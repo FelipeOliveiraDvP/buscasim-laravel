@@ -1,7 +1,7 @@
 export interface BaseQuery {
   page?: number;
   order_by?: string;
-  direction?: "asc" | "desc";
+  direction?: 'asc' | 'desc';
 }
 
 export interface PaginatedResponse<T> {
@@ -13,4 +13,8 @@ export interface PaginatedResponse<T> {
     current: number;
     last_page: number;
   };
+}
+
+export interface ApiResponse {
+  message: string;
 }
