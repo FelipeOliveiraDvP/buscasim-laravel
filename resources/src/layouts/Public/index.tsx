@@ -1,11 +1,11 @@
-import React, { Suspense, useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "@/core/providers";
-import { PageLoader } from "@/components/__commons";
-import { BackgroundImage, Center, Grid, Image } from "@mantine/core";
+import { Suspense, useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/core/providers';
+import { PageLoader } from '@/components/__commons';
+import { BackgroundImage, Center, Grid, Image } from '@mantine/core';
 
-import background from "@/assets/background.jpeg";
-import logo from "@/assets/logo.png";
+import background from '@/assets/background.jpeg';
+import logo from '@/assets/logo.png';
 
 export function PublicLayout() {
   const { user, authenticated } = useAuth();
@@ -22,10 +22,10 @@ export function PublicLayout() {
       gutter={0}
       styles={{
         root: {
-          height: "100%",
+          height: '100%',
         },
         inner: {
-          height: "100%",
+          height: '100%',
           margin: 0,
         },
       }}

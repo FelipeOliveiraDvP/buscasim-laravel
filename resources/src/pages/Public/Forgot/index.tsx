@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Center,
@@ -7,18 +6,18 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@mantine/core";
-import { yupResolver } from "mantine-form-yup-resolver";
-import { useForm } from "@mantine/form";
-import { IconMail } from "@tabler/icons-react";
-import * as yup from "yup";
-import { ForgotRequest, useForgot } from "@/core/services/auth";
+} from '@mantine/core';
+import { yupResolver } from 'mantine-form-yup-resolver';
+import { useForm } from '@mantine/form';
+import { IconMail } from '@tabler/icons-react';
+import * as yup from 'yup';
+import { ForgotRequest, useForgot } from '@/core/services/auth';
 
-import logoAlt from "@/assets/logo-alt.png";
-import { AnchorLink } from "@/components/__commons";
+import logoAlt from '@/assets/logo-alt.png';
+import { AnchorLink } from '@/components/__commons';
 
 const schema = yup.object().shape({
-  email: yup.string().required("Campo Obrigatório").email("E-mail inválido"),
+  email: yup.string().required('Campo Obrigatório').email('E-mail inválido'),
 });
 
 export default function ForgotPage() {
@@ -26,7 +25,7 @@ export default function ForgotPage() {
 
   const form = useForm({
     initialValues: {
-      email: "",
+      email: '',
     },
     validate: yupResolver(schema),
   });
@@ -50,7 +49,7 @@ export default function ForgotPage() {
               label="E-mail"
               placeholder="email@exemplo.com"
               withAsterisk
-              {...form.getInputProps("email")}
+              {...form.getInputProps('email')}
             />
 
             <Button

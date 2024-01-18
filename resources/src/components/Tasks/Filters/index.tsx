@@ -1,16 +1,15 @@
-import React from "react";
-import { Button, Group, Input, Select } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconSearch } from "@tabler/icons-react";
-import { TaskListQuery } from "@/core/services/tasks";
-import { UserSelect } from "@/components/Users";
+import { Button, Group, Input, Select } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { IconSearch } from '@tabler/icons-react';
+import { TaskListQuery } from '@/core/services/tasks';
+import { UserSelect } from '@/components/Users';
 
 interface Props {
   onChange: (values: TaskListQuery) => void;
 }
 
 const initialValues: TaskListQuery = {
-  title: "",
+  title: '',
   responsible_id: null,
   page: 1,
 };
@@ -34,7 +33,7 @@ export function TasksFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Input
-          {...form.getInputProps("title")}
+          {...form.getInputProps('title')}
           placeholder="Pesquise por título"
           rightSection={<IconSearch />}
           onChange={(e) =>
@@ -42,7 +41,7 @@ export function TasksFilters({ onChange }: Props) {
           }
         />
         <UserSelect
-          {...form.getInputProps("responsible_id")}
+          {...form.getInputProps('responsible_id')}
           placeholder="Pesquise por responsável"
           onChange={(value) =>
             handleChange({ ...form.values, responsible_id: Number(value) })

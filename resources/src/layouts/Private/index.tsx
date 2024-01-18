@@ -1,12 +1,12 @@
-import React, { Suspense, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { AppShell, Button, Flex } from "@mantine/core";
+import { Suspense, useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { AppShell, Button, Flex } from '@mantine/core';
 
-import { PageLoader } from "@/components/__commons";
-import { Menu } from "./Menu";
-import { useAuth } from "@/core/providers";
-import { useLogout } from "@/core/services/auth";
-import { IconLogout } from "@tabler/icons-react";
+import { PageLoader } from '@/components/__commons';
+import { Menu } from './Menu';
+import { useAuth } from '@/core/providers';
+import { useLogout } from '@/core/services/auth';
+import { IconLogout } from '@tabler/icons-react';
 
 export function PrivateLayout() {
   const { user, authenticated } = useAuth();
@@ -19,7 +19,7 @@ export function PrivateLayout() {
 
   useEffect(() => {
     if (!authenticated || user === null) {
-      navigate("/");
+      navigate('/');
     }
   }, [user, authenticated, navigate]);
 
@@ -32,7 +32,7 @@ export function PrivateLayout() {
       header={{ height: 64 }}
       navbar={{
         width: 250,
-        breakpoint: "sm",
+        breakpoint: 'sm',
       }}
     >
       <AppShell.Header>

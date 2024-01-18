@@ -1,21 +1,21 @@
-import React, {
+import {
   ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-} from "react";
+} from 'react';
 
-import { User } from "@/core/services/users";
-import { LoginResponse } from "@/core/services/auth";
-import { AuthContextType } from "./types";
+import { User } from '@/core/services/users';
+import { LoginResponse } from '@/core/services/auth';
+import { AuthContextType } from './types';
 import {
   getAuthToken,
   getDecodedUser,
   initialValues,
   removeAuthToken,
   setAuthToken,
-} from "./utils";
+} from './utils';
 
 const AuthContext = createContext<AuthContextType>(initialValues);
 
@@ -72,5 +72,5 @@ export function useAuth(): AuthContextType {
   return useContext<AuthContextType>(AuthContext);
 }
 
-export * from "./types";
-export * from "./utils";
+export * from './types';
+export * from './utils';

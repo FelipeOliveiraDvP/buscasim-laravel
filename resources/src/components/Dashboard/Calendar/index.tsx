@@ -1,7 +1,6 @@
-import React from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import { Event } from "@/core/services/schedule";
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { Event } from '@/core/services/schedule';
 
 interface Props {
   events: Event[];

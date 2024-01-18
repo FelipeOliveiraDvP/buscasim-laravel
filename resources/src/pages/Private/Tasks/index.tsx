@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { Breadcrumbs, Flex, Group, Portal, Stack, Text } from "@mantine/core";
+import { useEffect, useState } from 'react';
+import { Breadcrumbs, Flex, Group, Portal, Stack, Text } from '@mantine/core';
 import {
   DragDropContext,
   DraggableLocation,
   OnDragEndResponder,
-} from "@hello-pangea/dnd";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+} from '@hello-pangea/dnd';
+import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
 
-import { TaskBoard, TaskCard, TaskModal } from "@/components/Tasks";
+import { TaskBoard, TaskCard, TaskModal } from '@/components/Tasks';
 import {
   Task,
   TaskReorderRequest,
@@ -17,10 +17,10 @@ import {
   taskStatus,
   useReorderTask,
   useTasks,
-} from "@/core/services/tasks";
-import { BaseQuery } from "@/core/types";
-import { AnchorLink } from "@/components/__commons";
-import { TasksFilters } from "@/components/Tasks/Filters";
+} from '@/core/services/tasks';
+import { BaseQuery } from '@/core/types';
+import { AnchorLink } from '@/components/__commons';
+import { TasksFilters } from '@/components/Tasks/Filters';
 
 export default function TasksPage() {
   const [params, setParams] = useState<BaseQuery>();

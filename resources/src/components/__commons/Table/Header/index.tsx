@@ -1,6 +1,5 @@
-import React from "react";
-import { Table as MantineTable } from "@mantine/core";
-import { Table as ReactTable, flexRender } from "@tanstack/react-table";
+import { Table as MantineTable } from '@mantine/core';
+import { Table as ReactTable, flexRender } from '@tanstack/react-table';
 
 interface Props<T> {
   table: ReactTable<T>;
@@ -14,7 +13,7 @@ export function TableHeader<T>({ table }: Props<T>) {
           {headerGroup.headers.map((header) => (
             <MantineTable.Th
               key={header.id}
-              style={{ fontSize: 12, color: "#74787d" }}
+              style={{ fontSize: 12, color: '#74787d' }}
             >
               {header.isPlaceholder
                 ? null

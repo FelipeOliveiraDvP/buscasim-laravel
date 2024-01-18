@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 import {
   Group,
   Box,
@@ -7,10 +7,10 @@ import {
   Text,
   UnstyledButton,
   rem,
-} from "@mantine/core";
-import { IconChevronRight } from "@tabler/icons-react";
-import classes from "./styles.module.css";
-import { Link, useNavigate } from "react-router-dom";
+} from '@mantine/core';
+import { IconChevronRight } from '@tabler/icons-react';
+import classes from './styles.module.css';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface MenuItemProps {
   icon: React.FC<any>;
@@ -52,7 +52,7 @@ export function MenuItem({
         className={classes.control}
       >
         <Group justify="space-between" gap={0}>
-          <Box style={{ display: "flex", alignItems: "center" }}>
+          <Box style={{ display: 'flex', alignItems: 'center' }}>
             <ThemeIcon variant="light" size={30}>
               <Icon style={{ width: rem(18), height: rem(18) }} />
             </ThemeIcon>
@@ -65,7 +65,7 @@ export function MenuItem({
               style={{
                 width: rem(16),
                 height: rem(16),
-                transform: opened ? "rotate(-90deg)" : "none",
+                transform: opened ? 'rotate(-90deg)' : 'none',
               }}
             />
           )}

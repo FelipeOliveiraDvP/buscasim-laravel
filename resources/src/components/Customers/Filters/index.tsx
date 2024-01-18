@@ -1,16 +1,15 @@
-import React from "react";
-import { Button, Group, Input, Select } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconSearch } from "@tabler/icons-react";
-import { CustomerListQuery } from "@/core/services/customers";
+import { Button, Group, Input, Select } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { IconSearch } from '@tabler/icons-react';
+import { CustomerListQuery } from '@/core/services/customers';
 
 interface Props {
   onChange: (values: CustomerListQuery) => void;
 }
 
 const initialValues: CustomerListQuery = {
-  name: "",
-  document: "",
+  name: '',
+  document: '',
   page: 1,
 };
 
@@ -33,7 +32,7 @@ export function CustomersFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Input
-          {...form.getInputProps("name")}
+          {...form.getInputProps('name')}
           placeholder="Pesquise por nome"
           rightSection={<IconSearch />}
           onChange={(e) =>
@@ -41,7 +40,7 @@ export function CustomersFilters({ onChange }: Props) {
           }
         />
         <Input
-          {...form.getInputProps("document")}
+          {...form.getInputProps('document')}
           placeholder="Pesquise por CPF"
           rightSection={<IconSearch />}
           onChange={(e) =>

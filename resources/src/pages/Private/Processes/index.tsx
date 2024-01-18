@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+import { useState } from 'react';
+import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
 import {
   Breadcrumbs,
   Button,
@@ -8,14 +8,14 @@ import {
   Portal,
   Stack,
   Text,
-} from "@mantine/core";
+} from '@mantine/core';
 import {
   ProcessModal,
   ProcessesFilters,
   ProcessesList,
-} from "@/components/Processes";
-import { Process, ProcessListQuery } from "@/core/services/processes";
-import { AnchorLink } from "@/components/__commons";
+} from '@/components/Processes';
+import { Process, ProcessListQuery } from '@/core/services/processes';
+import { AnchorLink } from '@/components/__commons';
 
 export default function ProcessesPage() {
   const [params, setParams] = useState<ProcessListQuery>();
@@ -68,45 +68,45 @@ const mockData: Process[] = [
     id: 1,
     customer: {
       id: 1,
-      name: "João da Silva",
-      phone: "1194838439",
+      name: 'João da Silva',
+      phone: '1194838439',
     },
-    process_number: "0112DSDSD",
+    process_number: '0112DSDSD',
     amount: 500,
-    expertise: "criminal",
-    situation: "pending",
-    tribunal: "Fórum do centro",
-    created_at: "2024-01-10",
-    updated_at: "2024-01-10",
+    expertise: 'criminal',
+    situation: 'pending',
+    tribunal: 'Fórum do centro',
+    created_at: '2024-01-10',
+    updated_at: '2024-01-10',
   },
   {
     id: 2,
     customer: {
       id: 1,
-      name: "João da Silva",
-      phone: "1194838439",
+      name: 'João da Silva',
+      phone: '1194838439',
     },
-    process_number: "SDSD454D",
+    process_number: 'SDSD454D',
     amount: 500,
-    expertise: "family",
-    situation: "approved",
-    tribunal: "Fórum do centro",
-    created_at: "2024-01-10",
-    updated_at: "2024-01-10",
+    expertise: 'family',
+    situation: 'approved',
+    tribunal: 'Fórum do centro',
+    created_at: '2024-01-10',
+    updated_at: '2024-01-10',
   },
   {
     id: 3,
     customer: {
       id: 1,
-      name: "João da Silva",
-      phone: "1194838439",
+      name: 'João da Silva',
+      phone: '1194838439',
     },
-    process_number: "SDSD454D",
+    process_number: 'SDSD454D',
     amount: 500,
-    expertise: "family",
-    situation: "cancelled",
-    tribunal: "Fórum do centro",
-    created_at: "2024-01-10",
-    updated_at: "2024-01-10",
+    expertise: 'family',
+    situation: 'cancelled',
+    tribunal: 'Fórum do centro',
+    created_at: '2024-01-10',
+    updated_at: '2024-01-10',
   },
 ];

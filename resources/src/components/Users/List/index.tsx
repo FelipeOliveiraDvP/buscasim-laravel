@@ -1,15 +1,14 @@
-import React from "react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { ActionIcon, Badge, Group, Text } from "@mantine/core";
-import { Table } from "@/components/__commons";
+import { createColumnHelper } from '@tanstack/react-table';
+import { ActionIcon, Badge, Group, Text } from '@mantine/core';
+import { Table } from '@/components/__commons';
 import {
   User,
   UserListResponse,
   getUserRole,
   useRemoveUser,
-} from "@/core/services/users";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
-import { modals } from "@mantine/modals";
+} from '@/core/services/users';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { modals } from '@mantine/modals';
 
 interface Props {
   data?: UserListResponse;
@@ -23,9 +22,9 @@ export function UsersList({ data, loading, onSelect, onPaginate }: Props) {
 
   const confirmRemove = (obj: User) =>
     modals.openConfirmModal({
-      title: "Remover Usuário",
+      title: 'Remover Usuário',
       children: <Text size="sm">Deseja realmente remover esse usuário?</Text>,
-      labels: { confirm: "Remover", cancel: "Cancelar" },
+      labels: { confirm: 'Remover', cancel: 'Cancelar' },
       confirmProps: { loading: removeMutation.isLoading },
       centered: true,
       onConfirm: async () => await removeMutation.mutateAsync(obj),
@@ -34,31 +33,31 @@ export function UsersList({ data, loading, onSelect, onPaginate }: Props) {
   const columnHelper = createColumnHelper<User>();
 
   const columns = [
-    columnHelper.accessor("name", {
-      id: "name",
-      header: "Nome",
+    columnHelper.accessor('name', {
+      id: 'name',
+      header: 'Nome',
     }),
-    columnHelper.accessor("email", {
-      id: "email",
-      header: "E-mail",
+    columnHelper.accessor('email', {
+      id: 'email',
+      header: 'E-mail',
     }),
-    columnHelper.accessor("role", {
-      id: "role",
-      header: "Tipo de Usuário",
+    columnHelper.accessor('role', {
+      id: 'role',
+      header: 'Tipo de Usuário',
       cell: ({ getValue }) => getUserRole(getValue()),
     }),
-    columnHelper.accessor("is_active", {
-      id: "is_active",
-      header: "Tipo de Usuário",
+    columnHelper.accessor('is_active', {
+      id: 'is_active',
+      header: 'Tipo de Usuário',
       cell: ({ getValue }) => (
-        <Badge color={getValue() ? "lime" : "gray"}>
-          {getValue() ? "Ativo" : "Inativo"}
+        <Badge color={getValue() ? 'lime' : 'gray'}>
+          {getValue() ? 'Ativo' : 'Inativo'}
         </Badge>
       ),
     }),
     columnHelper.accessor((row) => row, {
-      id: "actions",
-      header: "",
+      id: 'actions',
+      header: '',
       cell: ({ getValue }) => (
         <Group justify="flex-end" gap="xs" align="center">
           <ActionIcon

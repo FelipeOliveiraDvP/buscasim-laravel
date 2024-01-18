@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Select, SelectProps } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
-import { useUsers } from "@/core/services/users";
+import { useEffect, useState } from 'react';
+import { Select, SelectProps } from '@mantine/core';
+import { useDebouncedValue } from '@mantine/hooks';
+import { useUsers } from '@/core/services/users';
 
 type OptionType = { value: string; label: string };
 

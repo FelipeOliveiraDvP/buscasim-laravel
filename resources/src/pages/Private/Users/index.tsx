@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 import {
   Breadcrumbs,
   Button,
@@ -8,12 +8,12 @@ import {
   Portal,
   Stack,
   Text,
-} from "@mantine/core";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
-import { UsersFilters, UsersList } from "@/components/Users";
-import { User, UserListQuery, useUsers } from "@/core/services/users";
-import { AnchorLink } from "@/components/__commons";
-import { UserModal } from "@/components/Users/Modal";
+} from '@mantine/core';
+import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
+import { UsersFilters, UsersList } from '@/components/Users';
+import { User, UserListQuery, useUsers } from '@/core/services/users';
+import { AnchorLink } from '@/components/__commons';
+import { UserModal } from '@/components/Users/Modal';
 
 export default function UsersPage() {
   const [params, setParams] = useState<UserListQuery>();

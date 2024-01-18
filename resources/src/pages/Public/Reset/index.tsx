@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Center,
@@ -8,24 +7,24 @@ import {
   PasswordInput,
   Stack,
   Text,
-} from "@mantine/core";
-import { yupResolver } from "mantine-form-yup-resolver";
-import { useForm } from "@mantine/form";
-import { IconLock } from "@tabler/icons-react";
-import * as yup from "yup";
-import { ResetRequest, useReset, useVerify } from "@/core/services/auth";
+} from '@mantine/core';
+import { yupResolver } from 'mantine-form-yup-resolver';
+import { useForm } from '@mantine/form';
+import { IconLock } from '@tabler/icons-react';
+import * as yup from 'yup';
+import { ResetRequest, useReset, useVerify } from '@/core/services/auth';
 
-import logoAlt from "@/assets/logo-alt.png";
-import { useParams } from "react-router-dom";
+import logoAlt from '@/assets/logo-alt.png';
+import { useParams } from 'react-router-dom';
 
 const schema = yup.object().shape({
   password: yup
     .string()
-    .required("Campo Obrigatório")
-    .min(8, "A senha deve ter no mínimo 8 caracteres"),
+    .required('Campo Obrigatório')
+    .min(8, 'A senha deve ter no mínimo 8 caracteres'),
   password_confirmation: yup
     .string()
-    .oneOf([yup.ref("password")], "As senhas não são iguais"),
+    .oneOf([yup.ref('password')], 'As senhas não são iguais'),
 });
 
 export default function ResetPage() {
@@ -35,9 +34,9 @@ export default function ResetPage() {
 
   const form = useForm({
     initialValues: {
-      password: "",
-      password_confirmation: "",
-      token: "",
+      password: '',
+      password_confirmation: '',
+      token: '',
     },
     validate: yupResolver(schema),
   });
@@ -66,14 +65,14 @@ export default function ResetPage() {
           </Text>
           <form onSubmit={form.onSubmit(handleSubmit)}>
             <PasswordInput
-              {...form.getInputProps("password")}
+              {...form.getInputProps('password')}
               label="Nova Senha"
               placeholder="********"
               withAsterisk
               mt="md"
             />
             <PasswordInput
-              {...form.getInputProps("password_confirmation")}
+              {...form.getInputProps('password_confirmation')}
               label="Confirme a Senha"
               placeholder="********"
               withAsterisk

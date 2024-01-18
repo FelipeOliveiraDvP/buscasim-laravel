@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from 'react';
 import {
   Breadcrumbs,
   Button,
@@ -7,19 +7,19 @@ import {
   Portal,
   Stack,
   Text,
-} from "@mantine/core";
-import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
+} from '@mantine/core';
+import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
 import {
   Customer,
   CustomerListQuery,
   useCustomers,
-} from "@/core/services/customers";
+} from '@/core/services/customers';
 import {
   CustomerModal,
   CustomersFilters,
   CustomersList,
-} from "@/components/Customers";
-import { AnchorLink } from "@/components/__commons";
+} from '@/components/Customers';
+import { AnchorLink } from '@/components/__commons';
 
 export default function CustomersPage() {
   const [params, setParams] = useState<CustomerListQuery>();

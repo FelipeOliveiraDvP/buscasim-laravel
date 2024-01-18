@@ -1,7 +1,6 @@
-import React from "react";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import { Event, EventListQuery } from "@/core/services/schedule";
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { Event, EventListQuery } from '@/core/services/schedule';
 
 interface Props {
   events: Event[];
@@ -17,7 +16,7 @@ export function Schedule({ events, onChange, onSelect }: Props) {
       plugins={[dayGridPlugin]}
       selectable
       buttonText={{
-        today: "Hoje",
+        today: 'Hoje',
       }}
       events={events.map((event) => ({
         title: event.title,

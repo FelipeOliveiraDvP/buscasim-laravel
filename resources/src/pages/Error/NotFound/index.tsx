@@ -1,8 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Button, Center, Container, Stack, Text, rem } from "@mantine/core";
-import { IconHome } from "@tabler/icons-react";
-import { useAuth } from "@/core/providers";
+import { Link } from 'react-router-dom';
+import { Button, Center, Container, Stack, Text, rem } from '@mantine/core';
+import { IconHome } from '@tabler/icons-react';
+import { useAuth } from '@/core/providers';
 
 export default function NotFoundPage() {
   const { authenticated } = useAuth();
@@ -19,7 +18,7 @@ export default function NotFoundPage() {
           </Text>
           <Button
             component={Link}
-            to={authenticated ? "/app" : "/"}
+            to={authenticated ? '/app' : '/'}
             size="xl"
             variant="primary"
             leftSection={<IconHome />}

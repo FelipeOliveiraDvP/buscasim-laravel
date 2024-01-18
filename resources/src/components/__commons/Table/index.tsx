@@ -1,13 +1,12 @@
-import React from "react";
-import { Flex, Table as MantineTable, Pagination, Stack } from "@mantine/core";
+import { Flex, Table as MantineTable, Pagination, Stack } from '@mantine/core';
 import {
   ColumnDef,
   getCoreRowModel,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table';
 
-import { TableHeader } from "./Header";
-import { TableBody } from "./Body";
+import { TableHeader } from './Header';
+import { TableBody } from './Body';
 
 interface Props<T> {
   columns: ColumnDef<T, any>[];

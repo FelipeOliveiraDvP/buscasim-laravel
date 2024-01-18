@@ -1,8 +1,7 @@
-import React from "react";
-import { Avatar, Group, Paper, Stack, Text } from "@mantine/core";
-import { getFirstLetter } from "@/core/utils";
-import { Task, taskStatus } from "@/core/services/tasks";
-import dayjs from "dayjs";
+import { Avatar, Group, Paper, Stack, Text } from '@mantine/core';
+import { getFirstLetter } from '@/core/utils';
+import { Task, taskStatus } from '@/core/services/tasks';
+import dayjs from 'dayjs';
 
 interface Props {
   task: Task;
@@ -32,7 +31,7 @@ export function DashboardTaskCard({ task }: Props) {
           <Stack gap="xs" ta="right">
             <Text>{taskStatus[task.status]}</Text>
             <Text c="dimmed">
-              {dayjs(task.final_date).format("DD/MM/YYYY")}
+              {dayjs(task.final_date).format('DD/MM/YYYY')}
             </Text>
           </Stack>
         </Group>

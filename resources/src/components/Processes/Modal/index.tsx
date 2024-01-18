@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { Modal, ModalProps } from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import * as Yup from "yup";
-import { Process, ProcessRequest } from "@/core/services/processes";
+import { useEffect } from 'react';
+import { Modal, ModalProps } from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import * as Yup from 'yup';
+import { Process, ProcessRequest } from '@/core/services/processes';
 
 type Props = ModalProps & {
   process?: Process;
 };
 
 const schema = Yup.object().shape({
-  customer_id: Yup.string().required("Campo Obrigatório"),
-  process_number: Yup.string().required("Campo Obrigatório"),
-  situation: Yup.string().required("Campo Obrigatório"),
-  expertise: Yup.string().required("Campo Obrigatório"),
-  tribunal: Yup.string().required("Campo Obrigatório"),
-  amount: Yup.number().min(1, "Informe o valor do processo"),
+  customer_id: Yup.string().required('Campo Obrigatório'),
+  process_number: Yup.string().required('Campo Obrigatório'),
+  situation: Yup.string().required('Campo Obrigatório'),
+  expertise: Yup.string().required('Campo Obrigatório'),
+  tribunal: Yup.string().required('Campo Obrigatório'),
+  amount: Yup.number().min(1, 'Informe o valor do processo'),
 });
 
 export function ProcessModal({ process, ...props }: Props) {
@@ -22,7 +22,7 @@ export function ProcessModal({ process, ...props }: Props) {
     validate: yupResolver(schema),
     initialValues: {
       customer_id: null,
-      process_number: "",
+      process_number: '',
 
       // expertise: null,
       // situation: null,
@@ -31,7 +31,7 @@ export function ProcessModal({ process, ...props }: Props) {
   });
 
   async function handleSave(values: ProcessRequest) {
-    console.log("Salvar: ", values);
+    console.log('Salvar: ', values);
     handleClose();
   }
 
@@ -52,7 +52,7 @@ export function ProcessModal({ process, ...props }: Props) {
   return (
     <Modal
       {...props}
-      title={process ? "Editar Processo" : "Novo Processo"}
+      title={process ? 'Editar Processo' : 'Novo Processo'}
       centered
       onClose={handleClose}
     >

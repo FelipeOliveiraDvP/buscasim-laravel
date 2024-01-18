@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Center,
@@ -8,19 +7,19 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@mantine/core";
-import { yupResolver } from "mantine-form-yup-resolver";
-import { useForm } from "@mantine/form";
-import { IconLogin2 } from "@tabler/icons-react";
-import * as yup from "yup";
-import { LoginRequest, useLogin } from "@/core/services/auth";
+} from '@mantine/core';
+import { yupResolver } from 'mantine-form-yup-resolver';
+import { useForm } from '@mantine/form';
+import { IconLogin2 } from '@tabler/icons-react';
+import * as yup from 'yup';
+import { LoginRequest, useLogin } from '@/core/services/auth';
 
-import logoAlt from "@/assets/logo-alt.png";
-import { AnchorLink } from "@/components/__commons";
+import logoAlt from '@/assets/logo-alt.png';
+import { AnchorLink } from '@/components/__commons';
 
 const schema = yup.object().shape({
-  email: yup.string().required("Campo Obrigatório").email("E-mail inválido"),
-  password: yup.string().min(2, "A senha precisa ter no mínimo 8 caracteres"),
+  email: yup.string().required('Campo Obrigatório').email('E-mail inválido'),
+  password: yup.string().min(2, 'A senha precisa ter no mínimo 8 caracteres'),
 });
 
 export default function LoginPage() {
@@ -28,8 +27,8 @@ export default function LoginPage() {
 
   const form = useForm({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
     validate: yupResolver(schema),
   });
@@ -53,14 +52,14 @@ export default function LoginPage() {
               label="E-mail"
               placeholder="email@exemplo.com"
               withAsterisk
-              {...form.getInputProps("email")}
+              {...form.getInputProps('email')}
             />
             <PasswordInput
               label="Senha"
               placeholder="********"
               withAsterisk
               mt="md"
-              {...form.getInputProps("password")}
+              {...form.getInputProps('password')}
             />
             <Button
               type="submit"

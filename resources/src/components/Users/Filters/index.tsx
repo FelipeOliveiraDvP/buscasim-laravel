@@ -1,20 +1,19 @@
-import React from "react";
-import { Button, Group, Input, Select } from "@mantine/core";
-import { useForm } from "@mantine/form";
-import { IconSearch } from "@tabler/icons-react";
+import { Button, Group, Input, Select } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import { IconSearch } from '@tabler/icons-react';
 import {
   UserListQuery,
   UserRolesType,
   userRolesOptions,
-} from "@/core/services/users";
+} from '@/core/services/users';
 
 interface Props {
   onChange: (values: UserListQuery) => void;
 }
 
 const initialValues: UserListQuery = {
-  name: "",
-  email: "",
+  name: '',
+  email: '',
   role: null,
   page: 1,
 };
@@ -38,7 +37,7 @@ export function UsersFilters({ onChange }: Props) {
     <form onReset={handleReset}>
       <Group justify="flex-end" gap="sm">
         <Input
-          {...form.getInputProps("name")}
+          {...form.getInputProps('name')}
           placeholder="Pesquise por nome"
           rightSection={<IconSearch />}
           onChange={(e) =>
@@ -46,7 +45,7 @@ export function UsersFilters({ onChange }: Props) {
           }
         />
         <Input
-          {...form.getInputProps("email")}
+          {...form.getInputProps('email')}
           placeholder="Pesquise por e-mail"
           rightSection={<IconSearch />}
           onChange={(e) =>
@@ -54,7 +53,7 @@ export function UsersFilters({ onChange }: Props) {
           }
         />
         <Select
-          {...form.getInputProps("role")}
+          {...form.getInputProps('role')}
           placeholder="Tipo de usuário"
           data={userRolesOptions}
           clearable

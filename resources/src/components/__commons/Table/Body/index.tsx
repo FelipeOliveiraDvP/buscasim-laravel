@@ -1,17 +1,16 @@
-import React from "react";
 import {
   Center,
   Loader,
   Table as MantineTable,
   Stack,
   Text,
-} from "@mantine/core";
+} from '@mantine/core';
 import {
   ColumnDef,
   Table as ReactTable,
   flexRender,
-} from "@tanstack/react-table";
-import { IconFolderOpen } from "@tabler/icons-react";
+} from '@tanstack/react-table';
+import { IconFolderOpen } from '@tabler/icons-react';
 
 interface Props<T> {
   columns: ColumnDef<T, any>[];

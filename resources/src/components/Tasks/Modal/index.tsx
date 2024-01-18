@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from 'react';
 import {
   Button,
   Divider,
@@ -9,12 +9,12 @@ import {
   Text,
   TextInput,
   Textarea,
-} from "@mantine/core";
-import { useForm, yupResolver } from "@mantine/form";
-import { DateInput } from "@mantine/dates";
-import { AxiosError } from "axios";
-import * as Yup from "yup";
-import dayjs from "dayjs";
+} from '@mantine/core';
+import { useForm, yupResolver } from '@mantine/form';
+import { DateInput } from '@mantine/dates';
+import { AxiosError } from 'axios';
+import * as Yup from 'yup';
+import dayjs from 'dayjs';
 import {
   Task,
   TaskRequest,
@@ -22,10 +22,10 @@ import {
   useCreateTask,
   useRemoveTask,
   useUpdateTask,
-} from "@/core/services/tasks";
-import { UserSelect } from "@/components/Users";
-import { getFormErrors } from "@/core/utils";
-import { modals } from "@mantine/modals";
+} from '@/core/services/tasks';
+import { UserSelect } from '@/components/Users';
+import { getFormErrors } from '@/core/utils';
+import { modals } from '@mantine/modals';
 
 type Props = ModalProps & {
   task?: Task;
@@ -33,13 +33,13 @@ type Props = ModalProps & {
 };
 
 const schema = Yup.object().shape({
-  title: Yup.string().required("Campo Obrigatório"),
-  description: Yup.string().required("Campo Obrigatório"),
+  title: Yup.string().required('Campo Obrigatório'),
+  description: Yup.string().required('Campo Obrigatório'),
   final_date: Yup.date()
-    .required("Campo Obrigatório")
-    .min(new Date(), "Escolha uma data futura para a tarefa."),
-  status: Yup.string().required("Campo Obrigatório"),
-  responsible_id: Yup.string().required("Campo Obrigatório"),
+    .required('Campo Obrigatório')
+    .min(new Date(), 'Escolha uma data futura para a tarefa.'),
+  status: Yup.string().required('Campo Obrigatório'),
+  responsible_id: Yup.string().required('Campo Obrigatório'),
 });
 
 export function TaskModal({ task, status, ...props }: Props) {
@@ -49,9 +49,9 @@ export function TaskModal({ task, status, ...props }: Props) {
   const form = useForm<TaskRequest>({
     validate: yupResolver(schema),
     initialValues: {
-      title: "",
-      description: "",
-      status: "todo",
+      title: '',
+      description: '',
+      status: 'todo',
       responsible_id: null,
       final_date: null,
     },
@@ -59,9 +59,9 @@ export function TaskModal({ task, status, ...props }: Props) {
 
   const confirmRemove = (obj: Task) =>
     modals.openConfirmModal({
-      title: "Remover Tarefa",
+      title: 'Remover Tarefa',
       children: <Text size="sm">Deseja realmente remover essa tarefa?</Text>,
-      labels: { confirm: "Remover", cancel: "Cancelar" },
+      labels: { confirm: 'Remover', cancel: 'Cancelar' },
       confirmProps: { loading: removeMutation.isLoading },
       centered: true,
       onConfirm: async () => {
@@ -104,14 +104,14 @@ export function TaskModal({ task, status, ...props }: Props) {
     }
 
     if (status) {
-      form.setFieldValue("status", status);
+      form.setFieldValue('status', status);
     }
   }, [task, status]);
 
   return (
     <Modal
       {...props}
-      title={task ? "Editar Tarefa" : "Nova Tarefa"}
+      title={task ? 'Editar Tarefa' : 'Nova Tarefa'}
       centered
       size="md"
       onClose={handleClose}
@@ -119,13 +119,13 @@ export function TaskModal({ task, status, ...props }: Props) {
       <form onSubmit={form.onSubmit((values) => handleSave(values))}>
         <Stack gap="md">
           <TextInput
-            {...form.getInputProps("title")}
+            {...form.getInputProps('title')}
             label="Título"
             placeholder="Informe o título da tarefa"
             withAsterisk
           />
           <Textarea
-            {...form.getInputProps("description")}
+            {...form.getInputProps('description')}
             label="Descrição"
             placeholder="Informe com detalhes o será executado na tarefa"
             rows={6}
@@ -138,13 +138,13 @@ export function TaskModal({ task, status, ...props }: Props) {
             data={taskStatusOptions}
           /> */}
           <UserSelect
-            {...form.getInputProps("responsible_id")}
+            {...form.getInputProps('responsible_id')}
             label="Responsável"
             placeholder="Selecione o responsável da tarefa"
             withAsterisk
           />
           <DateInput
-            {...form.getInputProps("final_date")}
+            {...form.getInputProps('final_date')}
             label="Prazo Final"
             placeholder="Informe o prazo para a conclusão da tarefa"
             valueFormat="DD/MM/YYYY"

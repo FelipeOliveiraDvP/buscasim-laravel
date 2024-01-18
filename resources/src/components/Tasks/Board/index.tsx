@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
-import { Button, Flex, Paper, Stack, Text } from "@mantine/core";
-import { IconPlus } from "@tabler/icons-react";
-import { Droppable } from "@hello-pangea/dnd";
-import { TaskStatusType } from "@/core/services/tasks";
+import { ReactNode } from 'react';
+import { Button, Flex, Paper, Stack, Text } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
+import { Droppable } from '@hello-pangea/dnd';
+import { TaskStatusType } from '@/core/services/tasks';
 
 interface Props {
   title: string;

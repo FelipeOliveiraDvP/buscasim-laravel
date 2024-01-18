@@ -1,14 +1,13 @@
-import React from "react";
-import { createColumnHelper } from "@tanstack/react-table";
-import { ActionIcon, Badge, Group } from "@mantine/core";
-import { IconEdit, IconEye, IconTrash } from "@tabler/icons-react";
-import { Table } from "@/components/__commons";
+import { createColumnHelper } from '@tanstack/react-table';
+import { ActionIcon, Badge, Group } from '@mantine/core';
+import { IconEdit, IconEye, IconTrash } from '@tabler/icons-react';
+import { Table } from '@/components/__commons';
 import {
   Process,
   ProcessResponseType,
   getLegalLabel,
   getSituationLabel,
-} from "@/core/services/processes";
+} from '@/core/services/processes';
 
 interface Props {
   data?: ProcessResponseType;
@@ -28,27 +27,27 @@ export function ProcessesList({
   const columnHelper = createColumnHelper<Process>();
 
   const columns = [
-    columnHelper.accessor("process_number", {
-      id: "process_number",
-      header: "Número do Processo",
+    columnHelper.accessor('process_number', {
+      id: 'process_number',
+      header: 'Número do Processo',
     }),
-    columnHelper.accessor("customer.name", {
-      id: "customer.name",
-      header: "Cliente",
+    columnHelper.accessor('customer.name', {
+      id: 'customer.name',
+      header: 'Cliente',
     }),
-    columnHelper.accessor("situation_type", {
-      id: "situation_type",
-      header: "Situação",
+    columnHelper.accessor('situation_type', {
+      id: 'situation_type',
+      header: 'Situação',
       cell: ({ getValue }) => getSituationLabel(getValue()),
     }),
-    columnHelper.accessor("legal_type", {
-      id: "legal_type",
-      header: "Área de Atuação",
+    columnHelper.accessor('legal_type', {
+      id: 'legal_type',
+      header: 'Área de Atuação',
       cell: ({ getValue }) => getLegalLabel(getValue()),
     }),
     columnHelper.accessor((row) => row, {
-      id: "actions",
-      header: "",
+      id: 'actions',
+      header: '',
       cell: ({ getValue }) =>
         preview ? (
           <ActionIcon
@@ -70,7 +69,7 @@ export function ProcessesList({
             <ActionIcon
               variant="transparent"
               size="lg"
-              onClick={() => console.log("Remover: ", getValue())}
+              onClick={() => console.log('Remover: ', getValue())}
             >
               <IconTrash />
             </ActionIcon>

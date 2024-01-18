@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ActionIcon,
   Divider,
@@ -10,11 +9,11 @@ import {
   Text,
   Title,
   rem,
-} from "@mantine/core";
-import { IconEdit, IconUser } from "@tabler/icons-react";
-import { Task } from "@/core/services/tasks";
-import { Draggable } from "@hello-pangea/dnd";
-import dayjs from "dayjs";
+} from '@mantine/core';
+import { IconEdit, IconUser } from '@tabler/icons-react';
+import { Task } from '@/core/services/tasks';
+import { Draggable } from '@hello-pangea/dnd';
+import dayjs from 'dayjs';
 
 interface Props {
   task: Task;
@@ -76,7 +75,7 @@ export function TaskCard({ task, index, onSelect }: Props) {
             <div>
               <Title order={5}>Prazo Final</Title>
               <Text c="dimmed" truncate="end">
-                {dayjs(task.final_date).format("DD/MM/YYYY")}
+                {dayjs(task.final_date).format('DD/MM/YYYY')}
               </Text>
             </div>
           </Stack>

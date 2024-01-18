@@ -1,6 +1,6 @@
-import { Anchor, AnchorProps } from "@mantine/core";
-import React, { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { Anchor, AnchorProps } from '@mantine/core';
 
 interface Props extends AnchorProps {
   href: string;
