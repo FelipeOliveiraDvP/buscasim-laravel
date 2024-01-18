@@ -7,7 +7,7 @@ export default function NotFoundPage() {
   const { authenticated } = useAuth();
 
   return (
-    <Center h="100%">
+    <Center>
       <Container>
         <Stack>
           <Text size={rem(96)} ta="center">

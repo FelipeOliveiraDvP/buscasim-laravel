@@ -13,7 +13,7 @@ import { IconMail } from '@tabler/icons-react';
 import * as yup from 'yup';
 import { ForgotRequest, useForgot } from '@/core/services/auth';
 
-import logoAlt from '@/assets/logo-alt.png';
+import logo from '@/assets/logo.svg';
 import { AnchorLink } from '@/components/__commons';
 
 const schema = yup.object().shape({
@@ -35,11 +35,11 @@ export default function ForgotPage() {
   }
 
   return (
-    <Center h="100%">
+    <Center>
       <Paper withBorder w={420} shadow="md" p={30} mt={30} radius="md">
         <Stack>
           <Center>
-            <Image src={logoAlt} w={200} />
+            <Image src={logo} w={200} />
           </Center>
           <Text c="dimmed" size="sm" ta="center" mt={5}>
             Informe seu e-mail para receber um link para a recuperação da senha.
