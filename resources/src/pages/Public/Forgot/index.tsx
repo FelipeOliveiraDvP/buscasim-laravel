@@ -15,6 +15,7 @@ import { ForgotRequest, useForgot } from '@/core/services/auth';
 
 import logo from '@/assets/logo.svg';
 import { AnchorLink } from '@/components/__commons';
+import classes from '@/styles/pages.module.css';
 
 const schema = yup.object().shape({
   email: yup.string().required('Campo Obrigatório').email('E-mail inválido'),
@@ -35,7 +36,7 @@ export default function ForgotPage() {
   }
 
   return (
-    <Center>
+    <Center className={classes.wrapper}>
       <Paper withBorder w={420} shadow="md" p={30} mt={30} radius="md">
         <Stack>
           <Center>
