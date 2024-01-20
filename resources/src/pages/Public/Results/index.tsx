@@ -2,27 +2,53 @@ import { useNavigate } from 'react-router-dom';
 import {
   Accordion,
   Affix,
+  Badge,
   Button,
+  Center,
   Container,
-  Divider,
   Grid,
-  Group,
   Image,
   Paper,
   Stack,
   Table,
   Text,
   Title,
-  Transition,
   rem,
 } from '@mantine/core';
-import { IconCar, IconLockOpen } from '@tabler/icons-react';
+import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
 
 import { QueryResult } from '@/core/services/query';
 import classes from './styles.module.css';
+import { useState } from 'react';
 
 export default function ResultsPage() {
+  const [premium, setPremium] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  function showInfo(info: string | null, show: boolean) {
+    if (show) return info;
+
+    return (
+      <Badge className={classes.premium} leftSection={<IconLock size={18} />}>
+        Bloqueada
+      </Badge>
+    );
+  }
+
+  const previewFipe = (
+    <Center py="xl" bg="blue.7" c="white">
+      <Stack align="center">
+        <IconLock size={96} />
+        <Title order={3}>
+          Quer saber mais informações sobre a tabela FIPE desse veículo?
+        </Title>
+        <Text>
+          Adquira o relatório Premium e tenha acesso a essa e outras
+          informações.
+        </Text>
+      </Stack>
+    </Center>
+  );
 
   return (
     <Container className={classes.container}>
@@ -140,47 +166,63 @@ export default function ResultsPage() {
                       <Table.Tbody>
                         <Table.Tr>
                           <Table.Th>N° do chassi</Table.Th>
-                          <Table.Td>{mock.chassi}</Table.Td>
+                          <Table.Td>{showInfo(mock.chassi, premium)}</Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Capacidade máxima de tração</Table.Th>
-                          <Table.Td>{mock.extra.cap_maxima_tracao}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.cap_maxima_tracao, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Cilindradas</Table.Th>
-                          <Table.Td>{mock.extra.cilindradas}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.cilindradas, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>N° do motor</Table.Th>
-                          <Table.Td>{mock.extra.motor}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.motor, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Tipo de documento faturado</Table.Th>
-                          <Table.Td>{mock.extra.tipo_doc_faturado}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.tipo_doc_faturado, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Estado do faturamento</Table.Th>
-                          <Table.Td>{mock.extra.uf_faturado}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.uf_faturado, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Roubo ou furto</Table.Th>
-                          <Table.Td>{mock.situacao}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.situacao, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Estado</Table.Th>
-                          <Table.Td>{mock.uf}</Table.Td>
+                          <Table.Td>{showInfo(mock.uf, premium)}</Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Renavam</Table.Th>
-                          <Table.Td>{mock.extra.renavam}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.renavam, premium)}
+                          </Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Nome do proprietário</Table.Th>
-                          <Table.Td></Table.Td>
+                          <Table.Td>{showInfo('', premium)}</Table.Td>
                         </Table.Tr>
                         <Table.Tr>
                           <Table.Th>Tipo de documento</Table.Th>
-                          <Table.Td>{mock.extra.tipo_doc_prop}</Table.Td>
+                          <Table.Td>
+                            {showInfo(mock.extra.tipo_doc_prop, premium)}
+                          </Table.Td>
                         </Table.Tr>
                       </Table.Tbody>
                     </Table>
@@ -190,9 +232,6 @@ export default function ResultsPage() {
             </Paper>
           </Grid.Col>
         </Grid>
-        {/* <Button onClick={() => navigate('/pagamento')}>
-          Liberar informações
-        </Button> */}
         <Title className={classes.title}>
           <Text
             component="span"
@@ -206,39 +245,41 @@ export default function ResultsPage() {
 
         <Paper>
           <Accordion variant="contained" defaultValue="item-0">
-            {mock.fipe.dados.map((item, index) => (
-              <Accordion.Item value={`item-${index}`}>
-                <Accordion.Control
-                  icon={<IconCar />}
-                  className={classes.accordionItem}
-                >
-                  {item.texto_modelo}
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <Text className={classes.price}>{item.texto_valor}</Text>
-                  <Table>
-                    <Table.Tbody>
-                      <Table.Tr>
-                        <Table.Th>Código da FIPE</Table.Th>
-                        <Table.Td>{item.codigo_fipe}</Table.Td>
-                      </Table.Tr>
-                      <Table.Tr>
-                        <Table.Th>Combustível</Table.Th>
-                        <Table.Td>{item.combustivel}</Table.Td>
-                      </Table.Tr>
-                      <Table.Tr>
-                        <Table.Th>Marca</Table.Th>
-                        <Table.Td>{item.texto_marca}</Table.Td>
-                      </Table.Tr>
-                      <Table.Tr>
-                        <Table.Th>Modelo</Table.Th>
-                        <Table.Td>{item.texto_modelo}</Table.Td>
-                      </Table.Tr>
-                    </Table.Tbody>
-                  </Table>
-                </Accordion.Panel>
-              </Accordion.Item>
-            ))}
+            {premium
+              ? mock.fipe.dados.map((item, index) => (
+                  <Accordion.Item key={`item-${index}`} value={`item-${index}`}>
+                    <Accordion.Control
+                      icon={<IconCar />}
+                      className={classes.accordionItem}
+                    >
+                      {item.texto_modelo}
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Text className={classes.price}>{item.texto_valor}</Text>
+                      <Table>
+                        <Table.Tbody>
+                          <Table.Tr>
+                            <Table.Th>Código da FIPE</Table.Th>
+                            <Table.Td>{item.codigo_fipe}</Table.Td>
+                          </Table.Tr>
+                          <Table.Tr>
+                            <Table.Th>Combustível</Table.Th>
+                            <Table.Td>{item.combustivel}</Table.Td>
+                          </Table.Tr>
+                          <Table.Tr>
+                            <Table.Th>Marca</Table.Th>
+                            <Table.Td>{item.texto_marca}</Table.Td>
+                          </Table.Tr>
+                          <Table.Tr>
+                            <Table.Th>Modelo</Table.Th>
+                            <Table.Td>{item.texto_modelo}</Table.Td>
+                          </Table.Tr>
+                        </Table.Tbody>
+                      </Table>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                ))
+              : previewFipe}
           </Accordion>
         </Paper>
       </Stack>

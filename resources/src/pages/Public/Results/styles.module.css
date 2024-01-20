@@ -27,3 +27,9 @@
   font-weight: 700;
   color: var(--mantine-color-blue-7);
 }
+.premium {
+  border-radius: var(--mantine-radius-xs);
+  padding: var(--mantine-spacing-xs);
+  display: inline-flex;
+  align-items: center;
+}
