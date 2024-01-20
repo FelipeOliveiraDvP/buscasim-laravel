@@ -14,9 +14,9 @@ import { IconLock } from '@tabler/icons-react';
 import * as yup from 'yup';
 import { ResetRequest, useReset, useVerify } from '@/core/services/auth';
 
-import logoAlt from '@/assets/logo-alt.png';
 import { useParams } from 'react-router-dom';
 import classes from '@/styles/pages.module.css';
+import logo from '@/assets/logo.svg';
 
 const schema = yup.object().shape({
   password: yup
@@ -59,7 +59,7 @@ export default function ResetPage() {
       <Paper withBorder w={420} shadow="md" p={30} mt={30} radius="md">
         <Stack>
           <Center>
-            <Image src={logoAlt} w={200} />
+            <Image src={logo} w={200} />
           </Center>
           <Text c="dimmed" size="sm" ta="center" mt={5}>
             Informe sua nva senha. Você será redirecionado após a alteração.
