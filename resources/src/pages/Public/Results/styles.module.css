@@ -1,0 +1,6 @@
+.container {
+  background-color: var(--mantine-color-white);
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-sm);
+  margin: var(--mantine-spacing-md) auto;
+}

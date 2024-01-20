@@ -10,8 +10,11 @@ import {
 
 import heroBg from '@/assets/hero.jpeg';
 import classes from './styles.module.css';
+import { useNavigate } from 'react-router-dom';
 
 export function Hero() {
+  const navigate = useNavigate();
+
   return (
     <BackgroundImage src={heroBg} h={600}>
       <Container className={classes.container}>
@@ -33,7 +36,12 @@ export function Hero() {
               placeholder="Digite uma placa"
               classNames={{ input: classes.input, root: classes.inputWrapper }}
             />
-            <Button className={classes.control}>Buscar</Button>
+            <Button
+              className={classes.control}
+              onClick={() => navigate('/resultados')}
+            >
+              Buscar
+            </Button>
           </div>
         </Stack>
       </Container>

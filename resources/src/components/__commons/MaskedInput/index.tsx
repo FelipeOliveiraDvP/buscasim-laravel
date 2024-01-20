@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Input, InputProps, TextInputProps } from '@mantine/core';
+import { Input, InputProps, InputWrapper, TextInputProps } from '@mantine/core';
 import { InputMask, MaskEventDetail } from '@react-input/mask';
 
 type MaksType = 'cpf' | 'phone' | 'cep';
@@ -22,7 +22,7 @@ export function MaskedInput({ mask, withAsterisk, ...props }: Props) {
   const [maskDetail, setMaskDetail] = useState<MaskEventDetail | null>(null);
 
   return (
-    <>
+    <InputWrapper>
       <Input.Label required={withAsterisk}>{props.label}</Input.Label>
       <Input
         {...props}
@@ -35,6 +35,6 @@ export function MaskedInput({ mask, withAsterisk, ...props }: Props) {
         <Input.Error>{masksErrors[mask]}</Input.Error>
       )}
       <Input.Error>{props.error}</Input.Error>
-    </>
+    </InputWrapper>
   );
 }
