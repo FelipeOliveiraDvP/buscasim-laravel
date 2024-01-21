@@ -7,13 +7,39 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
+import { useNavigate } from 'react-router-dom';
+import { useForm, yupResolver } from '@mantine/form';
+import { IconSearch } from '@tabler/icons-react';
+import * as yup from 'yup';
+
+import { QueryRequest, useSearch } from '@/core/services/query';
+import { getFormErrors } from '@/core/utils';
 
 import heroBg from '@/assets/hero.jpeg';
 import classes from './styles.module.css';
-import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+
+const schema = yup.object().shape({
+  plate: yup.string().required('Informe uma placa para consultar'),
+});
 
 export function Hero() {
   const navigate = useNavigate();
+  const searchMutation = useSearch();
+  const form = useForm<QueryRequest>({
+    validate: yupResolver(schema),
+    initialValues: {
+      plate: '',
+    },
+  });
+
+  async function handleSearch(values: QueryRequest) {
+    try {
+      await searchMutation.mutateAsync(values);
+    } catch (error) {
+      form.setErrors({ ...getFormErrors(error as AxiosError) });
+    }
+  }
 
   return (
     <BackgroundImage src={heroBg} h={600}>
@@ -31,18 +57,23 @@ export function Hero() {
             </Text>{' '}
             mais completa da internet.
           </Title>
-          <div className={classes.controls}>
+          <form
+            onSubmit={form.onSubmit(handleSearch)}
+            className={classes.controls}
+          >
             <TextInput
+              {...form.getInputProps('plate')}
               placeholder="Digite uma placa"
               classNames={{ input: classes.input, root: classes.inputWrapper }}
             />
             <Button
               className={classes.control}
-              onClick={() => navigate('/resultados')}
+              type="submit"
+              loading={searchMutation.isLoading}
             >
-              Buscar
+              <IconSearch />
             </Button>
-          </div>
+          </form>
         </Stack>
       </Container>
     </BackgroundImage>

@@ -1,11 +1,11 @@
-import { useMutation, useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
-import authService from "./auth.service";
-import { useAuth } from "@/core/providers";
-import { LoginResponse } from ".";
-import { AxiosError } from "axios";
-import { getErrorMessage, showError } from "@/core/utils";
+import authService from './auth.service';
+import { useAuth } from '@/core/providers';
+import { LoginResponse } from '.';
+import { AxiosError } from 'axios';
+import { getErrorMessage, showError } from '@/core/utils';
 
 export function useLogin() {
   const { onLogin } = useAuth();
@@ -13,7 +13,23 @@ export function useLogin() {
 
   return useMutation(authService.login, {
     onSuccess(data) {
-      onLogin(data, () => navigate("/app"));
+      onLogin(data, () => navigate('/app'));
+    },
+    onError(error) {
+      showError(getErrorMessage(error as AxiosError));
+    },
+  });
+}
+
+export function useRegister() {
+  const { onLogin } = useAuth();
+  const navigate = useNavigate();
+
+  return useMutation(authService.register, {
+    onSuccess(data) {
+      onLogin(data, () =>
+        navigate(`/pagamento`, { state: { plate: data.plate } })
+      );
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));
@@ -27,7 +43,7 @@ export function useLogout() {
 
   return useMutation(authService.logout, {
     onSuccess() {
-      onLogout(() => navigate("/"));
+      onLogout(() => navigate('/'));
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));
@@ -38,7 +54,7 @@ export function useLogout() {
 export function useForgot() {
   return useMutation(authService.forgot, {
     onSuccess() {
-      console.log("Notification");
+      console.log('Notification');
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));
@@ -50,12 +66,12 @@ export function useVerify(token?: string) {
   const navigate = useNavigate();
 
   return useQuery<LoginResponse, AxiosError>(
-    ["verifyToken", token],
+    ['verifyToken', token],
     () => authService.verifyToken(token),
     {
       onError(error) {
         showError(getErrorMessage(error as AxiosError));
-        navigate("/");
+        navigate('/');
       },
     }
   );
@@ -67,7 +83,7 @@ export function useReset() {
 
   return useMutation(authService.reset, {
     onSuccess(data) {
-      onLogin(data, () => navigate("/app"));
+      onLogin(data, () => navigate('/app'));
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));

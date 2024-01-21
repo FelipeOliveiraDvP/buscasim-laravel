@@ -23,6 +23,7 @@ class Order extends Model
   protected $fillable = [
     'query_id',
     'coupon_id',
+    'document',
     'total',
     'status',
   ];

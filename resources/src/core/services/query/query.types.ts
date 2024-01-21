@@ -1,3 +1,7 @@
+export interface QueryRequest {
+  plate: string;
+}
+
 export interface QueryResult {
   MARCA: string;
   MODELO: string;

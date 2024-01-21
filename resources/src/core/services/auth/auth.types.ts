@@ -16,3 +16,15 @@ export interface ResetRequest {
   password_confirmation: string;
   token?: string;
 }
+
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  accept_terms: boolean;
+  plate?: string;
+}
+
+export interface RegisterResponse {
+  token: string;
+  plate: string;
+}

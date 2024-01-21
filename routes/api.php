@@ -19,7 +19,10 @@ use App\Http\Controllers\UsersController;
 */
 
 Route::prefix('auth')->group(function () {
+  // TODO: Se o usuário não tiver senha, fazer o fluxo de nova senha
   Route::post('login', [AuthController::class, 'login']);
+
+  // TODO:
   Route::post('register', [AuthController::class, 'register']);
   Route::post('refresh', [AuthController::class, 'refresh']);
   Route::post('forgot', [AuthController::class, 'forgot']);
@@ -28,7 +31,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('queries')->group(function () {
-  Route::get('/{plate}', [QueriesController::class, 'search']);
+  Route::post('/search', [QueriesController::class, 'search']);
 });
 
 Route::prefix('orders')->group(function () {

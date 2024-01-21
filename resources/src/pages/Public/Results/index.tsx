@@ -1,37 +1,38 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Accordion,
-  Badge,
   Button,
   Center,
   Container,
   Grid,
   Image,
   Paper,
+  Portal,
   Stack,
   Table,
   Text,
   Title,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
 
+import { RegisterModal } from '@/components/Auth';
 import { QueryResult } from '@/core/services/query';
 import classes from './styles.module.css';
+import {
+  ResultsFreeInfo,
+  ResultsOverview,
+  ResultsPremiumInfo,
+} from '@/components/Results';
 
 export default function ResultsPage() {
   const [premium, setPremium] = useState<boolean>(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  function showInfo(info: string | null, show: boolean) {
-    if (show) return info;
-
-    return (
-      <Badge className={classes.premium} leftSection={<IconLock size={18} />}>
-        Bloqueada
-      </Badge>
-    );
-  }
+  console.log(location);
 
   const previewFipe = (
     <Center p="xl" bg="blue.7" c="white">
@@ -45,18 +46,23 @@ export default function ResultsPage() {
           informações.
         </Text>
         <Button
-          component={Link}
-          to="/pagamento"
           leftSection={<IconLockOpen />}
           variant="outline"
           color="white"
           size="lg"
+          onClick={open}
         >
           Liberar Informações
         </Button>
       </Stack>
     </Center>
   );
+
+  useEffect(() => {
+    if (location.state === null) {
+      navigate('/');
+    }
+  }, [location]);
 
   return (
     <Container className={classes.container}>
@@ -83,30 +89,7 @@ export default function ResultsPage() {
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6, lg: 8 }}>
             <Paper withBorder p="md" h="100%">
-              <Table>
-                <Table.Tbody>
-                  <Table.Tr>
-                    <Table.Th>Placa</Table.Th>
-                    <Table.Td>{mock.placa}</Table.Td>
-                  </Table.Tr>
-                  <Table.Tr>
-                    <Table.Th>Placa Alternativa</Table.Th>
-                    <Table.Td>{mock.placa_alternativa}</Table.Td>
-                  </Table.Tr>
-                  <Table.Tr>
-                    <Table.Th>Marca/Modelo</Table.Th>
-                    <Table.Td>{mock.marcaModelo}</Table.Td>
-                  </Table.Tr>
-                  <Table.Tr>
-                    <Table.Th>Ano</Table.Th>
-                    <Table.Td>{mock.ano}</Table.Td>
-                  </Table.Tr>
-                  <Table.Tr>
-                    <Table.Th>Cor</Table.Th>
-                    <Table.Td>{mock.cor}</Table.Td>
-                  </Table.Tr>
-                </Table.Tbody>
-              </Table>
+              <ResultsOverview data={mock} />
             </Paper>
           </Grid.Col>
           <Grid.Col>
@@ -114,134 +97,17 @@ export default function ResultsPage() {
               <Stack align="center">
                 <Grid w="100%">
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <Table>
-                      <Table.Tbody>
-                        <Table.Tr>
-                          <Table.Th>Marca</Table.Th>
-                          <Table.Td>{mock.marca}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Modelo</Table.Th>
-                          <Table.Td>{mock.modelo}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Submodelo</Table.Th>
-                          <Table.Td>{mock.SUBMODELO}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Versão</Table.Th>
-                          <Table.Td>{mock.VERSAO}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Ano de fabricação</Table.Th>
-                          <Table.Td>{mock.anoModelo}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Cor</Table.Th>
-                          <Table.Td>{mock.cor}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Combustível</Table.Th>
-                          <Table.Td>{mock.extra.combustivel}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Eixos</Table.Th>
-                          <Table.Td>{mock.extra.eixos}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Espécie</Table.Th>
-                          <Table.Td>{mock.extra.especie}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Quantidade de passageiros</Table.Th>
-                          <Table.Td>
-                            {mock.extra.quantidade_passageiro}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Seguimento</Table.Th>
-                          <Table.Td>{mock.extra.segmento}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Sub Seguimento</Table.Th>
-                          <Table.Td>{mock.extra.sub_segmento}</Table.Td>
-                        </Table.Tr>
-                      </Table.Tbody>
-                    </Table>
+                    <ResultsFreeInfo data={mock} />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <Table>
-                      <Table.Tbody>
-                        <Table.Tr>
-                          <Table.Th>N° do chassi</Table.Th>
-                          <Table.Td>{showInfo(mock.chassi, premium)}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Capacidade máxima de tração</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.cap_maxima_tracao, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Cilindradas</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.cilindradas, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>N° do motor</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.motor, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Tipo de documento faturado</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.tipo_doc_faturado, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Estado do faturamento</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.uf_faturado, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Roubo ou furto</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.situacao, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Estado</Table.Th>
-                          <Table.Td>{showInfo(mock.uf, premium)}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Renavam</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.renavam, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Nome do proprietário</Table.Th>
-                          <Table.Td>{showInfo('', premium)}</Table.Td>
-                        </Table.Tr>
-                        <Table.Tr>
-                          <Table.Th>Tipo de documento</Table.Th>
-                          <Table.Td>
-                            {showInfo(mock.extra.tipo_doc_prop, premium)}
-                          </Table.Td>
-                        </Table.Tr>
-                      </Table.Tbody>
-                    </Table>
+                    <ResultsPremiumInfo data={mock} show={premium} />
                     {!premium && (
                       <Button
-                        component={Link}
-                        to="/pagamento"
                         leftSection={<IconLockOpen />}
                         variant="outline"
                         fullWidth
                         size="lg"
+                        onClick={open}
                       >
                         Liberar Informações
                       </Button>
@@ -303,6 +169,9 @@ export default function ResultsPage() {
           </Accordion>
         </Paper>
       </Stack>
+      <Portal>
+        <RegisterModal opened={opened} onClose={close} />
+      </Portal>
     </Container>
   );
 }

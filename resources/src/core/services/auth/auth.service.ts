@@ -1,27 +1,33 @@
-import api from "@/core/config/axios";
+import api from '@/core/config/axios';
 import {
   LoginRequest,
   LoginResponse,
   ForgotRequest,
   ResetRequest,
-} from "./auth.types";
-import { User } from "@/core/services/users";
+  RegisterRequest,
+  RegisterResponse,
+} from './auth.types';
+import { User } from '@/core/services/users';
 
 export default {
   async login(data: LoginRequest): Promise<LoginResponse> {
-    return api.post("/api/auth/login", data);
+    return api.post('/api/auth/login', data);
+  },
+
+  async register(data: RegisterRequest): Promise<RegisterResponse> {
+    return api.post('/api/auth/register', data);
   },
 
   async logout(): Promise<any> {
-    return api.post("/api/auth/logout");
+    return api.post('/api/auth/logout');
   },
 
   async forgot(data: ForgotRequest): Promise<any> {
-    return api.post("/api/auth/forgot", data);
+    return api.post('/api/auth/forgot', data);
   },
 
   async reset(data: ResetRequest): Promise<LoginResponse> {
-    return api.post("/api/auth/reset", data);
+    return api.post('/api/auth/reset', data);
   },
 
   async verifyToken(token?: string): Promise<any> {
@@ -29,6 +35,6 @@ export default {
   },
 
   async profile(): Promise<User> {
-    return api.get("/api/auth/me");
+    return api.get('/api/auth/me');
   },
 };
