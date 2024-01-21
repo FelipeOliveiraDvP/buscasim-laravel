@@ -11,12 +11,12 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('installments', function (Blueprint $table) {
+    Schema::create('orders', function (Blueprint $table) {
       $table->id();
-      $table->foreignId('order_id');
-      $table->integer('number', false, true);
-      $table->boolean('is_paid');
-      $table->date('due_date');
+      $table->foreignId('query_id');
+      $table->foreignId('coupon_id')->nullable();
+      $table->decimal('total', 7, 2, true)->default(0);
+      $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
       $table->timestamps();
       $table->softDeletes();
     });
@@ -27,6 +27,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('installments');
+    Schema::dropIfExists('orders');
   }
 };

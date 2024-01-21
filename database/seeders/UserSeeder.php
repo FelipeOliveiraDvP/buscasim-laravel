@@ -17,15 +17,6 @@ class UserSeeder extends Seeder
       'name' => 'Administrador',
       'email' => 'admin@email.com',
       'password' => Hash::make('asdf1234'),
-      'is_active' => true,
-      'role' => 'admin'
-    ]);
-
-    DB::table('users')->insert([
-      'name' => 'Samara',
-      'email' => 'samaraohanneadv@gmail.com',
-      'password' => Hash::make('asdf1234'),
-      'is_active' => true,
       'role' => 'admin'
     ]);
   }

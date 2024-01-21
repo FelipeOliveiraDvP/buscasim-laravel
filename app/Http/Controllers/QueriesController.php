@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-class ProcessesController extends Controller
+use Illuminate\Http\Request;
+
+class QueriesController extends Controller
 {
   public function index()
   {
     return response()->json(['message' => 'Ok'], 200);
   }
 
-  public function store()
+  public function search(Request $request)
   {
     return response()->json(['message' => 'Ok'], 200);
   }

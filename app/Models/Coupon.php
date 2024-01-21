@@ -3,22 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Address extends Model
+class Coupon extends Model
 {
-  /**
-   * Disable default timestamps.
-   *
-   * @var boolean
-   */
-  public $timestamps = false;
-
+  use SoftDeletes;
   /**
    * The table name.
    *
    * @var array<int, string>
    */
-  protected $table = "addresses";
+  protected $table = "coupons";
 
   /**
    * The attributes that are mass assignable.
@@ -26,11 +21,8 @@ class Address extends Model
    * @var array<int, string>
    */
   protected $fillable = [
-    'zip',
-    'street',
-    'number',
-    'city',
-    'state',
-    'complement',
+    'code',
+    'percentage',
+    'expiration',
   ];
 }

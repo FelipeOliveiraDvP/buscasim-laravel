@@ -3,22 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Indication extends Model
+class Query extends Model
 {
-  /**
-   * Disable default timestamps.
-   *
-   * @var boolean
-   */
-  public $timestamps = false;
-
+  use SoftDeletes;
   /**
    * The table name.
    *
    * @var array<int, string>
    */
-  protected $table = "indications";
+  protected $table = "queries";
 
   /**
    * The attributes that are mass assignable.
@@ -26,8 +21,13 @@ class Indication extends Model
    * @var array<int, string>
    */
   protected $fillable = [
-    'name',
-    'email',
-    'phone',
+    'plate',
+    'user_id',
+    'data',
   ];
+
+  public function user()
+  {
+    return $this->belongsTo(User::class);
+  }
 }

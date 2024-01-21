@@ -24,7 +24,6 @@ class User extends Authenticatable implements JWTSubject
     'email',
     'role',
     'password',
-    'is_active',
   ];
 
   /**
@@ -34,7 +33,6 @@ class User extends Authenticatable implements JWTSubject
    */
   protected $hidden = [
     'password',
-    'remember_token',
   ];
 
   /**
@@ -44,7 +42,6 @@ class User extends Authenticatable implements JWTSubject
    */
   protected $casts = [
     'password' => 'hashed',
-    'is_active' => 'boolean',
   ];
 
   /**
@@ -64,7 +61,11 @@ class User extends Authenticatable implements JWTSubject
       'email'     => $this->email,
       'name'      => $this->name,
       'role'      => $this->role,
-      'is_active' => $this->is_active,
     ];
+  }
+
+  public function queries()
+  {
+    return $this->hasMany(Query::class, 'user_id', 'id');
   }
 }

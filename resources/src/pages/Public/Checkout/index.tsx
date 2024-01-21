@@ -27,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 export default function CheckoutPage() {
-  const [showQRCode, setShowQRCode] = useState<boolean>(true);
+  const [showQRCode, setShowQRCode] = useState<boolean>(false);
   const form = useForm<CheckoutRequest>({
     initialValues: {
       document: '',

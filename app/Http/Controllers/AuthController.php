@@ -41,10 +41,18 @@ class AuthController extends Controller
     ]);
   }
 
+  public function register()
+  {
+    return response()->json(['message' => 'Ok'], 200);
+  }
+
   public function refresh()
   {
+    /** @var Illuminate\Auth\AuthManager */
+    $auth = auth('api');
+
     return response()->json([
-      'token' => Auth::guard('api')->refresh()
+      'token' => $auth->refresh()
     ]);
   }
 
