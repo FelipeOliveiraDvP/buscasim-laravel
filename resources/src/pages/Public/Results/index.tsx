@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Accordion,
-  Affix,
   Badge,
   Button,
   Center,
@@ -13,13 +13,11 @@ import {
   Table,
   Text,
   Title,
-  rem,
 } from '@mantine/core';
 import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
 
 import { QueryResult } from '@/core/services/query';
 import classes from './styles.module.css';
-import { useState } from 'react';
 
 export default function ResultsPage() {
   const [premium, setPremium] = useState<boolean>(false);
@@ -36,9 +34,9 @@ export default function ResultsPage() {
   }
 
   const previewFipe = (
-    <Center py="xl" bg="blue.7" c="white">
+    <Center p="xl" bg="blue.7" c="white">
       <Stack align="center">
-        <IconLock size={96} />
+        <IconLock size={48} />
         <Title order={3}>
           Quer saber mais informações sobre a tabela FIPE desse veículo?
         </Title>
@@ -46,6 +44,16 @@ export default function ResultsPage() {
           Adquira o relatório Premium e tenha acesso a essa e outras
           informações.
         </Text>
+        <Button
+          component={Link}
+          to="/pagamento"
+          leftSection={<IconLockOpen />}
+          variant="outline"
+          color="white"
+          size="lg"
+        >
+          Liberar Informações
+        </Button>
       </Stack>
     </Center>
   );
@@ -226,6 +234,18 @@ export default function ResultsPage() {
                         </Table.Tr>
                       </Table.Tbody>
                     </Table>
+                    {!premium && (
+                      <Button
+                        component={Link}
+                        to="/pagamento"
+                        leftSection={<IconLockOpen />}
+                        variant="outline"
+                        fullWidth
+                        size="lg"
+                      >
+                        Liberar Informações
+                      </Button>
+                    )}
                   </Grid.Col>
                 </Grid>
               </Stack>
@@ -283,17 +303,6 @@ export default function ResultsPage() {
           </Accordion>
         </Paper>
       </Stack>
-      <Affix position={{ bottom: 120, right: 20 }}>
-        <Button
-          size="lg"
-          leftSection={
-            <IconLockOpen style={{ width: rem(16), height: rem(16) }} />
-          }
-          onClick={() => navigate('/pagamento')}
-        >
-          Liberar informações
-        </Button>
-      </Affix>
     </Container>
   );
 }

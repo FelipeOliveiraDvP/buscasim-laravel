@@ -4,6 +4,7 @@ import {
   Container,
   Grid,
   Paper,
+  SimpleGrid,
   Stack,
   Table,
   Text,
@@ -26,7 +27,7 @@ const schema = yup.object().shape({
 });
 
 export default function CheckoutPage() {
-  const [showQRCode, setShowQRCode] = useState<boolean>(false);
+  const [showQRCode, setShowQRCode] = useState<boolean>(true);
   const form = useForm<CheckoutRequest>({
     initialValues: {
       document: '',
@@ -46,13 +47,11 @@ export default function CheckoutPage() {
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Container className={classes.wrapper}>
-        <Grid w="100%">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Paper withBorder p="md">
-              {showQRCode ? <CheckoutQRCode /> : <CheckoutForm form={form} />}
-            </Paper>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6 }}>
+        <SimpleGrid w="100%" cols={{ base: 1, md: showQRCode ? 1 : 2 }}>
+          <Paper withBorder p="md">
+            {showQRCode ? <CheckoutQRCode /> : <CheckoutForm form={form} />}
+          </Paper>
+          {!showQRCode && (
             <Paper withBorder p="md">
               <Stack>
                 <Title order={3}>Pagamento</Title>
@@ -93,8 +92,8 @@ export default function CheckoutPage() {
                 </Alert>
               </Stack>
             </Paper>
-          </Grid.Col>
-        </Grid>
+          )}
+        </SimpleGrid>
       </Container>
     </form>
   );

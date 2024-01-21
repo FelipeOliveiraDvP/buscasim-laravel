@@ -5,3 +5,11 @@ body,
   color: var(--mantine-color-dark-9);
   background-color: var(--mantine-color-gray-1);
 }
+
+:root {
+  --mantine-breakpoint-xs: 30em;
+  --mantine-breakpoint-sm: 48em;
+  --mantine-breakpoint-md: 64em;
+  --mantine-breakpoint-lg: 74em;
+  --mantine-breakpoint-xl: 90em;
+}

@@ -37,7 +37,7 @@ export default function ForgotPage() {
 
   return (
     <Center className={classes.wrapper}>
-      <Paper withBorder w={420} shadow="md" p={30} mt={30} radius="md">
+      <Paper withBorder w={420} p={30} mt={30} radius="xs">
         <Stack>
           <Center>
             <Image src={logo} w={200} />
@@ -63,7 +63,7 @@ export default function ForgotPage() {
               Recuperar Senha
             </Button>
           </form>
-          <AnchorLink href="/">Voltar para o login</AnchorLink>
+          <AnchorLink href="/entrar">Voltar para o login</AnchorLink>
         </Stack>
       </Paper>
     </Center>

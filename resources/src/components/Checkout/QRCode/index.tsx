@@ -6,6 +6,7 @@ import {
   Input,
   Stack,
   Text,
+  Title,
 } from '@mantine/core';
 import dayjs from 'dayjs';
 
@@ -17,12 +18,17 @@ export function CheckoutQRCode() {
 
   return (
     <Stack align="center">
+      <Title order={3}>Confirmação do pagamento</Title>
+      <Text ta="center">
+        Escaneie o QRCode ou copie o código PIX para efetuar o pagamento. As
+        informações vão ser liberadas assim que o pagamento for confirmado.
+      </Text>
       <Image src={qrcode} maw={200} />
-      <Text>
+      <Text fw={700} size="lg">
         {minutes}:{seconds}
       </Text>
-      <Flex>
-        <Input readOnly radius={0} />
+      <Flex w="100%">
+        <Input readOnly radius={0} flex={1} />
         <CopyButton value="https://mantine.dev">
           {({ copied, copy }) => (
             <Button color={copied ? 'teal' : 'blue'} radius={0} onClick={copy}>
@@ -31,9 +37,6 @@ export function CheckoutQRCode() {
           )}
         </CopyButton>
       </Flex>
-      <Text>
-        Efetue o pagamento via PIX lendo o QRCode ou copiando o código.
-      </Text>
     </Stack>
   );
 }

@@ -1,11 +1,23 @@
-import { Container, Group, Burger, Image } from '@mantine/core';
+import {
+  Container,
+  Group,
+  Burger,
+  Image,
+  Drawer,
+  Stack,
+  Divider,
+} from '@mantine/core';
 import { useLocation } from 'react-router-dom';
-import { useDisclosure } from '@mantine/hooks';
 
 import { AnchorLink } from '@/components/__commons';
 import classes from './styles.module.css';
 
 import logo from '@/assets/logo.svg';
+
+interface Props {
+  opened: boolean;
+  toggle: VoidFunction;
+}
 
 const links = [
   { link: '/perguntas-frequentes', label: 'Perguntas Frequentes' },
@@ -13,8 +25,7 @@ const links = [
   { link: '/entrar', label: 'Entrar' },
 ];
 
-export function PublicHeader() {
-  const [opened, { toggle }] = useDisclosure(false);
+export function PublicHeader({ opened, toggle }: Props) {
   const location = useLocation();
 
   const items = links.map((link) => (
@@ -38,6 +49,20 @@ export function PublicHeader() {
 
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
       </Container>
+      <Drawer
+        opened={opened}
+        onClose={toggle}
+        title={
+          <AnchorLink href="/">
+            <Image src={logo} width={100} height={48} />
+          </AnchorLink>
+        }
+        position="right"
+        size="60%"
+      >
+        <Divider />
+        <Stack>{items}</Stack>
+      </Drawer>
     </header>
   );
 }
