@@ -21,16 +21,21 @@ class Order extends Model
    * @var array<int, string>
    */
   protected $fillable = [
-    'query_id',
-    'coupon_id',
-    'document',
     'total',
     'status',
+    'query_id',
+    'user_id',
+    'coupon_id',
   ];
 
-  public function data()
+  public function result()
   {
-    return $this->belongsTo(Query::class);
+    return $this->hasOne(Query::class);
+  }
+
+  public function user()
+  {
+    return $this->hasOne(User::class);
   }
 
   public function coupon()

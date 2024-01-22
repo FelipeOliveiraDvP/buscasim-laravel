@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\QueriesController;
 use App\Http\Controllers\UsersController;
@@ -19,11 +18,7 @@ use App\Http\Controllers\UsersController;
 */
 
 Route::prefix('auth')->group(function () {
-  // TODO: Se o usuário não tiver senha, fazer o fluxo de nova senha
   Route::post('login', [AuthController::class, 'login']);
-
-  // TODO:
-  Route::post('register', [AuthController::class, 'register']);
   Route::post('refresh', [AuthController::class, 'refresh']);
   Route::post('forgot', [AuthController::class, 'forgot']);
   Route::post('reset', [AuthController::class, 'reset']);
@@ -32,34 +27,36 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('queries')->group(function () {
   Route::post('/search', [QueriesController::class, 'search']);
+  Route::get('/results/{code}', [QueriesController::class, 'freeResults']);
 });
 
 Route::prefix('orders')->group(function () {
+  Route::post('payment', [OrdersController::class, 'payment']);
   Route::post('callback', [OrdersController::class, 'callback']);
 });
 
 Route::middleware('auth:api')->group(function () {
-  Route::prefix('queries')->group(function () {
-    Route::get('/', [QueriesController::class, 'index']);
-    Route::post('/', [QueriesController::class, 'store']);
-    Route::put('/{id}', [QueriesController::class, 'update']);
-    Route::delete('/{id}', [QueriesController::class, 'destroy']);
-  });
+  // Route::prefix('queries')->group(function () {
+  //   Route::get('/', [QueriesController::class, 'index']);
+  //   Route::post('/', [QueriesController::class, 'store']);
+  //   Route::put('/{id}', [QueriesController::class, 'update']);
+  //   Route::delete('/{id}', [QueriesController::class, 'destroy']);
+  // });
 
-  Route::prefix('orders')->group(function () {
-    Route::post('payment', [OrdersController::class, 'payment']);
-    Route::get('/', [OrdersController::class, 'index']);
-    Route::post('/', [OrdersController::class, 'store']);
-    Route::put('/{id}', [OrdersController::class, 'update']);
-    Route::delete('/{id}', [OrdersController::class, 'destroy']);
-  });
+  // Route::prefix('orders')->group(function () {
+  //   Route::post('payment', [OrdersController::class, 'payment']);
+  //   Route::get('/', [OrdersController::class, 'index']);
+  //   Route::post('/', [OrdersController::class, 'store']);
+  //   Route::put('/{id}', [OrdersController::class, 'update']);
+  //   Route::delete('/{id}', [OrdersController::class, 'destroy']);
+  // });
 
-  Route::prefix('coupons')->group(function () {
-    Route::get('/', [CouponsController::class, 'index']);
-    Route::post('/', [CouponsController::class, 'store']);
-    Route::put('/{id}', [CouponsController::class, 'update']);
-    Route::delete('/{id}', [CouponsController::class, 'destroy']);
-  });
+  // Route::prefix('coupons')->group(function () {
+  //   Route::get('/', [CouponsController::class, 'index']);
+  //   Route::post('/', [CouponsController::class, 'store']);
+  //   Route::put('/{id}', [CouponsController::class, 'update']);
+  //   Route::delete('/{id}', [CouponsController::class, 'destroy']);
+  // });
 
   Route::prefix('users')->group(function () {
     Route::get('/', [UsersController::class, 'index']);

@@ -26,8 +26,8 @@ export function Router() {
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="resultados" element={<ResultsPage />} />
-          <Route path="pagamento" element={<CheckoutPage />} />
+          <Route path="resultados/:code" element={<ResultsPage />} />
+          <Route path="pagamento/:code" element={<CheckoutPage />} />
           <Route path="perguntas-frequentes" element={<FaqPage />} />
           <Route path="contato" element={<ContactPage />} />
           <Route path="politica-de-privacidade" element={<PrivacyPage />} />

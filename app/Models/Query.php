@@ -22,12 +22,7 @@ class Query extends Model
    */
   protected $fillable = [
     'plate',
-    'user_id',
+    'code',
     'data',
   ];
-
-  public function user()
-  {
-    return $this->belongsTo(User::class);
-  }
 }

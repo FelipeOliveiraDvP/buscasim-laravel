@@ -1,5 +1,11 @@
-export interface QueryRequest {
+export interface QuerySearchRequest {
   plate: string;
+}
+
+export interface QuerySearchResponse {
+  plate: string;
+  code: string;
+  data: QueryResult;
 }
 
 export interface QueryResult {
@@ -64,22 +70,7 @@ export interface QueryResult {
     unidade_local_srf: string;
   };
   fipe: {
-    dados: Array<{
-      ano_modelo: string;
-      codigo_fipe: string;
-      codigo_marca: number;
-      codigo_modelo: string;
-      combustivel: string;
-      id_valor: number;
-      mes_referencia: string;
-      referencia_fipe: number;
-      score: number;
-      sigla_combustivel: string;
-      texto_marca: string;
-      texto_modelo: string;
-      texto_valor: string;
-      tipo_modelo: number;
-    }>;
+    dados: Array<QueryFIPEItem>;
   };
   listamodelo: string[];
   logo: string;
@@ -94,4 +85,21 @@ export interface QueryResult {
   situacao: string;
   token: string;
   uf: string;
+}
+
+export interface QueryFIPEItem {
+  codigo_fipe: string;
+  codigo_marca: number;
+  codigo_modelo: string;
+  score: number;
+  texto_modelo: string;
+  ano_modelo?: string;
+  combustivel?: string;
+  id_valor?: number;
+  mes_referencia?: string;
+  referencia_fipe?: number;
+  sigla_combustivel?: string;
+  texto_marca?: string;
+  texto_valor?: string;
+  tipo_modelo?: number;
 }

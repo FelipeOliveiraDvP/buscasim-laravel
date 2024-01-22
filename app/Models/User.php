@@ -22,9 +22,10 @@ class User extends Authenticatable implements JWTSubject
   protected $fillable = [
     'name',
     'email',
-    'role',
-    'accept_terms',
     'password',
+    'role',
+    'document',
+    'accept_terms',
   ];
 
   /**
@@ -59,14 +60,14 @@ class User extends Authenticatable implements JWTSubject
   public function getJWTCustomClaims()
   {
     return [
-      'email'     => $this->email,
       'name'      => $this->name,
+      'email'     => $this->email,
       'role'      => $this->role,
     ];
   }
 
-  public function queries()
+  public function orders()
   {
-    return $this->hasMany(Query::class, 'user_id', 'id');
+    return $this->hasMany(Order::class, 'user_id', 'id');
   }
 }

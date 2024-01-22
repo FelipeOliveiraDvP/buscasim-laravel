@@ -7,33 +7,31 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { useForm, yupResolver } from '@mantine/form';
 import { IconSearch } from '@tabler/icons-react';
 import * as yup from 'yup';
 
-import { QueryRequest, useSearch } from '@/core/services/query';
+import { QuerySearchRequest, useSearch } from '@/core/services/queries';
 import { getFormErrors } from '@/core/utils';
 
 import heroBg from '@/assets/hero.jpeg';
 import classes from './styles.module.css';
-import { AxiosError } from 'axios';
 
 const schema = yup.object().shape({
   plate: yup.string().required('Informe uma placa para consultar'),
 });
 
 export function Hero() {
-  const navigate = useNavigate();
   const searchMutation = useSearch();
-  const form = useForm<QueryRequest>({
+  const form = useForm<QuerySearchRequest>({
     validate: yupResolver(schema),
     initialValues: {
       plate: '',
     },
   });
 
-  async function handleSearch(values: QueryRequest) {
+  async function handleSearch(values: QuerySearchRequest) {
     try {
       await searchMutation.mutateAsync(values);
     } catch (error) {

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import {
   Button,
   Checkbox,
@@ -15,9 +15,9 @@ import { useForm, yupResolver } from '@mantine/form';
 import { IconLockOpen } from '@tabler/icons-react';
 import * as yup from 'yup';
 
-import { AnchorLink } from '../__commons';
 import { RegisterRequest, useRegister } from '@/core/services/auth';
 import { getFormErrors } from '@/core/utils';
+import { AnchorLink } from '@/components/__commons';
 
 const schema = yup.object().shape({
   name: yup.string().required('Campo Obrigatório'),
@@ -29,7 +29,7 @@ const schema = yup.object().shape({
 });
 
 export function RegisterModal({ ...props }: ModalProps) {
-  const { plate } = useParams();
+  const { state } = useLocation();
   const registerMutation = useRegister();
 
   const form = useForm<RegisterRequest>({
@@ -38,7 +38,7 @@ export function RegisterModal({ ...props }: ModalProps) {
       name: '',
       email: '',
       accept_terms: false,
-      plate,
+      plate: '',
     },
   });
 
@@ -59,12 +59,14 @@ export function RegisterModal({ ...props }: ModalProps) {
   }
 
   useEffect(() => {
-    if (plate) {
+    if (state.results) {
+      const { extra } = state.results;
+
       form.setValues({
-        plate: plate,
+        plate: extra.placa_modelo_antigo,
       });
     }
-  }, [plate]);
+  }, [state.results]);
 
   return (
     <Modal

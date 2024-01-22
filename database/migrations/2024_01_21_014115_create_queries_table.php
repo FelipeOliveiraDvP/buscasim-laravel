@@ -14,8 +14,8 @@ return new class extends Migration
     Schema::create('queries', function (Blueprint $table) {
       $table->id();
       $table->string('plate');
-      $table->foreignId('user_id');
-      $table->json('data');
+      $table->string('code')->unique();
+      $table->json('data')->nullable();
       $table->timestamps();
       $table->softDeletes();
     });

@@ -15,6 +15,9 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+  /**
+   * Authenticate the user and returns a JWT access token.
+   */
   public function login(Request $request)
   {
     $validator = Validator::make($request->all(), [
@@ -41,11 +44,9 @@ class AuthController extends Controller
     ]);
   }
 
-  public function register()
-  {
-    return response()->json(['message' => 'Ok'], 200);
-  }
-
+  /**
+   * Refresh the user JWT token.
+   */
   public function refresh()
   {
     /** @var Illuminate\Auth\AuthManager */
@@ -56,6 +57,9 @@ class AuthController extends Controller
     ]);
   }
 
+  /**
+   * Revoke the user's current JWT token.
+   */
   public function logout()
   {
     Auth::guard('api')->logout();
@@ -65,6 +69,9 @@ class AuthController extends Controller
     ]);
   }
 
+  /**
+   * Request a link to reset the user password.
+   */
   public function forgot(Request $request)
   {
     $validator = Validator::make($request->all(), [
@@ -91,6 +98,9 @@ class AuthController extends Controller
     ]);
   }
 
+  /**
+   * Verify the token for reset user password.
+   */
   public function verify(string $token)
   {
     $token_exists = ResetTokens::where('token', '=', $token)->first();
@@ -114,6 +124,9 @@ class AuthController extends Controller
     ]);
   }
 
+  /**
+   * Confirm and reset the user password.
+   */
   public function reset(Request $request)
   {
     $validator = Validator::make($request->all(), [
@@ -146,6 +159,9 @@ class AuthController extends Controller
     ]);
   }
 
+  /**
+   * Get the current user info.
+   */
   public function me()
   {
     return Auth::guard('api')->user();

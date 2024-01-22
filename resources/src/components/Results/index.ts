@@ -1,4 +1,4 @@
-import { QueryResult } from '@/core/services/query';
+import { QueryResult } from '@/core/services/queries';
 
 export interface ResultInfoProps {
   data: QueryResult;
