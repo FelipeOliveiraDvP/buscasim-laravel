@@ -16,7 +16,7 @@ const ResetPage = lazy(() => import('@/pages/Public/Reset'));
 const OrdersPage = lazy(() => import('@/pages/Private/Orders'));
 const CouponsPage = lazy(() => import('@/pages/Private/Coupons'));
 const SettingsPage = lazy(() => import('@/pages/Private/Settings'));
-// const UsersPage = lazy(() => import('@/pages/Private/Users'));
+const UsersPage = lazy(() => import('@/pages/Private/Users'));
 
 const NotFoundPage = lazy(() => import('@/pages/Error/NotFound'));
 
@@ -40,6 +40,7 @@ export function Router() {
           <Route index element={<OrdersPage />} />
           <Route path="cupons" element={<CouponsPage />} />
           <Route path="configuracoes" element={<SettingsPage />} />
+          <Route path="usuarios" element={<UsersPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

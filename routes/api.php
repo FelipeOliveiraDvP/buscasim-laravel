@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\QueriesController;
 use App\Http\Controllers\UsersController;
@@ -63,6 +64,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/', [UsersController::class, 'store']);
     Route::put('/{id}', [UsersController::class, 'update']);
     Route::delete('/{id}', [UsersController::class, 'destroy']);
+  });
+
+  Route::prefix('options')->group(function () {
+    Route::get('/', [OptionsController::class, 'index']);
+    Route::post('/{key}', [OptionsController::class, 'set']);
   });
 
   Route::prefix('auth')->group(function () {

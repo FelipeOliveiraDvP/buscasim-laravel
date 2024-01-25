@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
+  /**
+   * List all the users.
+   */
   public function index(Request $request)
   {
     $query = User::query();
@@ -35,6 +38,9 @@ class UsersController extends Controller
     return response()->json($query->paginate(30), 200);
   }
 
+  /**
+   * Create a new user.
+   */
   public function store(Request $request)
   {
     $validator = Validator::make($request->all(), [
@@ -71,6 +77,9 @@ class UsersController extends Controller
     ], 201);
   }
 
+  /**
+   * Update a user.
+   */
   public function update(Request $request, string $id)
   {
     $user = User::where('id', '=', $id)->first();
@@ -82,9 +91,7 @@ class UsersController extends Controller
     }
 
     $validator = Validator::make($request->all(), [
-      'name'      => 'string',
-      'email'     => 'email|unique:users,email',
-      'is_active' => 'boolean',
+      'name' => 'string',
     ]);
 
     if ($validator->fails()) {
@@ -93,21 +100,15 @@ class UsersController extends Controller
 
     if ($request->has('name')) {
       $user->name = $request->name;
+      $user->save();
     }
-
-    if ($request->has('is_active')) {
-      $user->is_active = $request->is_active;
-    }
-
-    if ($request->has('email')) {
-      $user->email = $request->email;
-    }
-
-    $user->update();
 
     return response()->json(['message' => 'Usuário atualizado com sucesso'], 200);
   }
 
+  /**
+   * Remove a user.
+   */
   public function destroy(string $id)
   {
     $user = User::where('id', '=', $id)->first();

@@ -6,6 +6,9 @@ import {
   IconLayoutKanban,
   IconGavel,
   IconUsers,
+  IconSettings,
+  IconTicket,
+  IconNote,
 } from '@tabler/icons-react';
 import { Logo } from '../Logo';
 import { MenuItem } from '../Item';
@@ -13,24 +16,10 @@ import { UserInfo } from '../UserInfo';
 import classes from './styles.module.css';
 
 const menuItems = [
-  { label: 'Dashboard', link: '/app', icon: IconGauge },
-  {
-    label: 'Clientes',
-    link: '/app/customers',
-    icon: IconUserDollar,
-  },
-  {
-    label: 'Agenda',
-    link: '/app/scheduler',
-    icon: IconCalendarMonth,
-  },
-  { label: 'Tarefas', link: '/app/tasks', icon: IconLayoutKanban },
-  { label: 'Processos', link: '/app/processes', icon: IconGavel },
-  {
-    label: 'Usuários',
-    link: '/app/users',
-    icon: IconUsers,
-  },
+  { label: 'Pedidos', link: '/app', icon: IconNote },
+  { label: 'Cupons', link: '/app/cupons', icon: IconTicket },
+  { label: 'Configurações', link: '/app/configuracoes', icon: IconSettings },
+  { label: 'Usuários', link: '/app/usuarios', icon: IconUsers },
 ];
 
 export function Menu() {

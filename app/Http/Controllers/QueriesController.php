@@ -29,15 +29,15 @@ class QueriesController extends Controller
     }
 
     // Fetch the plate from API.
-    $url = env('API_PLACAS_URL') . "consulta/" . $request->plate . "/" . env('API_PLACAS_FREE_TOKEN');
-    $response = Http::get($url);
+    $url = getOption('API_PLACAS_URL') . "consulta/" . $request->plate . "/" . getOption('API_PLACAS_TOKEN_FREE');
+    $response = httpGet($url);
 
-    if ($response->status() == 406 || $response->status() == 402) {
-      return response()->json($response->json(), 400);
+    if (isset($response['error'])) {
+      return response()->json(['message' => $response['error']], 400);
     }
 
-    if ($response->json()['MARCA'] == null) {
-      return response()->json(['message' => $response->json()['mensagemRetorno']], 400);
+    if ($response['MARCA'] == null) {
+      return response()->json(['message' => $response['mensagemRetorno']], 400);
     }
 
     // Create a draft query
@@ -46,7 +46,7 @@ class QueriesController extends Controller
     $query_results = Query::create([
       'plate' => $request->plate,
       'code'  => $token,
-      'data'  => json_encode($response->json()),
+      'data'  => json_encode($response),
     ]);
 
     return response()->json($query_results, 200);
