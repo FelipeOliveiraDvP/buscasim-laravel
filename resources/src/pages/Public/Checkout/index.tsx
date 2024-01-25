@@ -18,7 +18,7 @@ import { useForm, yupResolver } from '@mantine/form';
 import * as yup from 'yup';
 
 import { CheckoutForm, CheckoutQRCode } from '@/components/Checkout';
-import { OrderPaymentRequest, usePayment } from '@/core/services/orders';
+import { OrderRequest, usePayment } from '@/core/services/orders';
 import { getFormErrors } from '@/core/utils';
 import classes from './styles.module.css';
 import { PageLoader } from '@/components/__commons';
@@ -38,7 +38,7 @@ export default function CheckoutPage() {
 
   const navigate = useNavigate();
   const paymentMutation = usePayment();
-  const form = useForm<OrderPaymentRequest>({
+  const form = useForm<OrderRequest>({
     initialValues: {
       code: '',
       document: '',
@@ -50,7 +50,7 @@ export default function CheckoutPage() {
     validate: yupResolver(schema),
   });
 
-  async function handleSubmit(values: OrderPaymentRequest) {
+  async function handleSubmit(values: OrderRequest) {
     try {
       await paymentMutation.mutateAsync(values);
       setShowQRCode(true);

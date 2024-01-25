@@ -12,7 +12,7 @@ import { useForm, yupResolver } from '@mantine/form';
 import { IconSearch } from '@tabler/icons-react';
 import * as yup from 'yup';
 
-import { QuerySearchRequest, useSearch } from '@/core/services/queries';
+import { QueryRequest, useSearch } from '@/core/services/queries';
 import { getFormErrors } from '@/core/utils';
 
 import heroBg from '@/assets/hero.jpeg';
@@ -24,14 +24,14 @@ const schema = yup.object().shape({
 
 export function Hero() {
   const searchMutation = useSearch();
-  const form = useForm<QuerySearchRequest>({
+  const form = useForm<QueryRequest>({
     validate: yupResolver(schema),
     initialValues: {
       plate: '',
     },
   });
 
-  async function handleSearch(values: QuerySearchRequest) {
+  async function handleSearch(values: QueryRequest) {
     try {
       await searchMutation.mutateAsync(values);
     } catch (error) {

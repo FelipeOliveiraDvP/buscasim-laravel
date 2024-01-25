@@ -1,10 +1,10 @@
 import { UseFormReturnType } from '@mantine/form';
 import { Checkbox, Stack, Text, TextInput, Title } from '@mantine/core';
 import { AnchorLink, MaskedInput } from '@/components/__commons';
-import { OrderPaymentRequest } from '@/core/services/orders';
+import { OrderRequest } from '@/core/services/orders';
 
 interface Props {
-  form: UseFormReturnType<OrderPaymentRequest>;
+  form: UseFormReturnType<OrderRequest>;
 }
 
 export function CheckoutForm({ form }: Props) {

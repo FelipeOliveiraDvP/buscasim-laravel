@@ -1,11 +1,11 @@
-export interface QuerySearchRequest {
-  plate: string;
-}
-
-export interface QuerySearchResponse {
+export interface Query {
   plate: string;
   code: string;
   data: QueryResult;
+}
+
+export interface QueryRequest {
+  plate: string;
 }
 
 export interface QueryResult {

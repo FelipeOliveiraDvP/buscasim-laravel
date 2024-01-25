@@ -1,8 +1,8 @@
 import api from '@/core/config/axios';
-import { QuerySearchRequest, QuerySearchResponse, QueryResult } from '.';
+import { QueryRequest, Query, QueryResult } from '.';
 
 export default {
-  async search(data: QuerySearchRequest): Promise<QuerySearchResponse> {
+  async search(data: QueryRequest): Promise<Query> {
     return api.post(`/api/queries/search`, data);
   },
 
