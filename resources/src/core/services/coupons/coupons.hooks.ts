@@ -1,14 +1,15 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQuery } from 'react-query';
-import { UserListQuery, UserListResponse } from '.';
+
+import { CouponListQuery, CouponListResponse } from '.';
 import { queryClient } from '@/core/config/react-query';
 import { getErrorMessage, showError, showSuccess } from '@/core/utils';
-import usersService from './users.service';
+import couponsService from './coupons.service';
 
-export function useUsers(query?: UserListQuery) {
-  return useQuery<UserListResponse, AxiosError>(
-    ['users', { ...query }],
-    () => usersService.list({ ...query }),
+export function useCoupons(query?: CouponListQuery) {
+  return useQuery<CouponListResponse, AxiosError>(
+    ['coupons', { ...query }],
+    () => couponsService.list({ ...query }),
     {
       onError(error) {
         showError(getErrorMessage(error as AxiosError));
@@ -17,10 +18,10 @@ export function useUsers(query?: UserListQuery) {
   );
 }
 
-export function useCreateUser() {
-  return useMutation(usersService.create, {
+export function useCreateCoupon() {
+  return useMutation(couponsService.create, {
     onSuccess(data) {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['coupons']);
       showSuccess(data.message);
     },
     onError(error) {
@@ -29,10 +30,10 @@ export function useCreateUser() {
   });
 }
 
-export function useUpdateUser() {
-  return useMutation(usersService.update, {
+export function useUpdateCoupon() {
+  return useMutation(couponsService.update, {
     onSuccess(data) {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['coupons']);
       showSuccess(data.message);
     },
     onError(error) {
@@ -41,10 +42,10 @@ export function useUpdateUser() {
   });
 }
 
-export function useRemoveUser() {
-  return useMutation(usersService.remove, {
+export function useRemoveCoupon() {
+  return useMutation(couponsService.remove, {
     onSuccess(data) {
-      queryClient.invalidateQueries(['users']);
+      queryClient.invalidateQueries(['coupons']);
       showSuccess(data.message);
     },
     onError(error) {
