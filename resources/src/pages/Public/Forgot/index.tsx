@@ -37,7 +37,7 @@ export default function ForgotPage() {
 
   return (
     <Center className={classes.wrapper}>
-      <Paper withBorder w={420} p={30} mt={30} radius="xs">
+      <Paper withBorder p={30} mt={30} radius="xs">
         <Stack>
           <Center>
             <Image src={logo} w={200} />
