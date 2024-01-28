@@ -1,8 +1,11 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import {
   Alert,
   Button,
   Container,
-  Grid,
+  NumberFormatter,
   Paper,
   SimpleGrid,
   Stack,
@@ -11,69 +14,62 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, yupResolver } from '@mantine/form';
 import * as yup from 'yup';
 
-import { CheckoutForm, CheckoutQRCode } from '@/components/Checkout';
-import { OrderRequest, usePayment } from '@/core/services/orders';
-import { getFormErrors } from '@/core/utils';
-import classes from './styles.module.css';
 import { PageLoader } from '@/components/__commons';
-import { useResults } from '@/core/services/search';
+import { CheckoutForm, CheckoutQRCode } from '@/components/Checkout';
+import { PaymentRequest, usePayment } from '@/core/services/orders';
+import { useCheckoutContext } from '@/core/providers';
+import { getFormErrors } from '@/core/utils';
+
+import classes from './styles.module.css';
 
 const schema = yup.object().shape({
-  name: yup.string().required('Campo Obrigatório'),
-  email: yup.string().required('Campo Obrigatório').email('E-mail inválido'),
   document: yup.string().required('Campo Obrigatório'),
-  accept_terms: yup.boolean().oneOf([true], 'Aceite os termos par continuar'),
+  accept_terms: yup.boolean().oneOf([true], 'Aceite os termos para continuar'),
 });
 
 export default function CheckoutPage() {
-  const [showQRCode, setShowQRCode] = useState<boolean>(false);
-  const { code } = useParams();
-  const { data } = useResults(code);
-
+  const { payment, order } = useCheckoutContext();
   const navigate = useNavigate();
-  const paymentMutation = usePayment();
-  const form = useForm<OrderRequest>({
+  const mutation = usePayment();
+
+  const form = useForm<PaymentRequest>({
     initialValues: {
-      code: '',
       document: '',
-      name: '',
-      email: '',
-      coupon: '',
       accept_terms: false,
+      coupon_id: null,
+      order_id: null,
     },
     validate: yupResolver(schema),
   });
 
-  async function handleSubmit(values: OrderRequest) {
+  async function handleSubmit(values: PaymentRequest) {
     try {
-      await paymentMutation.mutateAsync(values);
-      setShowQRCode(true);
+      await mutation.mutateAsync({
+        ...values,
+        order_id: order ? order.order.id : null,
+      });
     } catch (error) {
       form.setErrors({ ...getFormErrors(error as AxiosError) });
     }
   }
 
   useEffect(() => {
-    if (code) form.setValues({ code: code });
-    else navigate('/');
-  }, [code]);
+    if (!order) navigate('/');
+  }, [order]);
 
-  if (!data) return <PageLoader />;
+  if (!order) return <PageLoader />;
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Container className={classes.wrapper}>
-        <SimpleGrid w="100%" cols={{ base: 1, md: showQRCode ? 1 : 2 }}>
+        <SimpleGrid w="100%" cols={{ base: 1, md: payment ? 1 : 2 }}>
           <Paper withBorder p="md">
-            {showQRCode ? <CheckoutQRCode /> : <CheckoutForm form={form} />}
+            {payment ? <CheckoutQRCode /> : <CheckoutForm form={form} />}
           </Paper>
-          {!showQRCode && (
+          {!payment && order && (
             <Paper withBorder p="md">
               <Stack>
                 <Title order={3}>Pagamento</Title>
@@ -81,33 +77,61 @@ export default function CheckoutPage() {
                   <Table.Tbody>
                     <Table.Tr>
                       <Table.Td>Placa</Table.Td>
-                      <Table.Th>{data?.placa}</Table.Th>
+                      <Table.Th>{order.order.plate}</Table.Th>
                     </Table.Tr>
                     <Table.Tr>
                       <Table.Td>Subtotal</Table.Td>
-                      <Table.Th>R$ 30,00</Table.Th>
+                      <Table.Th>
+                        <NumberFormatter
+                          prefix="R$ "
+                          value={order.order.total}
+                          decimalScale={2}
+                          thousandSeparator="."
+                          decimalSeparator=","
+                          fixedDecimalScale
+                        />
+                      </Table.Th>
                     </Table.Tr>
                     <Table.Tr>
                       <Table.Td>
+                        {/* TODO: Implement search coupon form */}
                         <TextInput
-                          {...form.getInputProps('coupon')}
+                          {...form.getInputProps('coupon_id')}
                           placeholder="Cupom"
                           description="Possui um cupom?"
                         />
                       </Table.Td>
-                      <Table.Th>R$ 0,00</Table.Th>
+                      <Table.Th>
+                        <NumberFormatter
+                          prefix="R$ "
+                          value={0}
+                          decimalScale={2}
+                          thousandSeparator="."
+                          decimalSeparator=","
+                          fixedDecimalScale
+                        />
+                      </Table.Th>
                     </Table.Tr>
                     <Table.Tr>
                       <Table.Td>
                         <Text size="lg">Total</Text>
                       </Table.Td>
                       <Table.Th>
-                        <Text size="lg">R$ 30,00</Text>
+                        <Text size="lg">
+                          <NumberFormatter
+                            prefix="R$ "
+                            value={order.order.total}
+                            decimalScale={2}
+                            thousandSeparator="."
+                            decimalSeparator=","
+                            fixedDecimalScale
+                          />
+                        </Text>
                       </Table.Th>
                     </Table.Tr>
                   </Table.Tbody>
                 </Table>
-                <Button type="submit" loading={paymentMutation.isLoading}>
+                <Button type="submit" loading={mutation.isLoading}>
                   Pagar
                 </Button>
                 <Alert variant="light" color="yellow">

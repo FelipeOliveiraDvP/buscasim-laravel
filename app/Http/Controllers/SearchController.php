@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
-class QueriesController extends Controller
+class SearchController extends Controller
 {
   /**
    * Search a vehicle plate and returns the free information.
@@ -15,7 +15,7 @@ class QueriesController extends Controller
   {
     // Validate the request.
     $validator = Validator::make($request->all(), [
-      'plate' => 'required|formato_placa_de_veiculo	',
+      'plate' => 'required|formato_placa_de_veiculo',
     ], [
       'plate' => [
         'formato_placa_de_veiculo' => 'Informe uma placa válida, somente com números e letras'

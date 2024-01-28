@@ -23,19 +23,34 @@ class Order extends Model
   protected $fillable = [
     'total',
     'status',
-    'query_id',
+    'plate',
+    'transaction_id',
+    'data',
     'user_id',
     'coupon_id',
   ];
 
-  public function result()
-  {
-    return $this->hasOne(Query::class);
-  }
+  /**
+   * The attributes that should be hidden for serialization.
+   *
+   * @var array<int, string>
+   */
+  protected $hidden = [
+    'transaction_id',
+  ];
+
+  /**
+   * The attributes that should be cast.
+   *
+   * @var array<string, string>
+   */
+  protected $casts = [
+    'total' => 'double',
+  ];
 
   public function user()
   {
-    return $this->hasOne(User::class);
+    return $this->belongsTo(User::class);
   }
 
   public function coupon()

@@ -15,7 +15,9 @@ return new class extends Migration
       $table->id();
       $table->decimal('total', 7, 2, true)->default(0);
       $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
-      $table->foreignId('query_id');
+      $table->string('plate');
+      $table->json('data')->nullable();
+      $table->json('transaction_id')->nullable();
       $table->foreignId('user_id');
       $table->foreignId('coupon_id')->nullable();
       $table->timestamps();

@@ -12,7 +12,6 @@ return new class extends Migration
   public function up(): void
   {
     Schema::table('orders', function (Blueprint $table) {
-      $table->foreign('query_id', 'order_query')->references('id')->on('queries')->onDelete('cascade');
       $table->foreign('user_id', 'order_user')->references('id')->on('users')->onDelete('cascade');
       $table->foreign('coupon_id', 'order_coupon')->references('id')->on('coupons')->onDelete('cascade');
     });
@@ -24,7 +23,6 @@ return new class extends Migration
   public function down(): void
   {
     Schema::table('orders', function (Blueprint $table) {
-      $table->dropForeign('order_query');
       $table->dropForeign('order_user');
       $table->dropForeign('order_coupon');
     });

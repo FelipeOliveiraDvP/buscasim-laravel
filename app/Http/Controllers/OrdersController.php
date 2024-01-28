@@ -4,96 +4,105 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\Order;
-use App\Models\Query;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class OrdersController extends Controller
 {
   /**
-   * Create a payment request for the premium query.
+   * Create a new order.
    */
-  public function payment(Request $request)
+  public function checkout(Request $request)
   {
     // Validate the request.
     $validator = Validator::make($request->all(), [
-      'code'          => 'required|exists:queries,code',
-      'name'          => 'required|string',
-      'email'         => 'required|email',
-      'document'      => 'required|cpf',
-      'accept_terms'  => 'required|boolean',
-      // 'coupon'        => 'string|exists:coupons,code',
+      'name'  => 'required|string',
+      'email' => 'required|email',
+      'plate' => 'required|formato_placa_de_veiculo',
     ]);
 
     if ($validator->fails()) {
       return response()->json($validator->errors(), 400);
     }
 
+    // The customer for checkout.
+    $customer = null;
+
     // Retrieve an existing user or create a new one.
     $user_exists = User::where('email', '=', $request->email)->first();
 
-    if ($user_exists) {
-      $user = $user_exists;
+    if (auth('api')->user() != null) {
+      $customer = auth('api')->user();
+    } elseif ($user_exists != null) {
+      $customer = $user_exists;
     } else {
-      $user = User::create([
-        'name'          => $request->name,
-        'email'         => $request->email,
-        'document'      => $request->document,
-        'accept_terms'  => $request->accept_terms,
+      $customer = User::create([
+        'name'      => $request->name,
+        'email'     => $request->email,
+        'password'  => Hash::make('asdf1234')
       ]);
     }
 
-    // Retrieve the free query results.
-    $query_result = Query::where('code', '=', $request->code)->first();
-
-    // Retrieve coupon if exists.
-    $discount = 0;
-    $coupon = null;
-    if ($request->coupon) {
-      $coupon = Coupon::where('code', '=', $request->coupon);
-      $discount = $coupon->percentage / 100;
-    }
-
-    // Calc the total price.
-    if ($discount && env('QUERY_PRICE', 0) > 0) {
-      $total = env('QUERY_PRICE', 0) * (1 - $discount);
-    } else {
-      $total = 0;
-    }
-
-    // Create a new order.
+    // Create a draft order.
     $order = Order::create([
-      'total'     => $total,
-      'query_id'  => $query_result->id,
-      'user_id'   => $user->id,
-      'coupon_id' => $coupon ? $coupon->id : null,
+      'total'   => getOption('BASE_PRICE'),
+      'plate'   => $request->plate,
+      'user_id' => $customer->id,
     ]);
 
-    // TODO: Call the payment gateway and returns the QRCode.
-    // Mercado Pago Example:
-    //
-    // $client = new PaymentClient();
+    return response()->json([
+      'customer'  => $customer,
+      'order'     => $order
+    ], 200);
+  }
 
-    // $body = [
-    //     'transaction_amount' => 100,
-    //     'token' => 'token',
-    //     'description' => 'description',
-    //     'installments' => 1,
-    //     'payment_method_id' => 'visa',
-    //     'notification_url' => 'http://test.com',
-    //     'payer' => array(
-    //         'email' => 'test@test.com',
-    //         'identification' => array(
-    //             'type' => 'CPF',
-    //             'number' => '19119119100'
-    //         )
-    //     )
-    // ];
+  /**
+   * Create a payment request.
+   */
+  public function payment(Request $request)
+  {
+    // Validate the request.
+    $validator = Validator::make($request->all(), [
+      'order_id'      => 'required|exists:orders,id',
+      'document'      => 'required|cpf',
+      'coupon_id'     => 'nullable|exists:coupons,id',
+      'accept_terms'  => 'required|boolean',
+    ]);
 
-    // $client->create(body);
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 400);
+    }
 
-    return response()->json(['message' => 'Seu pedido foi realizado com sucesso.'], 200);
+    // Get the order.
+    $order = Order::where('id', '=', $request->order_id)->with('user:id,name,email')->first();
+    $total = $order->total;
+
+    // Get the coupon and calc the discount.
+    if ($request->coupon_id) {
+      $coupon = Coupon::where('id', '=', $request->coupon_id)->first();
+
+      if ($coupon->type == 'fixed') {
+        $total = $order->total - $coupon->amount;
+      } else {
+        $discount = $coupon->amount / 100;
+        $total = $order->total * (1 - $discount);
+      }
+
+      $order->coupon_id = $request->coupon_id;
+      $order->total = $total;
+      $order->save();
+    }
+
+    // TODO: Create a Mercado Pago Payment.
+
+    return response()->json([
+      'customer'  => $order->user,
+      'qrcode'    => "base64",
+      'code'      => "copy_code",
+    ], 200);
   }
 
   /**

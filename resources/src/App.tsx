@@ -4,28 +4,33 @@ import { ModalsProvider } from '@mantine/modals';
 import { DatesProvider } from '@mantine/dates';
 import { Notifications } from '@mantine/notifications';
 
-import { AuthProvider } from './core/providers';
+import {
+  AuthProvider,
+  CheckoutProvider,
+  ResultsProvider,
+} from './core/providers';
 import { queryClient } from './core/config/react-query';
 import { Router } from './core/routes';
 
 import 'dayjs/locale/pt-br';
-import { ResultsProvider } from './core/providers/results';
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ResultsProvider>
-          <MantineProvider>
-            <DatesProvider
-              settings={{ locale: 'pt-br', timezone: 'America/Sao_Paulo' }}
-            >
-              <ModalsProvider>
-                <Notifications position="top-right" />
-                <Router />
-              </ModalsProvider>
-            </DatesProvider>
-          </MantineProvider>
+          <CheckoutProvider>
+            <MantineProvider>
+              <DatesProvider
+                settings={{ locale: 'pt-br', timezone: 'America/Sao_Paulo' }}
+              >
+                <ModalsProvider>
+                  <Notifications position="top-right" />
+                  <Router />
+                </ModalsProvider>
+              </DatesProvider>
+            </MantineProvider>
+          </CheckoutProvider>
         </ResultsProvider>
       </AuthProvider>
     </QueryClientProvider>

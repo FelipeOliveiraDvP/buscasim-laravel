@@ -8,11 +8,13 @@ import {
   Grid,
   Image,
   Paper,
+  Portal,
   Stack,
   Table,
   Text,
   Title,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
 
 import { PageLoader } from '@/components/__commons';
@@ -25,8 +27,10 @@ import {
 import { useResults } from '@/core/providers/results';
 
 import classes from './styles.module.css';
+import { CheckoutModal } from '@/components/Checkout';
 
 export default function ResultsPage() {
+  const [opened, { open, close }] = useDisclosure(false);
   const { results, premium } = useResults();
   const navigate = useNavigate();
 
@@ -46,6 +50,7 @@ export default function ResultsPage() {
           variant="outline"
           color="white"
           size="lg"
+          onClick={open}
         >
           Liberar Informações
         </Button>
@@ -102,6 +107,7 @@ export default function ResultsPage() {
                         variant="outline"
                         fullWidth
                         size="lg"
+                        onClick={open}
                       >
                         Liberar Informações
                       </Button>
@@ -163,6 +169,9 @@ export default function ResultsPage() {
           </Accordion>
         </Paper>
       </Stack>
+      <Portal>
+        <CheckoutModal opened={opened} onClose={close} plate={results.placa} />
+      </Portal>
     </Container>
   );
 }

@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\OrdersController;
-use App\Http\Controllers\QueriesController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UsersController;
 
 /*
@@ -28,7 +28,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('search')->group(function () {
-  Route::post('/', [QueriesController::class, 'search']);
+  Route::post('/', [SearchController::class, 'search']);
 });
 
 Route::prefix('coupons')->group(function () {
@@ -37,7 +37,6 @@ Route::prefix('coupons')->group(function () {
 
 Route::prefix('orders')->group(function () {
   Route::post('checkout', [OrdersController::class, 'checkout']);
-  Route::get('/{id}',     [OrdersController::class, 'details']);
   Route::post('payment',  [OrdersController::class, 'payment']);
 });
 

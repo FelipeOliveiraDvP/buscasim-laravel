@@ -1,9 +1,19 @@
 import api from '@/core/config/axios';
-import { ApiResponse } from '@/core/types';
-import { OrderRequest, OrderListQuery, OrderListResponse } from '.';
+import {
+  CheckoutRequest,
+  CheckoutResponse,
+  OrderListQuery,
+  OrderListResponse,
+  PaymentRequest,
+  PaymentResponse,
+} from '.';
 
 export default {
-  async payment(data: OrderRequest): Promise<ApiResponse> {
+  async checkout(data: CheckoutRequest): Promise<CheckoutResponse> {
+    return api.post(`/api/orders/checkout`, data);
+  },
+
+  async payment(data: PaymentRequest): Promise<PaymentResponse> {
     return api.post(`/api/orders/payment`, data);
   },
 

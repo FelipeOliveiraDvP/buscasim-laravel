@@ -10,8 +10,9 @@ import {
 } from '@mantine/core';
 import dayjs from 'dayjs';
 
-import qrcode from '@/assets/qrcode.png';
 import { useCountdown } from '@/core/hooks';
+
+import qrcode from '@/assets/qrcode.png';
 
 export function CheckoutQRCode() {
   const { minutes, seconds } = useCountdown(dayjs().add(5, 'minutes').toDate());
