@@ -23,3 +23,9 @@ export type CouponListQuery = BaseQuery & {
 };
 
 export type CouponListResponse = PaginatedResponse<Coupon>;
+
+export interface CouponDiscountResponse {
+  coupon_id: number | null;
+  discount: number;
+  subtotal: number;
+}

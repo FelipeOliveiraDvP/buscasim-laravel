@@ -1,6 +1,11 @@
 import api from '@/core/config/axios';
 import { ApiResponse } from '@/core/types';
-import { CouponListQuery, CouponListResponse, CouponRequest } from '.';
+import {
+  CouponListQuery,
+  CouponListResponse,
+  CouponRequest,
+  CouponDiscountResponse,
+} from '.';
 
 export default {
   async list(query?: CouponListQuery): Promise<CouponListResponse> {
@@ -17,5 +22,9 @@ export default {
 
   async remove(data: CouponRequest): Promise<ApiResponse> {
     return api.delete(`/api/coupons/${data.id}`);
+  },
+
+  async discount(code?: string): Promise<CouponDiscountResponse> {
+    return api.get(`/api/coupons/search/${code}`);
   },
 };

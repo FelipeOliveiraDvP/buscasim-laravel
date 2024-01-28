@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 
-import { CouponListQuery, CouponListResponse } from '.';
+import { CouponDiscountResponse, CouponListQuery, CouponListResponse } from '.';
 import { queryClient } from '@/core/config/react-query';
 import { getErrorMessage, showError, showSuccess } from '@/core/utils';
 import couponsService from './coupons.service';
@@ -15,6 +15,14 @@ export function useCoupons(query?: CouponListQuery) {
         showError(getErrorMessage(error as AxiosError));
       },
     }
+  );
+}
+
+export function useDiscount(code?: string) {
+  return useQuery<CouponDiscountResponse, AxiosError>(
+    ['discount', code],
+    () => couponsService.discount(code),
+    { enabled: !!code }
   );
 }
 

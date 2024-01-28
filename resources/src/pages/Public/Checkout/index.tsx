@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import {
@@ -24,6 +24,8 @@ import { useCheckoutContext } from '@/core/providers';
 import { getFormErrors } from '@/core/utils';
 
 import classes from './styles.module.css';
+import { useDebouncedValue } from '@mantine/hooks';
+import { useDiscount } from '@/core/services/coupons';
 
 const schema = yup.object().shape({
   document: yup.string().required('Campo Obrigatório'),
@@ -31,9 +33,12 @@ const schema = yup.object().shape({
 });
 
 export default function CheckoutPage() {
+  const [coupon, setCoupon] = useState<string>();
+  const [debounced] = useDebouncedValue(coupon, 250);
   const { payment, order } = useCheckoutContext();
   const navigate = useNavigate();
   const mutation = usePayment();
+  const { data: discount } = useDiscount(debounced);
 
   const form = useForm<PaymentRequest>({
     initialValues: {
@@ -49,6 +54,7 @@ export default function CheckoutPage() {
     try {
       await mutation.mutateAsync({
         ...values,
+        coupon_id: discount?.coupon_id || null,
         order_id: order ? order.order.id : null,
       });
     } catch (error) {
@@ -94,17 +100,17 @@ export default function CheckoutPage() {
                     </Table.Tr>
                     <Table.Tr>
                       <Table.Td>
-                        {/* TODO: Implement search coupon form */}
                         <TextInput
-                          {...form.getInputProps('coupon_id')}
                           placeholder="Cupom"
                           description="Possui um cupom?"
+                          value={coupon}
+                          onChange={(e) => setCoupon(e.target.value)}
                         />
                       </Table.Td>
                       <Table.Th>
                         <NumberFormatter
-                          prefix="R$ "
-                          value={0}
+                          prefix="R$ -"
+                          value={discount ? discount.discount : 0}
                           decimalScale={2}
                           thousandSeparator="."
                           decimalSeparator=","
@@ -120,7 +126,9 @@ export default function CheckoutPage() {
                         <Text size="lg">
                           <NumberFormatter
                             prefix="R$ "
-                            value={order.order.total}
+                            value={
+                              discount ? discount.subtotal : order.order.total
+                            }
                             decimalScale={2}
                             thousandSeparator="."
                             decimalSeparator=","
