@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Accordion,
   Button,
@@ -16,19 +16,19 @@ import {
 import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
 
 import { PageLoader } from '@/components/__commons';
-import { QueryResult, useResults } from '@/core/services/queries';
+
 import {
   ResultsFreeInfo,
   ResultsOverview,
   ResultsPremiumInfo,
 } from '@/components/Results';
+import { useResults } from '@/core/providers/results';
+
 import classes from './styles.module.css';
 
 export default function ResultsPage() {
-  const [results, setResults] = useState<QueryResult>();
-  const [premium, setPremium] = useState<boolean>(false);
-  const { code } = useParams();
-  const { data } = useResults(code);
+  const { results, premium } = useResults();
+  const navigate = useNavigate();
 
   const previewFipe = (
     <Center p="xl" bg="blue.7" c="white">
@@ -42,8 +42,6 @@ export default function ResultsPage() {
           informações.
         </Text>
         <Button
-          component={Link}
-          to={`/pagamento/${code}`}
           leftSection={<IconLockOpen />}
           variant="outline"
           color="white"
@@ -56,10 +54,8 @@ export default function ResultsPage() {
   );
 
   useEffect(() => {
-    if (data) {
-      setResults(data);
-    }
-  }, [data]);
+    if (!results) navigate('/');
+  }, [results]);
 
   if (!results) return <PageLoader />;
 
@@ -102,8 +98,6 @@ export default function ResultsPage() {
                     <ResultsPremiumInfo data={results} show={premium} />
                     {!premium && (
                       <Button
-                        component={Link}
-                        to={`/pagamento/${code}`}
                         leftSection={<IconLockOpen />}
                         variant="outline"
                         fullWidth

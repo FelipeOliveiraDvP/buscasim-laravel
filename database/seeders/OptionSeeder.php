@@ -26,7 +26,7 @@ class OptionSeeder extends Seeder
         'value' => '',
       ],
       [
-        'key'   => 'PRICE',
+        'key'   => 'BASE_PRICE',
         'value' => '20.00',
       ],
     ]);

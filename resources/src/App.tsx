@@ -9,21 +9,24 @@ import { queryClient } from './core/config/react-query';
 import { Router } from './core/routes';
 
 import 'dayjs/locale/pt-br';
+import { ResultsProvider } from './core/providers/results';
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <MantineProvider>
-          <DatesProvider
-            settings={{ locale: 'pt-br', timezone: 'America/Sao_Paulo' }}
-          >
-            <ModalsProvider>
-              <Notifications position="top-right" />
-              <Router />
-            </ModalsProvider>
-          </DatesProvider>
-        </MantineProvider>
+        <ResultsProvider>
+          <MantineProvider>
+            <DatesProvider
+              settings={{ locale: 'pt-br', timezone: 'America/Sao_Paulo' }}
+            >
+              <ModalsProvider>
+                <Notifications position="top-right" />
+                <Router />
+              </ModalsProvider>
+            </DatesProvider>
+          </MantineProvider>
+        </ResultsProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

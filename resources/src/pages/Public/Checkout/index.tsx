@@ -22,7 +22,7 @@ import { OrderRequest, usePayment } from '@/core/services/orders';
 import { getFormErrors } from '@/core/utils';
 import classes from './styles.module.css';
 import { PageLoader } from '@/components/__commons';
-import { useResults } from '@/core/services/queries';
+import { useResults } from '@/core/services/search';
 
 const schema = yup.object().shape({
   name: yup.string().required('Campo Obrigatório'),

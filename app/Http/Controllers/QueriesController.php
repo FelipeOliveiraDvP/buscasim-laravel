@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Query;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class QueriesController extends Controller
 {
   /**
-   * Search a vehicle plate and create a draft query.
+   * Search a vehicle plate and returns the free information.
    */
   public function search(Request $request)
   {
-    // Validate the request
+    // Validate the request.
     $validator = Validator::make($request->all(), [
       'plate' => 'required|formato_placa_de_veiculo	',
     ], [
       'plate' => [
-        'formato_placa_de_veiculo' => 'Informe somente números e letras'
+        'formato_placa_de_veiculo' => 'Informe uma placa válida, somente com números e letras'
       ]
     ]);
 
@@ -28,41 +26,26 @@ class QueriesController extends Controller
       return response()->json($validator->errors(), 400);
     }
 
-    // Fetch the plate from API.
-    $url = getOption('API_PLACAS_URL') . "consulta/" . $request->plate . "/" . getOption('API_PLACAS_TOKEN_FREE');
-    $response = httpGet($url);
+    // Returns mock JSON data if is in development.
+    if (env('APP_ENV') == 'development') {
+      $mock = file_get_contents(base_path('resources/json/free_response.json'));
 
-    if (isset($response['error'])) {
-      return response()->json(['message' => $response['error']], 400);
+      return response()->json(json_decode($mock), 200);
     }
 
-    if ($response['MARCA'] == null) {
-      return response()->json(['message' => $response['mensagemRetorno']], 400);
+    // Make an API request to get free vehicles information.
+    if (env('APP_ENV') == 'production') {
+      $response = Http::withUrlParameters([
+        'endpoint'  => getOption('API_PLACAS_URL'),
+        'plate'     => $request->plate,
+        'token'     => getOption('API_PLACAS_TOKEN_FREE'),
+      ])->get('{+endpoint}/consulta/{plate}/{token}');
+
+      if ($response->failed()) {
+        return response()->json(json_decode($response->body()), 400);
+      }
+
+      return response()->json(json_decode($response->body()), 200);
     }
-
-    // Create a draft query
-    $token = Str::random(32);
-
-    $query_results = Query::create([
-      'plate' => $request->plate,
-      'code'  => $token,
-      'data'  => json_encode($response),
-    ]);
-
-    return response()->json($query_results, 200);
-  }
-
-  /**
-   * Get the query results from the unique code.
-   */
-  public function freeResults(string $code)
-  {
-    $query_results = Query::where('code', '=', $code)->first();
-
-    if (!$query_results) {
-      return response()->json(['message' => 'Resultado não encontrado'], 404);
-    }
-
-    return response()->json(json_decode($query_results->data), 200);
   }
 }

@@ -1,14 +1,8 @@
-export interface Query {
-  plate: string;
-  code: string;
-  data: QueryResult;
-}
-
-export interface QueryRequest {
+export interface SearchRequest {
   plate: string;
 }
 
-export interface QueryResult {
+export interface SearchResult {
   MARCA: string;
   MODELO: string;
   SUBMODELO: string;
@@ -70,7 +64,7 @@ export interface QueryResult {
     unidade_local_srf: string;
   };
   fipe: {
-    dados: Array<QueryFIPEItem>;
+    dados: Array<SearchFIPEItem>;
   };
   listamodelo: string[];
   logo: string;
@@ -87,7 +81,7 @@ export interface QueryResult {
   uf: string;
 }
 
-export interface QueryFIPEItem {
+export interface SearchFIPEItem {
   codigo_fipe: string;
   codigo_marca: number;
   codigo_modelo: string;

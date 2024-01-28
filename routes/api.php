@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CouponsController;
 use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\QueriesController;
@@ -19,60 +20,58 @@ use App\Http\Controllers\UsersController;
 */
 
 Route::prefix('auth')->group(function () {
-  Route::post('login', [AuthController::class, 'login']);
-  Route::post('refresh', [AuthController::class, 'refresh']);
+  Route::post('login',  [AuthController::class, 'login']);
+  Route::post('simple', [AuthController::class, 'simple']);
   Route::post('forgot', [AuthController::class, 'forgot']);
-  Route::post('reset', [AuthController::class, 'reset']);
-  Route::get('verify/{token}', [AuthController::class, 'verify']);
+  Route::post('reset',  [AuthController::class, 'reset']);
+  Route::get('refresh', [AuthController::class, 'refresh']);
 });
 
-Route::prefix('queries')->group(function () {
-  Route::post('/search', [QueriesController::class, 'search']);
-  Route::get('/results/{code}', [QueriesController::class, 'freeResults']);
+Route::prefix('search')->group(function () {
+  Route::post('/', [QueriesController::class, 'search']);
+});
+
+Route::prefix('coupons')->group(function () {
+  Route::get('search/{code}',   [CouponsController::class, 'search']);
 });
 
 Route::prefix('orders')->group(function () {
-  Route::post('payment', [OrdersController::class, 'payment']);
-  Route::post('callback', [OrdersController::class, 'callback']);
+  Route::post('checkout', [OrdersController::class, 'checkout']);
+  Route::get('/{id}',     [OrdersController::class, 'details']);
+  Route::post('payment',  [OrdersController::class, 'payment']);
 });
 
 Route::middleware('auth:api')->group(function () {
-  // Route::prefix('queries')->group(function () {
-  //   Route::get('/', [QueriesController::class, 'index']);
-  //   Route::post('/', [QueriesController::class, 'store']);
-  //   Route::put('/{id}', [QueriesController::class, 'update']);
-  //   Route::delete('/{id}', [QueriesController::class, 'destroy']);
-  // });
+  Route::prefix('customers')->group(function () {
+    Route::get('orders',      [OrdersController::class, 'index']);
+    Route::get('orders/{id}', [OrdersController::class, 'details']);
+  });
 
-  // Route::prefix('orders')->group(function () {
-  //   Route::post('payment', [OrdersController::class, 'payment']);
-  //   Route::get('/', [OrdersController::class, 'index']);
-  //   Route::post('/', [OrdersController::class, 'store']);
-  //   Route::put('/{id}', [OrdersController::class, 'update']);
-  //   Route::delete('/{id}', [OrdersController::class, 'destroy']);
-  // });
+  Route::prefix('orders')->group(function () {
+    Route::get('/', [OrdersController::class, 'index']);
+  });
 
-  // Route::prefix('coupons')->group(function () {
-  //   Route::get('/', [CouponsController::class, 'index']);
-  //   Route::post('/', [CouponsController::class, 'store']);
-  //   Route::put('/{id}', [CouponsController::class, 'update']);
-  //   Route::delete('/{id}', [CouponsController::class, 'destroy']);
-  // });
+  Route::prefix('coupons')->group(function () {
+    Route::get('/',         [CouponsController::class, 'index']);
+    Route::post('/',        [CouponsController::class, 'store']);
+    Route::put('/{id}',     [CouponsController::class, 'update']);
+    Route::delete('/{id}',  [CouponsController::class, 'destroy']);
+  });
 
   Route::prefix('users')->group(function () {
-    Route::get('/', [UsersController::class, 'index']);
-    Route::post('/', [UsersController::class, 'store']);
-    Route::put('/{id}', [UsersController::class, 'update']);
-    Route::delete('/{id}', [UsersController::class, 'destroy']);
+    Route::get('/',         [UsersController::class, 'index']);
+    Route::post('/',        [UsersController::class, 'store']);
+    Route::put('/{id}',     [UsersController::class, 'update']);
+    Route::delete('/{id}',  [UsersController::class, 'destroy']);
   });
 
   Route::prefix('options')->group(function () {
-    Route::get('/', [OptionsController::class, 'index']);
-    Route::post('/{key}', [OptionsController::class, 'set']);
+    Route::get('/',   [OptionsController::class, 'index']);
+    Route::patch('/', [OptionsController::class, 'update']);
   });
 
   Route::prefix('auth')->group(function () {
-    Route::get('me', [AuthController::class, 'me']);
+    Route::get('me',      [AuthController::class, 'me']);
     Route::post('logout', [AuthController::class, 'logout']);
   });
 });

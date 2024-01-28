@@ -1,6 +1,6 @@
 import { BaseQuery, PaginatedResponse } from '@/core/types';
 import { Coupon } from '../coupons';
-import { Query } from '../queries';
+import { Query } from '../search';
 import { User } from '../users';
 
 export interface Order {
