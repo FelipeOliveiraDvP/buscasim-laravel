@@ -15,11 +15,16 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
+import Pusher from 'pusher-js';
 import * as yup from 'yup';
 
 import { PageLoader } from '@/components/__commons';
 import { CheckoutForm, CheckoutQRCode } from '@/components/Checkout';
-import { PaymentRequest, usePayment } from '@/core/services/orders';
+import {
+  PaymentConfirmed,
+  PaymentRequest,
+  usePayment,
+} from '@/core/services/orders';
 import { useCheckoutContext } from '@/core/providers';
 import { getFormErrors } from '@/core/utils';
 
@@ -35,7 +40,8 @@ const schema = yup.object().shape({
 export default function CheckoutPage() {
   const [coupon, setCoupon] = useState<string>();
   const [debounced] = useDebouncedValue(coupon, 250);
-  const { payment, order } = useCheckoutContext();
+  const { payment, order, setResults, setOrder, setPayment } =
+    useCheckoutContext();
   const navigate = useNavigate();
   const mutation = usePayment();
   const { data: discount } = useDiscount(debounced);
@@ -62,8 +68,36 @@ export default function CheckoutPage() {
     }
   }
 
+  function listenEvents() {
+    const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
+      cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    });
+
+    const channel = pusher.subscribe('payment-confirmed');
+
+    // TODO: Fix redirect on confirm payment.
+    channel.bind('payment-event', (data: PaymentConfirmed) => {
+      const { payment_id, data: results } = data.payment;
+      const isCurrentPayment =
+        String(payment_id) === String(payment?.payment_id);
+
+      if (isCurrentPayment) {
+        setResults(results);
+        navigate('/resultados');
+      }
+    });
+  }
+
+  useEffect(() => {
+    listenEvents();
+  }, []);
+
   useEffect(() => {
     if (!order) navigate('/');
+
+    return () => {
+      setOrder(null), setPayment(null);
+    };
   }, [order]);
 
   if (!order) return <PageLoader />;

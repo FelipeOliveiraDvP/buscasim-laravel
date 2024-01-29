@@ -4,7 +4,7 @@ import { ReactNode, createContext, useContext, useState } from 'react';
 type SearchResultType = {
   results: SearchResult | null;
   premium?: boolean;
-  setResults: (results: SearchResult) => void;
+  setResults: (results: SearchResult | null) => void;
 };
 
 const ResultsContext = createContext<SearchResultType>({

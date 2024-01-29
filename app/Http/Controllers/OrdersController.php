@@ -8,8 +8,12 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use MercadoPago\Client\Common\RequestOptions;
+use MercadoPago\Client\Payment\PaymentClient;
+use MercadoPago\MercadoPagoConfig;
 
 class OrdersController extends Controller
 {
@@ -97,12 +101,37 @@ class OrdersController extends Controller
       $order->save();
     }
 
-    // TODO: Create a Mercado Pago Payment.
+    // Create a Mercado Pago payment.
+    MercadoPagoConfig::setAccessToken(getOption('MERCADO_PAGO_ACCESS_TOKEN'));
+
+    $client = new PaymentClient();
+    $request_options = new RequestOptions();
+    $request_options->setCustomHeaders(["X-Idempotency-Key: " . Str::random(32)]);
+
+    $payment = $client->create([
+      "transaction_amount" => (float) $total,
+      "description" => "BuscaSim - Consulta Premium da placa " . $order->plate,
+      "installments" => 1,
+      "payment_method_id" => "pix",
+      "payer" => [
+        "email" => $order->user->email,
+        "first_name" => $order->user->name,
+        "last_name" => "",
+        "identification" => [
+          "type" => "cpf",
+          "number" => $request->document
+        ]
+      ]
+    ], $request_options);
+
+    $order->transaction_id = $payment->id;
+    $order->save();
 
     return response()->json([
-      'customer'  => $order->user,
-      'qrcode'    => "base64",
-      'code'      => "copy_code",
+      'payment_id'  => $payment->id,
+      'customer'    => $order->user,
+      'qrcode'      => $payment->point_of_interaction->transaction_data->qr_code_base64,
+      'code'        => $payment->point_of_interaction->transaction_data->qr_code,
     ], 200);
   }
 
@@ -111,16 +140,43 @@ class OrdersController extends Controller
    */
   public function callback(Request $request)
   {
-    if ($request->type == "payment") {
-      // TODO: Verify if payment is approved.
-      // TODO: Make a request for the premium API.
-      // TODO: Update order status, transaction, data and notify websocket.
+    // Verify if the request is a valid callback.
+    if ($request->type == "payment" && $request->data) {
+      // Setup Mercado Pago SDK for get the payment details.
+      MercadoPagoConfig::setAccessToken(getOption('MERCADO_PAGO_ACCESS_TOKEN'));
 
-      $mock = file_get_contents(base_path('resources/json/premium_response.json'));
+      $payment_id = $request->data['id'];
+      $client = new PaymentClient();
+      $payment = $client->get($payment_id);
 
+      // Get the order.
+      $order = Order::where('transaction_id', '=', $payment_id)->first();
+
+      // To debug on development.
+      if (env('APP_ENV') == 'development') {
+        $order->status = 'confirmed';
+        $order->data = file_get_contents(base_path('resources/json/premium_response.json'));
+        $order->save();
+      }
+
+      // Get API premium data if payment is confirmed.
+      if (env('APP_ENV') == 'production' && $payment->status == 'approved') {
+        $response = Http::withUrlParameters([
+          'endpoint'  => getOption('API_PLACAS_URL'),
+          'plate'     => $order->plate,
+          'token'     => getOption('API_PLACAS_TOKEN_PREMIUM'),
+        ])->get('{+endpoint}/consulta/{plate}/{token}');
+
+        $order->status = 'confirmed';
+        $order->data = $response->body();
+        $order->save();
+      }
+
+      // Notify the client by WebSocket.
       event(new PaymentEvent([
-        'order_id' => 1,
-        'data'  => json_decode($mock),
+        'payment_id'  => (int)$payment_id,
+        'confirmed'   => true,
+        'data'        => json_decode($order->data),
       ]));
 
       return response()->json(['message' => 'Ok'], 200);

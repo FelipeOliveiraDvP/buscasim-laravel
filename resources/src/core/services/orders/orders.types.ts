@@ -43,6 +43,7 @@ export interface PaymentRequest {
 }
 
 export interface PaymentResponse {
+  payment_id: number;
   customer: {
     id: number;
     name: string;
@@ -50,6 +51,14 @@ export interface PaymentResponse {
   };
   qrcode: string;
   code: string;
+}
+
+export interface PaymentConfirmed {
+  payment: {
+    payment_id: number;
+    data: SearchResult;
+    confirmed: boolean;
+  };
 }
 
 export type OrderStatusType = 'pending' | 'confirmed' | 'cancelled';

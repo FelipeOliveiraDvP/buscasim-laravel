@@ -18,20 +18,22 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
 
 import { PageLoader } from '@/components/__commons';
-
 import {
   ResultsFreeInfo,
   ResultsOverview,
   ResultsPremiumInfo,
 } from '@/components/Results';
+import { CheckoutModal } from '@/components/Checkout';
 import { useResults } from '@/core/providers/results';
+import { useCheckoutContext } from '@/core/providers';
 
 import classes from './styles.module.css';
-import { CheckoutModal } from '@/components/Checkout';
 
 export default function ResultsPage() {
   const [opened, { open, close }] = useDisclosure(false);
-  const { results, premium } = useResults();
+  const { results, setResults } = useResults();
+  const { premiumResults, setResults: setPremiumResults } =
+    useCheckoutContext();
   const navigate = useNavigate();
 
   const previewFipe = (
@@ -60,6 +62,11 @@ export default function ResultsPage() {
 
   useEffect(() => {
     if (!results) navigate('/');
+
+    return () => {
+      setResults(null);
+      setPremiumResults(null);
+    };
   }, [results]);
 
   if (!results) return <PageLoader />;
@@ -100,8 +107,11 @@ export default function ResultsPage() {
                     <ResultsFreeInfo data={results} />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <ResultsPremiumInfo data={results} show={premium} />
-                    {!premium && (
+                    <ResultsPremiumInfo
+                      data={results}
+                      show={!!premiumResults}
+                    />
+                    {!premiumResults && (
                       <Button
                         leftSection={<IconLockOpen />}
                         variant="outline"
@@ -131,8 +141,8 @@ export default function ResultsPage() {
 
         <Paper>
           <Accordion variant="contained" defaultValue="item-0">
-            {premium
-              ? results.fipe.dados.map((item, index) => (
+            {premiumResults
+              ? premiumResults.fipe.dados.map((item, index) => (
                   <Accordion.Item key={`item-${index}`} value={`item-${index}`}>
                     <Accordion.Control
                       icon={<IconCar />}

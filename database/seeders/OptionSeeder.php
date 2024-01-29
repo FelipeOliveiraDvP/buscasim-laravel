@@ -15,7 +15,7 @@ class OptionSeeder extends Seeder
     DB::table('options')->insert([
       [
         'key'   => 'API_PLACAS_URL',
-        'value' => 'https://wdapi2.com.br/',
+        'value' => 'https://wdapi2.com.br',
       ],
       [
         'key'   => 'API_PLACAS_TOKEN_FREE',
@@ -28,6 +28,10 @@ class OptionSeeder extends Seeder
       [
         'key'   => 'BASE_PRICE',
         'value' => '20.00',
+      ],
+      [
+        'key'   => 'MERCADO_PAGO_ACCESS_TOKEN',
+        'value' => 'TEST-5441779568103896-012821-6ecee8c98c84fffd2bc95656acf65bc7-723430278',
       ],
     ]);
   }
