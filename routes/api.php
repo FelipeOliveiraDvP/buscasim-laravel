@@ -38,6 +38,7 @@ Route::prefix('coupons')->group(function () {
 Route::prefix('orders')->group(function () {
   Route::post('checkout', [OrdersController::class, 'checkout']);
   Route::post('payment',  [OrdersController::class, 'payment']);
+  Route::post('callback',  [OrdersController::class, 'callback']);
 });
 
 Route::middleware('auth:api')->group(function () {

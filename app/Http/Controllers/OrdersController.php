@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentEvent;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
@@ -42,7 +43,7 @@ class OrdersController extends Controller
       $customer = User::create([
         'name'      => $request->name,
         'email'     => $request->email,
-        'password'  => Hash::make('asdf1234')
+        // 'password'  => Hash::make('asdf1234') Just implement if you can returns a JWT token.
       ]);
     }
 
@@ -112,9 +113,17 @@ class OrdersController extends Controller
   {
     if ($request->type == "payment") {
       // TODO: Verify if payment is approved.
-      // TODO: Update order status and notify websocket.
       // TODO: Make a request for the premium API.
-      // TODO: Update the query with premium result.
+      // TODO: Update order status, transaction, data and notify websocket.
+
+      $mock = file_get_contents(base_path('resources/json/premium_response.json'));
+
+      event(new PaymentEvent([
+        'order_id' => 1,
+        'data'  => json_decode($mock),
+      ]));
+
+      return response()->json(['message' => 'Ok'], 200);
     }
   }
 }
