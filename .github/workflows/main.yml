@@ -11,6 +11,9 @@ jobs:
 
       - name: Setup environment variables
         run: echo "${{ secrets.ENV_FILE }}" >> .env
+
+      - name: Show env file
+        run: cat .env
         
       - name: Setup PHP and required extensions
         uses: shivammathur/setup-php@v2
