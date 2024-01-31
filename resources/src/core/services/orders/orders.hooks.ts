@@ -1,19 +1,19 @@
 import { AxiosError } from 'axios';
 import { useMutation, useQuery } from 'react-query';
-import { getErrorMessage, showError } from '@/core/utils';
-import { OrderListQuery, OrderListResponse } from '.';
-import { useCheckoutContext } from '@/core/providers';
 import { useNavigate } from 'react-router-dom';
 
+import { getErrorMessage, showError } from '@/core/utils';
+import { OrderListQuery, OrderListResponse } from '.';
+import { useSearchResults } from '@/core/providers';
 import ordersService from './orders.service';
 
 export function useCheckout() {
-  const { setOrder } = useCheckoutContext();
+  const { setSearchResults } = useSearchResults();
   const navigate = useNavigate();
 
   return useMutation(ordersService.checkout, {
-    onSuccess(data) {
-      setOrder(data);
+    onSuccess(order) {
+      setSearchResults({ order });
       navigate('/pagamento');
     },
     onError(error) {
@@ -23,11 +23,11 @@ export function useCheckout() {
 }
 
 export function usePayment() {
-  const { setPayment } = useCheckoutContext();
+  const { setSearchResults } = useSearchResults();
 
   return useMutation(ordersService.payment, {
-    onSuccess(data) {
-      setPayment(data);
+    onSuccess(payment) {
+      setSearchResults({ payment });
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));

@@ -23,14 +23,15 @@ import { CheckoutForm, CheckoutQRCode } from '@/components/Checkout';
 import {
   PaymentConfirmed,
   PaymentRequest,
+  PaymentResponse,
   usePayment,
 } from '@/core/services/orders';
-import { useCheckoutContext } from '@/core/providers';
-import { getFormErrors } from '@/core/utils';
+import { getFormErrors, showSuccess } from '@/core/utils';
 
 import classes from './styles.module.css';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useDiscount } from '@/core/services/coupons';
+import { useSearchResults } from '@/core/providers';
 
 const schema = yup.object().shape({
   document: yup.string().required('Campo Obrigatório'),
@@ -40,11 +41,10 @@ const schema = yup.object().shape({
 export default function CheckoutPage() {
   const [coupon, setCoupon] = useState<string>();
   const [debounced] = useDebouncedValue(coupon, 250);
-  const { payment, order, setResults, setOrder, setPayment } =
-    useCheckoutContext();
-  const navigate = useNavigate();
-  const mutation = usePayment();
   const { data: discount } = useDiscount(debounced);
+  const { order, payment, setSearchResults } = useSearchResults();
+  const mutation = usePayment();
+  const navigate = useNavigate();
 
   const form = useForm<PaymentRequest>({
     initialValues: {
@@ -68,36 +68,30 @@ export default function CheckoutPage() {
     }
   }
 
-  function listenEvents() {
+  function listenEvents(payment: PaymentResponse) {
     const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
       cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
     });
 
     const channel = pusher.subscribe('payment-confirmed');
 
-    // TODO: Fix redirect on confirm payment.
     channel.bind('payment-event', (data: PaymentConfirmed) => {
       const { payment_id, data: results } = data.payment;
-      const isCurrentPayment =
-        String(payment_id) === String(payment?.payment_id);
 
-      if (isCurrentPayment) {
-        setResults(results);
+      if (payment_id === payment?.payment_id) {
+        setSearchResults({ results, premium: true });
+        showSuccess('Pagamento confirmado com sucesso!');
         navigate('/resultados');
       }
     });
   }
 
   useEffect(() => {
-    listenEvents();
-  }, []);
+    if (payment) listenEvents(payment);
+  }, [payment]);
 
   useEffect(() => {
     if (!order) navigate('/');
-
-    return () => {
-      setOrder(null), setPayment(null);
-    };
   }, [order]);
 
   if (!order) return <PageLoader />;

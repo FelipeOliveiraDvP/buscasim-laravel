@@ -11,21 +11,21 @@
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-right: 0;
-  height: rem(64px);
-  font-size: rem(24px);
+  height: rem(64px) !important;
+  font-size: rem(24px) !important;
   text-transform: uppercase;
   @media (max-width: $mantine-breakpoint-md) {
-    height: rem(48px);
-    font-size: rem(18px);
+    height: rem(48px) !important;
+    font-size: rem(18px) !important;
   }
 }
 .control {
-  height: rem(64px);
-  font-size: rem(20px);
+  height: rem(64px) !important;
+  font-size: rem(20px) !important;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   @media (max-width: $mantine-breakpoint-md) {
-    height: rem(48px);
-    font-size: rem(18px);
+    height: rem(48px) !important;
+    font-size: rem(18px) !important;
   }
 }

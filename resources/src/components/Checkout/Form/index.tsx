@@ -3,14 +3,14 @@ import { Checkbox, Stack, Text, Title } from '@mantine/core';
 
 import { AnchorLink, MaskedInput } from '@/components/__commons';
 import { PaymentRequest } from '@/core/services/orders';
-import { useCheckoutContext } from '@/core/providers';
+import { useSearchResults } from '@/core/providers';
 
 interface Props {
   form: UseFormReturnType<PaymentRequest>;
 }
 
 export function CheckoutForm({ form }: Props) {
-  const { order } = useCheckoutContext();
+  const { order } = useSearchResults();
 
   return (
     <Stack>

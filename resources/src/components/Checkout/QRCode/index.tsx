@@ -1,4 +1,3 @@
-import { useCheckoutContext } from '@/core/providers';
 import {
   Button,
   CopyButton,
@@ -9,9 +8,10 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import { useSearchResults } from '@/core/providers';
 
 export function CheckoutQRCode() {
-  const { payment } = useCheckoutContext();
+  const { payment } = useSearchResults();
 
   if (!payment) return null;
 
