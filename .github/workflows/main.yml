@@ -1,0 +1,36 @@
+name: Deploy on homolog
+
+on: [push]
+
+jobs:
+  deploy:
+    name: Build app and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+      
+      - name: Setup environment variables
+        run: echo "${{ secrets.ENV_FILE }}" > .env
+        
+      - name: Run composer install
+        run: composer install
+
+      - name: Cache api routes
+        run: php artisan route:cache
+
+      - name: Build assets
+        uses: actions/setup-node@v3
+        with: 
+          node-version: '20.x'
+      - run: npm run build
+
+        
+          
+        
