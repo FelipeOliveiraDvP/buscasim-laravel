@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SEOController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{all}', function () {
-    return view('welcome');
-})->where('all', '^(?!api).*$');
+Route::get('/{all}', [SEOController::class, 'index'])->where('all', '^(?!api).*$');

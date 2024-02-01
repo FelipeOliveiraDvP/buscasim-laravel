@@ -1,4 +1,4 @@
-import { BackgroundImage, Container, Stack, Text, Title } from '@mantine/core';
+import { BackgroundImage, Container, Stack, Title } from '@mantine/core';
 
 import { SearchForm } from '@/components/Search/Form';
 
