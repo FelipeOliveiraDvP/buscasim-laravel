@@ -2,7 +2,7 @@ import { Suspense, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 
-import { PageLoader } from '@/components/__commons';
+import { PageLoader, WhatsAppButton } from '@/components/__commons';
 import { PublicHeader } from './Header';
 import { PublicFooter } from './Footer';
 import { useAuth } from '@/core/providers';
@@ -27,6 +27,7 @@ export function PublicLayout() {
         <Outlet />
       </Suspense>
       <PublicFooter />
+      <WhatsAppButton />
     </>
   );
 }
