@@ -1,7 +1,9 @@
+import { AxiosError } from 'axios';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { useSearchResults } from '@/core/providers';
+import { getErrorMessage, showError } from '@/core/utils';
 import searchService from './search.service';
 
 export function useSearch() {
@@ -13,7 +15,8 @@ export function useSearch() {
       setSearchResults({ results, order: null, payment: null, premium: false });
       navigate(`/resultados`);
     },
-    onError() {
+    onError(error) {
+      showError(getErrorMessage(error as AxiosError));
       navigate('/');
     },
   });
