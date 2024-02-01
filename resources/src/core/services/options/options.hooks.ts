@@ -3,11 +3,12 @@ import { AxiosError } from 'axios';
 import { Option } from '.';
 import { getErrorMessage, showError, showSuccess } from '@/core/utils';
 import optionsService from './options.service';
+import { queryClient } from '@/core/config/react-query';
 
 export function useOptions() {
   return useQuery<Option[], AxiosError>(
     ['options'],
-    () => optionsService.getOptions(),
+    () => optionsService.list(),
     {
       onError(error) {
         showError(getErrorMessage(error as AxiosError));
@@ -16,9 +17,10 @@ export function useOptions() {
   );
 }
 
-export function useSetOptions() {
-  return useMutation(optionsService.setOptions, {
+export function useUpdateOptions() {
+  return useMutation(optionsService.update, {
     onSuccess(data) {
+      queryClient.invalidateQueries(['options']);
       showSuccess(data.message);
     },
     onError(error) {

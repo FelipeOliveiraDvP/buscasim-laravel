@@ -1,13 +1,13 @@
 import api from '@/core/config/axios';
 import { ApiResponse } from '@/core/types';
-import { Option, OptionRequest } from '.';
+import { Option, OptionsRequest } from '.';
 
 export default {
-  async getOptions(): Promise<Option[]> {
+  async list(): Promise<Option[]> {
     return api.get(`/api/options`);
   },
 
-  async setOptions(data: OptionRequest): Promise<ApiResponse> {
+  async update(data: OptionsRequest): Promise<ApiResponse> {
     return api.patch(`/api/options`, data);
   },
 };
