@@ -6,8 +6,8 @@ use App\Events\PaymentEvent;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
+use App\Traits\Helpers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -17,6 +17,8 @@ use MercadoPago\MercadoPagoConfig;
 
 class OrdersController extends Controller
 {
+  use Helpers;
+
   /**
    * List all orders.
    */
@@ -81,7 +83,7 @@ class OrdersController extends Controller
 
     // Create a draft order.
     $order = Order::create([
-      'total'   => getOption('BASE_PRICE'),
+      'total'   => $this->getOption('BASE_PRICE'),
       'plate'   => $request->plate,
       'user_id' => $customer->id,
     ]);
@@ -135,7 +137,7 @@ class OrdersController extends Controller
     }
 
     // Create a Mercado Pago payment.
-    MercadoPagoConfig::setAccessToken(getOption('MERCADO_PAGO_ACCESS_TOKEN'));
+    MercadoPagoConfig::setAccessToken($this->getOption('MERCADO_PAGO_ACCESS_TOKEN'));
 
     $client = new PaymentClient();
     $request_options = new RequestOptions();
@@ -176,7 +178,7 @@ class OrdersController extends Controller
     // Verify if the request is a valid callback.
     if ($request->type == "payment" && $request->data) {
       // Setup Mercado Pago SDK for get the payment details.
-      MercadoPagoConfig::setAccessToken(getOption('MERCADO_PAGO_ACCESS_TOKEN'));
+      MercadoPagoConfig::setAccessToken($this->getOption('MERCADO_PAGO_ACCESS_TOKEN'));
 
       $payment_id = $request->data['id'];
       $client = new PaymentClient();
@@ -195,9 +197,9 @@ class OrdersController extends Controller
       // Get API premium data if payment is confirmed.
       if (env('APP_ENV') == 'production' && $payment->status == 'approved') {
         $response = Http::withUrlParameters([
-          'endpoint'  => getOption('API_PLACAS_URL'),
+          'endpoint'  => $this->getOption('API_PLACAS_URL'),
           'plate'     => $order->plate,
-          'token'     => getOption('API_PLACAS_TOKEN_PREMIUM'),
+          'token'     => $this->getOption('API_PLACAS_TOKEN_PREMIUM'),
         ])->get('{+endpoint}/consulta/{plate}/{token}');
 
         $order->status = 'confirmed';

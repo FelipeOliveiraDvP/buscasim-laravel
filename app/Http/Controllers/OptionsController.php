@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Option;
+use App\Traits\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class OptionsController extends Controller
 {
+  use Helpers;
+
   /**
    * List all the system options.
    */
@@ -33,7 +36,7 @@ class OptionsController extends Controller
     }
 
     foreach ($request->options as $option) {
-      setOption($option['key'], $option['value']);
+      $this->setOption($option['key'], $option['value']);
     }
 
     return response()->json(['message' => 'Configurações atualizadas com sucesso.'], 200);

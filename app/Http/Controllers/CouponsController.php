@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coupon;
-use App\Models\Order;
+use App\Traits\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class CouponsController extends Controller
 {
+  use Helpers;
+
   /**
    * Search and returns a coupon discount.
    */
@@ -23,7 +25,7 @@ class CouponsController extends Controller
       return response()->json([
         'coupon_id' => null,
         'discount'  => 0,
-        'subtotal'  => (float)getOption('BASE_PRICE')
+        'subtotal'  => (float) $this->getOption('BASE_PRICE')
       ], 200);
     }
 
@@ -32,10 +34,10 @@ class CouponsController extends Controller
 
     if ($coupon->type == 'fixed') {
       $discount = $coupon->amount;
-      $total = getOption('BASE_PRICE') - $coupon->amount;
+      $total = $this->getOption('BASE_PRICE') - $coupon->amount;
     } else {
-      $total = getOption('BASE_PRICE') * (1 - $coupon->amount / 100);
-      $discount = getOption('BASE_PRICE') - $total;
+      $total = $this->getOption('BASE_PRICE') * (1 - $coupon->amount / 100);
+      $discount = $this->getOption('BASE_PRICE') - $total;
     }
 
     return response()->json([
@@ -68,8 +70,6 @@ class CouponsController extends Controller
    */
   public function store(Request $request)
   {
-
-
     // Validate the request.
     $validator = Validator::make($request->all(), [
       'code'        => 'required|unique:coupons,code',

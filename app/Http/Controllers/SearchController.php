@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class SearchController extends Controller
 {
+  use Helpers;
+
   /**
    * Search a vehicle plate and returns the free information.
    */
@@ -36,9 +39,9 @@ class SearchController extends Controller
     // Make an API request to get free vehicles information.
     if (env('APP_ENV') == 'production') {
       $response = Http::withUrlParameters([
-        'endpoint'  => getOption('API_PLACAS_URL'),
+        'endpoint'  => $this->getOption('API_PLACAS_URL'),
         'plate'     => $request->plate,
-        'token'     => getOption('API_PLACAS_TOKEN_FREE'),
+        'token'     => $this->getOption('API_PLACAS_TOKEN_FREE'),
       ])->get('{+endpoint}/consulta/{plate}/{token}');
 
       if ($response->failed()) {
