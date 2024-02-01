@@ -11,16 +11,7 @@ export function Hero() {
       <Container className={classes.container}>
         <Stack>
           <Title className={classes.title}>
-            A{' '}
-            <Text
-              component="span"
-              inherit
-              variant="gradient"
-              gradient={{ from: 'blue.5', to: 'blue.9' }}
-            >
-              consulta de placa
-            </Text>{' '}
-            mais completa da internet.
+            A consulta de placa mais completa da internet.
           </Title>
           <SearchForm />
         </Stack>
