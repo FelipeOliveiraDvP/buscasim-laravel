@@ -6,7 +6,6 @@ import {
   Modal,
   ModalProps,
   Stack,
-  Switch,
   TextInput,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
@@ -40,7 +39,6 @@ export function UserModal({ user, ...props }: Props) {
     initialValues: {
       name: '',
       email: '',
-      is_active: true,
     },
   });
 
@@ -65,11 +63,7 @@ export function UserModal({ user, ...props }: Props) {
 
   useEffect(() => {
     if (user) {
-      form.setValues({
-        name: user?.name || '',
-        email: user?.email || '',
-        is_active: user.is_active,
-      });
+      form.setValues({ ...user });
     }
   }, [user]);
 
@@ -93,10 +87,6 @@ export function UserModal({ user, ...props }: Props) {
             label="E-mail"
             placeholder="Adicione o e-mail"
             withAsterisk
-          />
-          <Switch
-            {...form.getInputProps('is_active', { type: 'checkbox' })}
-            label="Ativar usuário"
           />
           <Divider />
           <Group gap="sm" justify="flex-end">

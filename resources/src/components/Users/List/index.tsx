@@ -1,14 +1,10 @@
 import { createColumnHelper } from '@tanstack/react-table';
-import { ActionIcon, Badge, Group, Text } from '@mantine/core';
-import { Table } from '@/components/__commons';
-import {
-  User,
-  UserListResponse,
-  getUserRole,
-  useRemoveUser,
-} from '@/core/services/users';
+import { ActionIcon, Group, Text } from '@mantine/core';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { modals } from '@mantine/modals';
+
+import { Table } from '@/components/__commons';
+import { User, UserListResponse, useRemoveUser } from '@/core/services/users';
 
 interface Props {
   data?: UserListResponse;
@@ -41,19 +37,9 @@ export function UsersList({ data, loading, onSelect, onPaginate }: Props) {
       id: 'email',
       header: 'E-mail',
     }),
-    columnHelper.accessor('role', {
-      id: 'role',
-      header: 'Tipo de Usuário',
-      cell: ({ getValue }) => getUserRole(getValue()),
-    }),
-    columnHelper.accessor('is_active', {
-      id: 'is_active',
-      header: 'Tipo de Usuário',
-      cell: ({ getValue }) => (
-        <Badge color={getValue() ? 'lime' : 'gray'}>
-          {getValue() ? 'Ativo' : 'Inativo'}
-        </Badge>
-      ),
+    columnHelper.accessor('document', {
+      id: 'document',
+      header: 'CPF',
     }),
     columnHelper.accessor((row) => row, {
       id: 'actions',

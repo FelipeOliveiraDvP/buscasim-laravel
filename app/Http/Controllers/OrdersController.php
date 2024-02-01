@@ -110,8 +110,13 @@ class OrdersController extends Controller
     }
 
     // Get the order.
-    $order = Order::where('id', '=', $request->order_id)->with('user:id,name,email')->first();
+    $order = Order::where('id', '=', $request->order_id)->with('user:id,name,email,document')->first();
     $total = $order->total;
+
+    // Update user document and terms.
+    $order->user->document      = $request->document;
+    $order->user->accept_terms  = $request->accept_terms;
+    $order->user->save();
 
     // Get the coupon and calc the discount.
     if ($request->coupon_id) {
