@@ -46,6 +46,9 @@ class Order extends Model
    */
   protected $casts = [
     'total' => 'double',
+    'created_at' => 'date',
+    'updated_at' => 'date',
+    'data' => 'object',
   ];
 
   public function user()
@@ -55,6 +58,6 @@ class Order extends Model
 
   public function coupon()
   {
-    return $this->hasOne(Coupon::class);
+    return $this->belongsTo(Coupon::class);
   }
 }

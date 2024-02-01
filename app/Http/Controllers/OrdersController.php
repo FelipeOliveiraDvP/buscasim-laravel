@@ -18,6 +18,34 @@ use MercadoPago\MercadoPagoConfig;
 class OrdersController extends Controller
 {
   /**
+   * List all orders.
+   */
+  public function index(Request $request)
+  {
+    $query = Order::query();
+    $current_user = auth('api')->user();
+
+    if ($current_user && $current_user->role != 'admin') {
+      $query->where('user_id', '=', $current_user->id);
+    }
+
+    if ($request->has('date')) {
+      $query->whereDate('created_at', '=', $request->date);
+    }
+
+    if ($request->has('status')) {
+      $query->where('status', '=', $request->status);
+    }
+
+    $query
+      ->with('user:id,name')
+      ->with('coupon:id,code')
+      ->orderBy('created_at', 'desc');
+
+    return response()->json($query->paginate(10), 200);
+  }
+
+  /**
    * Create a new order.
    */
   public function checkout(Request $request)

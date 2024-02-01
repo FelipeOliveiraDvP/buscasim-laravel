@@ -64,7 +64,7 @@ export interface PaymentConfirmed {
 export type OrderStatusType = 'pending' | 'confirmed' | 'cancelled';
 
 export type OrderListQuery = BaseQuery & {
-  date?: Date | null;
+  date?: Date | string | null;
   status?: OrderStatusType | null;
 };
 

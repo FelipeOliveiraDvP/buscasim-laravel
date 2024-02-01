@@ -5,10 +5,17 @@ import { useDebouncedValue } from '@mantine/hooks';
 import { AnchorLink } from '@/components/__commons';
 import { OrdersFilters, OrdersList } from '@/components/Orders';
 import { OrderListQuery, useOrders } from '@/core/services/orders';
+import dayjs from 'dayjs';
 
 export default function OrdersPage() {
   const [params, setParams] = useState<OrderListQuery>();
-  const [debounced] = useDebouncedValue(params, 200);
+  const [debounced] = useDebouncedValue(
+    {
+      ...params,
+      date: params?.date ? dayjs(params.date).format('YYYY-MM-DD') : null,
+    },
+    200
+  );
   const { data, isLoading } = useOrders(debounced);
 
   return (

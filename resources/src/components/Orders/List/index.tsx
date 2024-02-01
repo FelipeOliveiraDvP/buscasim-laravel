@@ -1,4 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table';
+import { NumberFormatter } from '@mantine/core';
 import dayjs from 'dayjs';
 
 import { Table } from '@/components/__commons';
@@ -7,7 +8,6 @@ import {
   OrderListResponse,
   getOrderStatus,
 } from '@/core/services/orders';
-import { moneyFormat } from '@/core/utils';
 
 interface Props {
   data?: OrderListResponse;
@@ -20,31 +20,45 @@ export function OrdersList({ data, loading, onPaginate }: Props) {
   const columnHelper = createColumnHelper<Order>();
 
   const columns = [
+    columnHelper.accessor('id', {
+      id: 'order_id',
+      header: 'N° do pedido',
+    }),
+    columnHelper.accessor('user.name', {
+      id: 'user.name',
+      header: 'Cliente',
+    }),
     columnHelper.accessor('total', {
       id: 'total',
       header: 'Valor Total',
-      cell: ({ getValue }) => moneyFormat(getValue()),
+      cell: ({ getValue }) => (
+        <NumberFormatter
+          prefix="R$ "
+          value={getValue()}
+          decimalScale={2}
+          thousandSeparator="."
+          decimalSeparator=","
+          fixedDecimalScale
+        />
+      ),
     }),
     columnHelper.accessor('status', {
       id: 'status',
       header: 'Status',
       cell: ({ getValue }) => getOrderStatus(getValue()),
     }),
-    columnHelper.accessor('query.plate', {
-      id: 'query.plate',
+    columnHelper.accessor('plate', {
+      id: 'plate',
       header: 'Placa',
     }),
     columnHelper.accessor('coupon', {
       id: 'coupon',
-      header: 'Cupon',
-      cell: ({ getValue }) =>
-        getValue()
-          ? `${getValue()?.code} - ${(getValue()?.percentage || 0) / 100}%`
-          : '',
+      header: 'Cupom',
+      cell: ({ getValue }) => (getValue() ? getValue()?.code : ''),
     }),
     columnHelper.accessor('created_at', {
       id: 'created_at',
-      header: 'Placa',
+      header: 'Data do pedido',
       cell: ({ getValue }) => dayjs(getValue()).format('DD/MM/YYYY'),
     }),
   ];
