@@ -22,7 +22,8 @@ class Coupon extends Model
    */
   protected $fillable = [
     'code',
-    'percentage',
+    'type',
+    'amount',
     'expiration',
   ];
 }

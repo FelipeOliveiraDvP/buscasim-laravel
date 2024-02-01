@@ -8,8 +8,10 @@ import { Table } from '@/components/__commons';
 import {
   Coupon,
   CouponListResponse,
+  getCouponType,
   useRemoveCoupon,
 } from '@/core/services/coupons';
+import { moneyFormat } from '@/core/utils';
 
 interface Props {
   data?: CouponListResponse;
@@ -23,8 +25,8 @@ export function CouponsList({ data, loading, onSelect, onPaginate }: Props) {
 
   const confirmRemove = (obj: Coupon) =>
     modals.openConfirmModal({
-      title: 'Remover Cupon',
-      children: <Text size="sm">Deseja realmente remover esse cupon?</Text>,
+      title: 'Remover Cupom',
+      children: <Text size="sm">Deseja realmente remover esse cupom?</Text>,
       labels: { confirm: 'Remover', cancel: 'Cancelar' },
       confirmProps: { loading: removeMutation.isLoading },
       centered: true,
@@ -37,20 +39,28 @@ export function CouponsList({ data, loading, onSelect, onPaginate }: Props) {
 
   const columnHelper = createColumnHelper<Coupon>();
 
+  const formateDiscount = (coupon: Coupon) =>
+    coupon.type === 'fixed' ? moneyFormat(coupon.amount) : `${coupon.amount}%`;
+
   const columns = [
     columnHelper.accessor('code', {
       id: 'code',
-      header: 'Código do cupon',
+      header: 'Código do cupom',
+    }),
+    columnHelper.accessor('type', {
+      id: 'type',
+      header: 'Tipo de desconto',
+      cell: ({ getValue }) => getCouponType(getValue()),
+    }),
+    columnHelper.accessor((row) => row, {
+      id: 'discount',
+      header: 'Desconto',
+      cell: ({ getValue }) => formateDiscount(getValue()),
     }),
     columnHelper.accessor('expiration', {
       id: 'expiration',
       header: 'Data de vencimento',
       cell: ({ getValue }) => dayjs(getValue()).format('DD/MM/YYYY'),
-    }),
-    columnHelper.accessor('percentage', {
-      id: 'percentage',
-      header: 'Desconto',
-      cell: ({ getValue }) => `${getValue() / 100}%`,
     }),
     columnHelper.accessor('created_at', {
       id: 'created_at',

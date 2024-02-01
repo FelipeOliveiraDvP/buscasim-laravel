@@ -1,5 +1,5 @@
 export function moneyFormat(value: number): string {
-  return new Intl.NumberFormat('pt_BR', {
+  return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }).format(value);

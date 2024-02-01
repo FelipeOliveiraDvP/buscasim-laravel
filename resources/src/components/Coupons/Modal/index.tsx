@@ -7,6 +7,7 @@ import {
   Modal,
   ModalProps,
   NumberInput,
+  Radio,
   Stack,
   TextInput,
 } from '@mantine/core';
@@ -17,6 +18,7 @@ import * as Yup from 'yup';
 import {
   Coupon,
   CouponRequest,
+  getCouponType,
   useCreateCoupon,
   useUpdateCoupon,
 } from '@/core/services/coupons';
@@ -31,16 +33,17 @@ const schema = Yup.object().shape({
   code: Yup.string()
     .required('Campo Obrigatório')
     .uppercase('O código deve possuir letras maiúsculas e números'),
+  type: Yup.string().required('Campo Obrigatório'),
+  amount: Yup.number()
+    .required('Campo Obrigatório')
+    .min(1, 'Informe um valor maior que 0')
+    .max(100, 'Informe um valor menor que 100'),
   expiration: Yup.date()
     .required('Campo Obrigatório')
     .min(
       dayjs().add(1, 'day').toDate(),
       'Informe um data de vencimento maior que o dia atual'
     ),
-  percentage: Yup.number()
-    .required('Campo Obrigatório')
-    .min(1, 'Informe um valor maior que 0')
-    .max(100, 'Informe um valor menor que 100'),
 });
 
 export function CouponModal({ coupon, ...props }: Props) {
@@ -51,17 +54,24 @@ export function CouponModal({ coupon, ...props }: Props) {
     validate: yupResolver(schema),
     initialValues: {
       code: '',
+      type: 'fixed',
       expiration: null,
-      percentage: 0,
+      amount: 0,
     },
   });
 
   async function handleSave(values: CouponRequest) {
+    const obj = {
+      ...values,
+      code: values.code.toUpperCase(),
+      expiration: dayjs(values.expiration).format('YYYY-MM-DD'),
+    };
+
     try {
       if (coupon) {
-        await updateMutation.mutateAsync({ ...values, id: coupon.id });
+        await updateMutation.mutateAsync({ ...obj, id: coupon.id });
       } else {
-        await createMutation.mutateAsync(values);
+        await createMutation.mutateAsync(obj);
       }
 
       handleClose();
@@ -78,8 +88,7 @@ export function CouponModal({ coupon, ...props }: Props) {
   useEffect(() => {
     if (coupon) {
       form.setValues({
-        code: coupon.code,
-        percentage: coupon.percentage,
+        ...coupon,
         expiration: dayjs(coupon.expiration).toDate(),
       });
     }
@@ -88,7 +97,7 @@ export function CouponModal({ coupon, ...props }: Props) {
   return (
     <Modal
       {...props}
-      title={coupon ? 'Editar Cupon' : 'Novo Cupon'}
+      title={coupon ? 'Editar Cupom' : 'Novo Cupom'}
       centered
       onClose={handleClose}
     >
@@ -96,21 +105,45 @@ export function CouponModal({ coupon, ...props }: Props) {
         <Stack gap="md">
           <TextInput
             {...form.getInputProps('code')}
-            label="Código do cupon"
+            label="Código do cupom"
             placeholder="EX: DESCONTO10"
             withAsterisk
+            disabled={!!coupon}
+            styles={{
+              input: {
+                textTransform: 'uppercase',
+              },
+            }}
           />
-          <NumberInput
-            {...form.getInputProps('percentage')}
-            label="Desconto %"
-            placeholder="Informe a porcentagem de desconto"
+          <Radio.Group
+            {...form.getInputProps('type')}
+            label="Tipo de desconto"
             withAsterisk
+          >
+            <Radio
+              value="fixed"
+              label={getCouponType('fixed')}
+              disabled={!!coupon}
+            />
+            <Radio
+              value="percentage"
+              label={getCouponType('percentage')}
+              disabled={!!coupon}
+            />
+          </Radio.Group>
+          <NumberInput
+            {...form.getInputProps('amount')}
+            label="Valor do desconto"
+            placeholder="Informe o valor do desconto"
+            withAsterisk
+            disabled={!!coupon}
             min={0}
             max={100}
           />
           <DateInput
             {...form.getInputProps('expiration')}
-            placeholder="Data de vencimento"
+            label="Data de vencimento"
+            placeholder="Informe a data de vencimento do cupom"
             clearable
             withAsterisk
             valueFormat="DD/MM/YYYY"
@@ -124,7 +157,7 @@ export function CouponModal({ coupon, ...props }: Props) {
               type="submit"
               loading={createMutation.isLoading || updateMutation.isLoading}
             >
-              Salvar Cupon
+              Salvar Cupom
             </Button>
           </Group>
         </Stack>

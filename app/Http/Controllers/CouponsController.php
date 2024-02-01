@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coupon;
+use App\Models\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class CouponsController extends Controller
 {
+  /**
+   * Search and returns a coupon discount.
+   */
   public function search(string $code)
   {
-    $coupon = Coupon::where('code', '=', $code)->first();
+    $coupon = Coupon::where('code', '=', $code)
+      ->whereDate('expiration', '>', Carbon::now())
+      ->first();
 
     if (!$coupon) {
       return response()->json([
@@ -36,23 +45,92 @@ class CouponsController extends Controller
     ], 200);
   }
 
-  public function index()
+  /**
+   * List all coupons.
+   */
+  public function index(Request $request)
   {
-    return response()->json(['message' => 'Ok'], 200);
+    $query = Coupon::query();
+
+    if ($request->has('code')) {
+      $query->whereDate('code', 'like', "%{$request->code}%");
+    }
+
+    if ($request->has('type')) {
+      $query->where('type', '=', $request->type);
+    }
+
+    return response()->json($query->paginate(10), 200);
   }
 
-  public function store()
+  /**
+   * Create a new coupon.
+   */
+  public function store(Request $request)
   {
-    return response()->json(['message' => 'Ok'], 200);
+
+
+    // Validate the request.
+    $validator = Validator::make($request->all(), [
+      'code'        => 'required|unique:coupons,code',
+      'type'        => 'required|in:fixed,percentage',
+      'amount'      => 'required|integer|between:0,100',
+      'expiration'  => 'required|date|after:tomorrow',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 400);
+    }
+
+    Coupon::create([
+      'code'        => $request->code,
+      'type'        => $request->type,
+      'amount'      => $request->amount,
+      'expiration'  => $request->expiration,
+    ]);
+
+    return response()->json(['message' => 'Cupom criado com sucesso'], 200);
   }
 
-  public function update()
+  /**
+   * Update a coupon.
+   */
+  public function update(Request $request, string $id)
   {
-    return response()->json(['message' => 'Ok'], 200);
+    $coupon = Coupon::where('id', '=', $id)->first();
+
+    if (!$coupon) {
+      return response()->json(['message' => 'Cupom não encontrado'], 40);
+    }
+
+    // Validate the request.
+    $validator = Validator::make($request->all(), [
+      'expiration'  => 'required|date|after:tomorrow',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 400);
+    }
+
+    $coupon->expiration = $request->expiration;
+    $coupon->save();
+
+    return response()->json(['message' => 'Cupom atualizado com sucesso'], 200);
   }
 
-  public function destroy()
+  /**
+   * Remove a cupom.
+   */
+  public function destroy(string $id)
   {
-    return response()->json(['message' => 'Ok'], 200);
+    $coupon = Coupon::where('id', '=', $id)->first();
+
+    if (!$coupon) {
+      return response()->json(['message' => 'Cupom não encontrado'], 40);
+    }
+
+    $coupon->delete();
+
+    return response()->json(['message' => 'Cupom removido com sucesso'], 200);
   }
 }

@@ -1,8 +1,11 @@
-import { Button, Group, Input } from '@mantine/core';
+import { Button, Group, Input, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconSearch } from '@tabler/icons-react';
-import { CouponListQuery } from '@/core/services/coupons';
-import { DateInput } from '@mantine/dates';
+import {
+  CouponListQuery,
+  CouponType,
+  couponTypeOptions,
+} from '@/core/services/coupons';
 
 interface Props {
   onChange: (values: CouponListQuery) => void;
@@ -10,7 +13,7 @@ interface Props {
 
 const initialValues: CouponListQuery = {
   code: '',
-  expiration: null,
+  type: null,
   page: 1,
 };
 
@@ -40,12 +43,16 @@ export function CouponsFilters({ onChange }: Props) {
             handleChange({ ...form.values, code: e.target.value })
           }
         />
-        <DateInput
-          {...form.getInputProps('date')}
-          placeholder="Pesquise por data"
+        <Select
+          {...form.getInputProps('type')}
+          placeholder="Tipo do cupon"
+          data={couponTypeOptions}
           clearable
-          onChange={(date) =>
-            handleChange({ ...form.values, expiration: date })
+          onChange={(value) =>
+            handleChange({
+              ...form.values,
+              type: value as CouponType,
+            })
           }
         />
         <Button variant="outline" type="reset" onClick={handleReset}>
