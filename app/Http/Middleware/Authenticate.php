@@ -17,6 +17,6 @@ class Authenticate extends Middleware
 
   protected function unauthenticated($request, array $guards)
   {
-    abort(response()->json(['message' => 'Não autorizado.'], 401));
+    abort(response()->json(['message' => 'Não autenticado.'], 401));
   }
 }

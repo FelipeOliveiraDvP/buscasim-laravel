@@ -22,6 +22,7 @@ interface Props {
 const links = [
   { link: '/perguntas-frequentes', label: 'Perguntas Frequentes' },
   { link: '/contato', label: 'Contato' },
+  { link: '/minhas-consultas', label: 'Minhas Consultas' },
   { link: '/entrar', label: 'Entrar' },
 ];
 

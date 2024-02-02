@@ -16,12 +16,38 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
   /**
+   * Handles a simple user login.
+   *
+   * @param Request $request
+   * @return JsonResponse
+   */
+  public function simple(Request $request)
+  {
+    $validator = Validator::make($request->all(), [
+      'email'     => 'required|string|email|exists:users,email',
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json($validator->errors(), 400);
+    }
+
+    $user = User::where('email', '=', $request->email)->first();
+
+    return response()->json([
+      'first_access' => $user->password == null
+    ], 200);
+  }
+
+  /**
    * Authenticate the user and returns a JWT access token.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function login(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'email'     => 'required|string|email',
+      'email'     => 'required|string|email|exists:users,email',
       'password'  => 'required|string',
     ]);
 
@@ -30,8 +56,7 @@ class AuthController extends Controller
     }
 
     $credentials = $request->only('email', 'password');
-    // TODO: Implement remember-me
-    $token = Auth::guard('api')->attempt($credentials);
+    $token = Auth::guard('api')->attempt($credentials, true);
 
     if (!$token) {
       return response()->json([
@@ -46,6 +71,8 @@ class AuthController extends Controller
 
   /**
    * Refresh the user JWT token.
+   *
+   * @return JsonResponse
    */
   public function refresh()
   {
@@ -59,6 +86,8 @@ class AuthController extends Controller
 
   /**
    * Revoke the user's current JWT token.
+   *
+   * @return JsonResponse
    */
   public function logout()
   {
@@ -71,6 +100,9 @@ class AuthController extends Controller
 
   /**
    * Request a link to reset the user password.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function forgot(Request $request)
   {
@@ -100,6 +132,9 @@ class AuthController extends Controller
 
   /**
    * Verify the token for reset user password.
+   *
+   * @param string $token
+   * @return JsonResponse
    */
   public function verify(string $token)
   {
@@ -126,6 +161,9 @@ class AuthController extends Controller
 
   /**
    * Confirm and reset the user password.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function reset(Request $request)
   {
@@ -161,6 +199,8 @@ class AuthController extends Controller
 
   /**
    * Get the current user info.
+   *
+   * @return JsonResponse
    */
   public function me()
   {

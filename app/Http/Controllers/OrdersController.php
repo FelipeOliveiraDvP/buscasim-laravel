@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Traits\Helpers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -77,7 +78,6 @@ class OrdersController extends Controller
       $customer = User::create([
         'name'      => $request->name,
         'email'     => $request->email,
-        // 'password'  => Hash::make('asdf1234') Just implement if you can returns a JWT token.
       ]);
     }
 
@@ -117,6 +117,7 @@ class OrdersController extends Controller
 
     // Update user document and terms.
     $order->user->document      = $request->document;
+    $order->user->password      = Hash::make($request->document);
     $order->user->accept_terms  = $request->accept_terms;
     $order->user->save();
 
