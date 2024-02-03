@@ -30,6 +30,7 @@ class OrdersController extends Controller
   {
     $query = Order::query();
     $current_user = auth('api')->user();
+    $is_admin = $current_user->role == 'admin';
 
     if ($current_user && $current_user->role != 'admin') {
       $query->where('user_id', '=', $current_user->id);
@@ -41,6 +42,8 @@ class OrdersController extends Controller
 
     if ($request->has('status')) {
       $query->where('status', '=', $request->status);
+    } elseif (!$is_admin) {
+      $query->where('status', '=', 'confirmed');
     }
 
     $query

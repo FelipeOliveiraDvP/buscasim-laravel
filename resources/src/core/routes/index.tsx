@@ -12,7 +12,7 @@ const PrivacyPage = lazy(() => import('@/pages/Public/Privacy'));
 const LoginPage = lazy(() => import('@/pages/Public/Login'));
 const ForgotPage = lazy(() => import('@/pages/Public/Forgot'));
 const ResetPage = lazy(() => import('@/pages/Public/Reset'));
-const MySearchsPage = lazy(() => import('@/pages/Public/MySearchs'));
+const SearchesPage = lazy(() => import('@/pages/Public/Searches'));
 
 const OrdersPage = lazy(() => import('@/pages/Private/Orders'));
 const CouponsPage = lazy(() => import('@/pages/Private/Coupons'));
@@ -30,7 +30,7 @@ export function Router() {
           <Route path="resultados" element={<ResultsPage />} />
           <Route path="pagamento" element={<CheckoutPage />} />
           <Route path="perguntas-frequentes" element={<FaqPage />} />
-          <Route path="minhas-consultas" element={<MySearchsPage />} />
+          <Route path="minhas-consultas" element={<SearchesPage />} />
           <Route path="contato" element={<ContactPage />} />
           <Route path="politica-de-privacidade" element={<PrivacyPage />} />
           <Route path="entrar" element={<LoginPage />} />

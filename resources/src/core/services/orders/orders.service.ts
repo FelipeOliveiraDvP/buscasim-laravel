@@ -1,5 +1,6 @@
 import api from '@/core/config/axios';
 import {
+  Order,
   CheckoutRequest,
   CheckoutResponse,
   OrderListQuery,
@@ -19,5 +20,9 @@ export default {
 
   async list(params?: OrderListQuery): Promise<OrderListResponse> {
     return api.get(`/api/orders`, { params });
+  },
+
+  async detail(id?: number): Promise<Order> {
+    return api.get(`/api/orders/${id}`);
   },
 };

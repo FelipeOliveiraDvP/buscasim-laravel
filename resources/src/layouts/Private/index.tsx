@@ -18,7 +18,7 @@ export function PrivateLayout() {
   }
 
   useEffect(() => {
-    if (!authenticated || user === null) {
+    if (!authenticated || user === null || user.role === 'user') {
       navigate('/');
     }
   }, [user, authenticated, navigate]);
