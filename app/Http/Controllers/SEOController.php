@@ -18,6 +18,6 @@ class SEOController extends Controller
       'image'       => asset('cover.jpeg'),
     ];
 
-    return view('welcome', ['meta' => $meta]);
+    return view('index', ['meta' => $meta]);
   }
 }
