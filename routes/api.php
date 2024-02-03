@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CouponsController;
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\OptionsController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\SearchController;
@@ -21,7 +22,6 @@ use App\Http\Controllers\UsersController;
 
 Route::prefix('auth')->group(function () {
   Route::post('login',  [AuthController::class, 'login']);
-  Route::post('simple', [AuthController::class, 'simple']);
   Route::post('forgot', [AuthController::class, 'forgot']);
   Route::post('reset',  [AuthController::class, 'reset']);
   Route::get('refresh', [AuthController::class, 'refresh']);
@@ -39,6 +39,10 @@ Route::prefix('orders')->group(function () {
   Route::post('checkout', [OrdersController::class, 'checkout']);
   Route::post('payment',  [OrdersController::class, 'payment']);
   Route::post('callback', [OrdersController::class, 'callback']);
+});
+
+Route::prefix('customers')->group(function () {
+  Route::post('login', [CustomersController::class, 'login']);
 });
 
 Route::middleware('auth:api')->group(function () {

@@ -21,7 +21,10 @@ class OrdersController extends Controller
   use Helpers;
 
   /**
-   * List all orders.
+   * List all orders. If the current user is a admin, return all orders.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function index(Request $request)
   {
@@ -49,7 +52,30 @@ class OrdersController extends Controller
   }
 
   /**
-   * Create a new order.
+   * Get the order details.
+   *
+   * @param string $id
+   * @return JsonResponse
+   */
+  public function detail(string $id)
+  {
+    $order = Order::with('coupon')
+      ->where('id', '=', $id)
+      ->where('user_id', '=', auth('api')->id())
+      ->first();
+
+    if (!$order) {
+      return response()->json(['message' => 'Consulta não encontrada'], 404);
+    }
+
+    return response()->json($order, 200);
+  }
+
+  /**
+   * Create a draft pending order to proceed with checkout.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function checkout(Request $request)
   {
@@ -95,7 +121,10 @@ class OrdersController extends Controller
   }
 
   /**
-   * Create a payment request.
+   * Update pending order status, and generate a Mercado Pago QRCode for user payment.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function payment(Request $request)
   {
@@ -172,7 +201,10 @@ class OrdersController extends Controller
   }
 
   /**
-   * Callback for the payment gateway, thats updates the order status.
+   * Handles the Mercado Pago callback to update order status.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function callback(Request $request)
   {

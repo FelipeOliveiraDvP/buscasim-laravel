@@ -16,29 +16,6 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
   /**
-   * Handles a simple user login.
-   *
-   * @param Request $request
-   * @return JsonResponse
-   */
-  public function simple(Request $request)
-  {
-    $validator = Validator::make($request->all(), [
-      'email'     => 'required|string|email|exists:users,email',
-    ]);
-
-    if ($validator->fails()) {
-      return response()->json($validator->errors(), 400);
-    }
-
-    $user = User::where('email', '=', $request->email)->first();
-
-    return response()->json([
-      'first_access' => $user->password == null
-    ], 200);
-  }
-
-  /**
    * Authenticate the user and returns a JWT access token.
    *
    * @param Request $request
