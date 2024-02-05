@@ -14,6 +14,7 @@ import * as Yup from 'yup';
 
 import { getFormErrors } from '@/core/utils';
 import { CheckoutRequest, useCheckout } from '@/core/services/orders';
+import { IconLockOpen } from '@tabler/icons-react';
 
 type Props = ModalProps & {
   plate: string;
@@ -54,12 +55,28 @@ export function CheckoutModal({ plate, ...props }: Props) {
   }
 
   return (
-    <Modal {...props} title="Você está quase lá" centered onClose={handleClose}>
+    <Modal
+      {...props}
+      title={
+        <Text
+          component="span"
+          inherit
+          variant="gradient"
+          size="lg"
+          fw="bold"
+          gradient={{ from: 'blue.5', to: 'blue.9' }}
+        >
+          Você está quase lá
+        </Text>
+      }
+      centered
+      onClose={handleClose}
+    >
       <form onSubmit={form.onSubmit((values) => handleSave(values))}>
         <Stack gap="md">
           <Text>
-            Antes de seguir para o pagamento, precisamos que você nos informe
-            seu nome e e-mail.
+            Antes de continuar, precisamos que você nos informe seu nome e
+            e-mail.
           </Text>
           <TextInput
             {...form.getInputProps('name')}
@@ -81,8 +98,9 @@ export function CheckoutModal({ plate, ...props }: Props) {
               loading={mutation.isLoading}
               size="lg"
               fullWidth
+              leftSection={<IconLockOpen />}
             >
-              Ir para o pagamento
+              Liberar informações
             </Button>
           </Group>
         </Stack>

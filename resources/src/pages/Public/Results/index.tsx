@@ -130,41 +130,41 @@ export default function ResultsPage() {
 
         <Paper>
           <Accordion variant="contained" defaultValue="item-0">
-            {premium
-              ? results.fipe.dados.map((item, index) => (
-                  <Accordion.Item key={`item-${index}`} value={`item-${index}`}>
-                    <Accordion.Control
-                      icon={<IconCar />}
-                      className={classes.accordionItem}
-                    >
-                      {item.texto_modelo}
-                    </Accordion.Control>
-                    <Accordion.Panel>
-                      <Text className={classes.price}>{item.texto_valor}</Text>
-                      <Table>
-                        <Table.Tbody>
-                          <Table.Tr>
-                            <Table.Th>Código da FIPE</Table.Th>
-                            <Table.Td>{item.codigo_fipe}</Table.Td>
-                          </Table.Tr>
-                          <Table.Tr>
-                            <Table.Th>Combustível</Table.Th>
-                            <Table.Td>{item.combustivel}</Table.Td>
-                          </Table.Tr>
-                          <Table.Tr>
-                            <Table.Th>Marca</Table.Th>
-                            <Table.Td>{item.texto_marca}</Table.Td>
-                          </Table.Tr>
-                          <Table.Tr>
-                            <Table.Th>Modelo</Table.Th>
-                            <Table.Td>{item.texto_modelo}</Table.Td>
-                          </Table.Tr>
-                        </Table.Tbody>
-                      </Table>
-                    </Accordion.Panel>
-                  </Accordion.Item>
-                ))
-              : previewFipe}
+            {/* {premium */}
+            {results.fipe.dados.map((item, index) => (
+              <Accordion.Item key={`item-${index}`} value={`item-${index}`}>
+                <Accordion.Control
+                  icon={<IconCar />}
+                  className={classes.accordionItem}
+                >
+                  {item.texto_modelo}
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Text className={classes.price}>{item.texto_valor}</Text>
+                  <Table>
+                    <Table.Tbody>
+                      <Table.Tr>
+                        <Table.Th>Código da FIPE</Table.Th>
+                        <Table.Td>{item.codigo_fipe}</Table.Td>
+                      </Table.Tr>
+                      <Table.Tr>
+                        <Table.Th>Combustível</Table.Th>
+                        <Table.Td>{item.combustivel}</Table.Td>
+                      </Table.Tr>
+                      <Table.Tr>
+                        <Table.Th>Marca</Table.Th>
+                        <Table.Td>{item.texto_marca}</Table.Td>
+                      </Table.Tr>
+                      <Table.Tr>
+                        <Table.Th>Modelo</Table.Th>
+                        <Table.Td>{item.texto_modelo}</Table.Td>
+                      </Table.Tr>
+                    </Table.Tbody>
+                  </Table>
+                </Accordion.Panel>
+              </Accordion.Item>
+            ))}
+            {/*   : previewFipe} */}
           </Accordion>
         </Paper>
       </Stack>

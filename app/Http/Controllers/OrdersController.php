@@ -6,6 +6,7 @@ use App\Events\PaymentEvent;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
+use App\Services\PaymentService;
 use App\Traits\Helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,12 +22,16 @@ class OrdersController extends Controller
   use Helpers;
 
   /**
-   * List all orders.
+   * List all orders. If the current user is a admin, return all orders.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function index(Request $request)
   {
     $query = Order::query();
     $current_user = auth('api')->user();
+    $is_admin = $current_user->role == 'admin';
 
     if ($current_user && $current_user->role != 'admin') {
       $query->where('user_id', '=', $current_user->id);
@@ -38,6 +43,8 @@ class OrdersController extends Controller
 
     if ($request->has('status')) {
       $query->where('status', '=', $request->status);
+    } elseif (!$is_admin) {
+      $query->where('status', '=', 'confirmed');
     }
 
     $query
@@ -49,7 +56,30 @@ class OrdersController extends Controller
   }
 
   /**
-   * Create a new order.
+   * Get the order details.
+   *
+   * @param string $id
+   * @return JsonResponse
+   */
+  public function detail(string $id)
+  {
+    $order = Order::with('coupon')
+      ->where('id', '=', $id)
+      ->where('user_id', '=', auth('api')->id())
+      ->first();
+
+    if (!$order) {
+      return response()->json(['message' => 'Consulta não encontrada'], 404);
+    }
+
+    return response()->json($order, 200);
+  }
+
+  /**
+   * Create a draft pending order to proceed with checkout.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function checkout(Request $request)
   {
@@ -95,9 +125,12 @@ class OrdersController extends Controller
   }
 
   /**
-   * Create a payment request.
+   * Update pending order status, and generate a Mercado Pago QRCode for user payment.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
-  public function payment(Request $request)
+  public function payment(Request $request, PaymentService $payment_service)
   {
     // Validate the request.
     $validator = Validator::make($request->all(), [
@@ -138,82 +171,74 @@ class OrdersController extends Controller
     }
 
     // Create a Mercado Pago payment.
-    MercadoPagoConfig::setAccessToken($this->getOption('MERCADO_PAGO_ACCESS_TOKEN'));
+    $data = [
+      'total'     => $total,
+      'plate'     => $order->plate,
+      'name'      => $order->user->name,
+      'email'     => $order->user->email,
+      'document'  => $request->document,
+    ];
 
-    $client = new PaymentClient();
-    $request_options = new RequestOptions();
-    $request_options->setCustomHeaders(["X-Idempotency-Key: " . Str::random(32)]);
+    $result = $payment_service->payment($data);
 
-    $payment = $client->create([
-      "transaction_amount" => (float) $total,
-      "description" => "BuscaSim - Consulta Premium da placa " . $order->plate,
-      "installments" => 1,
-      "payment_method_id" => "pix",
-      "payer" => [
-        "email" => $order->user->email,
-        "first_name" => $order->user->name,
-        "last_name" => "",
-        "identification" => [
-          "type" => "cpf",
-          "number" => $request->document
-        ]
-      ]
-    ], $request_options);
+    if (!$result) {
+      return response()->json(['message' => 'Erro ao gerar o pagamento'], 500);
+    }
 
-    $order->transaction_id = $payment->id;
+    $order->transaction_id = $result['transaction_id'];
     $order->save();
 
     return response()->json([
-      'payment_id'  => $payment->id,
+      'payment_id'  => $result['transaction_id'],
       'customer'    => $order->user,
-      'qrcode'      => $payment->point_of_interaction->transaction_data->qr_code_base64,
-      'code'        => $payment->point_of_interaction->transaction_data->qr_code,
+      'qrcode'      => $result['qrcode'],
+      'code'        => $result['code'],
     ], 200);
   }
 
   /**
-   * Callback for the payment gateway, thats updates the order status.
+   * Handles the Mercado Pago callback to update order status.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
-  public function callback(Request $request)
+  public function callback(Request $request, PaymentService $payment_service)
   {
     // Verify if the request is a valid callback.
     if ($request->type == "payment" && $request->data) {
-      // Setup Mercado Pago SDK for get the payment details.
-      MercadoPagoConfig::setAccessToken($this->getOption('MERCADO_PAGO_ACCESS_TOKEN'));
-
       $payment_id = $request->data['id'];
-      $client = new PaymentClient();
-      $payment = $client->get($payment_id);
+      // Verify if payment is confirmed.
+      if ($payment_service->confirmed($payment_id)) {
+        // Get the order.
+        $order = Order::where('transaction_id', '=', $payment_id)->first();
 
-      // Get the order.
-      $order = Order::where('transaction_id', '=', $payment_id)->first();
+        // To debug on development.
+        if (env('APP_ENV') == 'development') {
+          $order->status = 'confirmed';
+          $order->data = file_get_contents(base_path('resources/json/premium_response.json'));
+          $order->save();
+        }
 
-      // To debug on development.
-      if (env('APP_ENV') == 'development') {
-        $order->status = 'confirmed';
-        $order->data = file_get_contents(base_path('resources/json/premium_response.json'));
-        $order->save();
+        // Get API premium data if payment is confirmed.
+        if (env('APP_ENV') == 'production') {
+          $response = Http::withUrlParameters([
+            'endpoint'  => $this->getOption('API_PLACAS_URL'),
+            'plate'     => $order->plate,
+            'token'     => $this->getOption('API_PLACAS_TOKEN_PREMIUM'),
+          ])->get('{+endpoint}/consulta/{plate}/{token}');
+
+          $order->status = 'confirmed';
+          $order->data = $response->body();
+          $order->save();
+        }
+
+        // Notify the client by WebSocket.
+        event(new PaymentEvent([
+          'payment_id'  => (int)$payment_id,
+          'confirmed'   => true,
+          'data'        => json_decode($order->data),
+        ]));
       }
-
-      // Get API premium data if payment is confirmed.
-      if (env('APP_ENV') == 'production' && $payment->status == 'approved') {
-        $response = Http::withUrlParameters([
-          'endpoint'  => $this->getOption('API_PLACAS_URL'),
-          'plate'     => $order->plate,
-          'token'     => $this->getOption('API_PLACAS_TOKEN_PREMIUM'),
-        ])->get('{+endpoint}/consulta/{plate}/{token}');
-
-        $order->status = 'confirmed';
-        $order->data = $response->body();
-        $order->save();
-      }
-
-      // Notify the client by WebSocket.
-      event(new PaymentEvent([
-        'payment_id'  => (int)$payment_id,
-        'confirmed'   => true,
-        'data'        => json_decode($order->data),
-      ]));
 
       return response()->json(['message' => 'Ok'], 200);
     }

@@ -1,40 +1,43 @@
-name: Deploy on shared hosting
-
-on: [push]
+name: Deploy on Hostgator
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
-    name: Build Laravel and React assets
+    name: Deploy app to Production
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
 
       - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" >> .env
+        run: echo '${{ secrets.ENV_FILE }}' >> .env
 
-      - name: Setup PHP and required extensions
+      - name: Setup PHP 8.2 and required extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           coverage: none
-        
-      - name: Install Laravel dependencies
+
+      - name: Install Laravel 10.x dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-req=ext-imagick
 
-      - name: Generate key
+      - name: Generate Laravel secret key
         run: php artisan key:generate
-      
-      - name: Cache api routes
+
+      - name: Cache Rest API routes
         run: php artisan route:cache
-        
-      - name: Directory Permissions
+
+      - name: Change Laravel cache directory permissions
         run: chmod -R 777 storage bootstrap/cache
-      
+
       - name: Cache node modules
         id: cache-npm
         uses: actions/cache@v3
-  
+
         env:
           cache-name: cache-node-modules
         with:
@@ -44,23 +47,24 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-  
+
       - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: List the state of node modules
         continue-on-error: true
         run: npm list
-  
+
       - name: Build frontend assets
         run: |
           npm install
           npm run build
 
-      - name: Copy files to hosting
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASS }}
-          port: ${{ secrets.SSH_PORT }}
-          source: ./*
-          target: "${{ secrets.SSH_TARGET }}"
+      - name: Deploy Files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
+          SOURCE: '.'
+          EXCLUDE: /.git/, /node_modules/
+          TARGET: ${{ secrets.SSH_TARGET }}

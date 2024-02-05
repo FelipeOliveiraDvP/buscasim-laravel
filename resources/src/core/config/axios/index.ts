@@ -1,11 +1,11 @@
-import axios, { AxiosError, AxiosRequestHeaders } from "axios";
-import { getAuthToken, removeAuthToken } from "@/core/providers";
-import { showError } from "@/core/utils";
+import axios, { AxiosError, AxiosRequestHeaders } from 'axios';
+import { getAuthToken, removeAuthToken } from '@/core/providers';
+import { showError } from '@/core/utils';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -32,13 +32,19 @@ api.interceptors.response.use(
   (res) => res.data,
   (error) => {
     const { response } = error as AxiosError;
+    const isOrder = response?.config.url?.includes('/orders');
 
     if (response?.status === 401) {
-      showError("Sua sessão expirou. Faça o login novamente.");
-      setTimeout(() => {
-        removeAuthToken();
-        window.location.href = "/";
-      }, 1000);
+      removeAuthToken();
+
+      if (!isOrder) {
+        showError('Sua sessão expirou. Faça o login novamente.');
+        setTimeout(() => {
+          removeAuthToken();
+          window.location.href = '/';
+        }, 1000);
+      }
+
       return;
     }
 

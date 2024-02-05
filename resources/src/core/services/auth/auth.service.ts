@@ -6,6 +6,7 @@ import {
   ResetRequest,
   RegisterRequest,
   RegisterResponse,
+  CustomerLoginRequest,
 } from './auth.types';
 import { User } from '@/core/services/users';
 
@@ -36,5 +37,9 @@ export default {
 
   async profile(): Promise<User> {
     return api.get('/api/auth/me');
+  },
+
+  async customerLogin(data: CustomerLoginRequest): Promise<LoginResponse> {
+    return api.post('/api/customers/login', data);
   },
 };

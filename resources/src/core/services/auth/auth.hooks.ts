@@ -1,11 +1,11 @@
+import { AxiosError } from 'axios';
 import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
-import authService from './auth.service';
 import { useAuth } from '@/core/providers';
 import { LoginResponse } from '.';
-import { AxiosError } from 'axios';
 import { getErrorMessage, showError } from '@/core/utils';
+import authService from './auth.service';
 
 export function useLogin() {
   const { onLogin } = useAuth();
@@ -84,6 +84,20 @@ export function useReset() {
   return useMutation(authService.reset, {
     onSuccess(data) {
       onLogin(data, () => navigate('/app'));
+    },
+    onError(error) {
+      showError(getErrorMessage(error as AxiosError));
+    },
+  });
+}
+
+export function useCustomerLogin() {
+  const { onLogin } = useAuth();
+  const navigate = useNavigate();
+
+  return useMutation(authService.customerLogin, {
+    onSuccess(data) {
+      onLogin(data, () => navigate('/minhas-consultas'));
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));

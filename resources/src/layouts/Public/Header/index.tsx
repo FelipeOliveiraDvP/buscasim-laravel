@@ -6,6 +6,7 @@ import {
   Drawer,
   Stack,
   Divider,
+  Button,
 } from '@mantine/core';
 import { useLocation } from 'react-router-dom';
 
@@ -13,6 +14,9 @@ import { AnchorLink } from '@/components/__commons';
 import classes from './styles.module.css';
 
 import logo from '@/assets/logo.svg';
+import { useAuth } from '@/core/providers';
+import { IconLogout } from '@tabler/icons-react';
+import { showSuccess } from '@/core/utils';
 
 interface Props {
   opened: boolean;
@@ -23,11 +27,11 @@ const links = [
   { link: '/perguntas-frequentes', label: 'Perguntas Frequentes' },
   { link: '/contato', label: 'Contato' },
   { link: '/minhas-consultas', label: 'Minhas Consultas' },
-  { link: '/entrar', label: 'Entrar' },
 ];
 
 export function PublicHeader({ opened, toggle }: Props) {
   const location = useLocation();
+  const { user, onLogout } = useAuth();
 
   const items = links.map((link) => (
     <AnchorLink
@@ -46,7 +50,27 @@ export function PublicHeader({ opened, toggle }: Props) {
         <AnchorLink href="/">
           <Image src={logo} width={100} height={48} />
         </AnchorLink>
-        <Group visibleFrom="xs">{items}</Group>
+        <Group visibleFrom="xs">
+          {items}
+          {user ? (
+            <Button
+              color="red"
+              variant="outline"
+              leftSection={<IconLogout />}
+              onClick={() =>
+                onLogout(() => {
+                  showSuccess('Você encerrou a sessão');
+                })
+              }
+            >
+              Sair
+            </Button>
+          ) : (
+            <AnchorLink href="/entrar" className={classes.link}>
+              Entrar
+            </AnchorLink>
+          )}
+        </Group>
 
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
       </Container>

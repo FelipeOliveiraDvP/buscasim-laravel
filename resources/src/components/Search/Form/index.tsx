@@ -34,6 +34,8 @@ export function SearchForm() {
     <form onSubmit={form.onSubmit(handleSearch)} className={classes.controls}>
       <TextInput
         {...form.getInputProps('plate')}
+        name="plate"
+        autoComplete="on"
         placeholder="Digite uma placa"
         classNames={{ input: classes.input, root: classes.inputWrapper }}
       />

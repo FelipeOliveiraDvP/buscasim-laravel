@@ -28,3 +28,8 @@ export interface RegisterResponse {
   token: string;
   plate: string;
 }
+
+export interface CustomerLoginRequest {
+  email: string;
+  document: string;
+}
