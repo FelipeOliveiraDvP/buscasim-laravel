@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { useForm, yupResolver } from '@mantine/form';
-import { Button, TextInput } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import * as Yup from 'yup';
 
@@ -8,6 +8,7 @@ import { SearchRequest, useSearch } from '@/core/services/search';
 import { getFormErrors } from '@/core/utils';
 
 import classes from './styles.module.css';
+import { MaskedInput } from '@/components/__commons';
 
 const schema = Yup.object().shape({
   plate: Yup.string().required('Informe uma placa para consultar'),
@@ -32,11 +33,12 @@ export function SearchForm() {
 
   return (
     <form onSubmit={form.onSubmit(handleSearch)} className={classes.controls}>
-      <TextInput
+      <MaskedInput
         {...form.getInputProps('plate')}
+        mask="plate"
         name="plate"
         autoComplete="on"
-        placeholder="Digite uma placa"
+        placeholder="Ex: HUF-8282"
         classNames={{ input: classes.input, root: classes.inputWrapper }}
       />
       <Button
