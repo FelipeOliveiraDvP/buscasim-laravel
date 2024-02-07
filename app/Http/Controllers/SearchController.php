@@ -13,6 +13,9 @@ class SearchController extends Controller
 
   /**
    * Search a vehicle plate and returns the free information.
+   *
+   * @param Request $request
+   * @return JsonResponse
    */
   public function search(Request $request)
   {
@@ -40,7 +43,7 @@ class SearchController extends Controller
     if (env('APP_ENV') == 'production') {
       $response = Http::withUrlParameters([
         'endpoint'  => $this->getOption('API_PLACAS_URL'),
-        'plate'     => $request->plate,
+        'plate'     => str_replace('-', '', $request->plate),
         'token'     => $this->getOption('API_PLACAS_TOKEN_FREE'),
       ])->get('{+endpoint}/consulta/{plate}/{token}');
 
@@ -50,5 +53,17 @@ class SearchController extends Controller
 
       return response()->json(json_decode($response->body()), 200);
     }
+  }
+
+  /**
+   * Get information about search.
+   *
+   * @return JsonResponse
+   */
+  public function info()
+  {
+    return response()->json([
+      'price' => (float) $this->getOption('BASE_PRICE', 0)
+    ]);
   }
 }

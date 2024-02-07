@@ -29,6 +29,7 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('search')->group(function () {
   Route::post('/', [SearchController::class, 'search']);
+  Route::get('info', [SearchController::class, 'info']);
 });
 
 Route::prefix('coupons')->group(function () {
@@ -36,8 +37,9 @@ Route::prefix('coupons')->group(function () {
 });
 
 Route::prefix('orders')->group(function () {
-  Route::post('checkout', [OrdersController::class, 'checkout']);
-  Route::post('payment',  [OrdersController::class, 'payment']);
+  Route::post('process', [OrdersController::class, 'process']);
+  // Route::post('checkout', [OrdersController::class, 'checkout']);
+  // Route::post('payment',  [OrdersController::class, 'payment']);
   Route::post('callback', [OrdersController::class, 'callback']);
 });
 

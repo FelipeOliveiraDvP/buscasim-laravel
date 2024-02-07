@@ -97,3 +97,7 @@ export interface SearchFIPEItem {
   texto_valor?: string;
   tipo_modelo?: number;
 }
+
+export interface SearchInformation {
+  price: number;
+}

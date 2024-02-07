@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PaymentEvent;
+use App\Http\Requests\CheckoutRequest;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\User;
@@ -12,10 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use MercadoPago\Client\Common\RequestOptions;
-use MercadoPago\Client\Payment\PaymentClient;
-use MercadoPago\MercadoPagoConfig;
 
 class OrdersController extends Controller
 {
@@ -76,6 +73,47 @@ class OrdersController extends Controller
   }
 
   /**
+   * Process customer checkout.
+   *
+   * @param CheckoutRequest $request.
+   * @return JsonResponse
+   */
+  public function process(CheckoutRequest $request)
+  {
+    // The customer for checkout.
+    $customer = null;
+
+    // Retrieve an existing user or create a new one.
+    $user_exists = User::where('email', '=', $request->email)->first();
+
+    if (auth('api')->user() != null) {
+      $customer = auth('api')->user();
+    } elseif ($user_exists != null) {
+      $customer = $user_exists;
+    } else {
+      $customer = User::create([
+        'name'          => $request->name,
+        'email'         => $request->email,
+        'password'      => Hash::make($request->document),
+        'document'      => $request->document,
+        'accept_terms'  => $request->accept_terms,
+      ]);
+    }
+
+    // Create a draft order.
+    $order = Order::create([
+      'total'   => $this->getOption('BASE_PRICE'),
+      'plate'   => str_replace('-', '', $request->plate),
+      'user_id' => $customer->id,
+    ]);
+
+
+
+    return response()->json(['plate' => $request->plate], 200);
+  }
+
+
+  /**
    * Create a draft pending order to proceed with checkout.
    *
    * @param Request $request
@@ -106,15 +144,18 @@ class OrdersController extends Controller
       $customer = $user_exists;
     } else {
       $customer = User::create([
-        'name'      => $request->name,
-        'email'     => $request->email,
+        'name'          => $request->name,
+        'email'         => $request->email,
+        'password'      => Hash::make($request->document),
+        'document'      => $request->document,
+        'accept_terms'  => $request->accept_terms,
       ]);
     }
 
     // Create a draft order.
     $order = Order::create([
       'total'   => $this->getOption('BASE_PRICE'),
-      'plate'   => $request->plate,
+      'plate'   => str_replace('-', '', $request->plate),
       'user_id' => $customer->id,
     ]);
 

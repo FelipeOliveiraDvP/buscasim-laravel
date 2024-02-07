@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Accordion,
   Button,
@@ -15,7 +15,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCar, IconLock, IconLockOpen } from '@tabler/icons-react';
+import { IconCar, IconLockOpen } from '@tabler/icons-react';
 
 import { PageLoader } from '@/components/__commons';
 import {
@@ -25,37 +25,17 @@ import {
 } from '@/components/Results';
 import { CheckoutModal } from '@/components/Checkout';
 
-import classes from './styles.module.css';
 import { useSearchResults } from '@/core/providers';
+import { useSearchInfo } from '@/core/services/search';
+import { moneyFormat } from '@/core/utils';
+
+import classes from './styles.module.css';
 
 export default function ResultsPage() {
   const [opened, { open, close }] = useDisclosure(false);
   const { results, premium } = useSearchResults();
+  const { data, isLoading } = useSearchInfo();
   const navigate = useNavigate();
-
-  const previewFipe = (
-    <Center p="xl" bg="blue.7" c="white">
-      <Stack align="center">
-        <IconLock size={48} />
-        <Title order={3}>
-          Quer saber mais informações sobre a tabela FIPE desse veículo?
-        </Title>
-        <Text>
-          Adquira o relatório Premium e tenha acesso a essa e outras
-          informações.
-        </Text>
-        <Button
-          leftSection={<IconLockOpen />}
-          variant="outline"
-          color="white"
-          size="lg"
-          onClick={open}
-        >
-          Liberar Informações
-        </Button>
-      </Stack>
-    </Center>
-  );
 
   useEffect(() => {
     if (!results) navigate('/');
@@ -100,18 +80,23 @@ export default function ResultsPage() {
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
                     <ResultsPremiumInfo data={results} show={premium} />
-                    {!premium && (
+                  </Grid.Col>
+                  {!premium && (
+                    <Grid.Col>
                       <Button
+                        component={Link}
+                        to="/pagamento"
+                        loading={isLoading}
                         leftSection={<IconLockOpen />}
                         variant="outline"
                         fullWidth
                         size="lg"
-                        onClick={open}
                       >
-                        Liberar Informações
+                        Liberar Informações por apenas{' '}
+                        {moneyFormat(data?.price || 0)}
                       </Button>
-                    )}
-                  </Grid.Col>
+                    </Grid.Col>
+                  )}
                 </Grid>
               </Stack>
             </Paper>
@@ -130,7 +115,6 @@ export default function ResultsPage() {
 
         <Paper>
           <Accordion variant="contained" defaultValue="item-0">
-            {/* {premium */}
             {results.fipe.dados.map((item, index) => (
               <Accordion.Item key={`item-${index}`} value={`item-${index}`}>
                 <Accordion.Control
@@ -164,9 +148,33 @@ export default function ResultsPage() {
                 </Accordion.Panel>
               </Accordion.Item>
             ))}
-            {/*   : previewFipe} */}
           </Accordion>
         </Paper>
+        {!premium && (
+          <Center p="xl" bg="blue.7" c="white">
+            <Stack align="center">
+              <IconLockOpen size={48} />
+              <Title order={3}>
+                Quer saber todas as informações que estão bloqueadas?
+              </Title>
+              <Text>
+                Adquira o relatório Premium e tenha acesso a essa e outras
+                informações.
+              </Text>
+              <Text size="xs">Você acessar seus relatórios quando quiser.</Text>
+              <Button
+                component={Link}
+                to="/pagamento"
+                leftSection={<IconLockOpen />}
+                variant="outline"
+                color="white"
+                size="lg"
+              >
+                Liberar Informações por apenas {moneyFormat(data?.price || 0)}
+              </Button>
+            </Stack>
+          </Center>
+        )}
       </Stack>
       <Portal>
         <CheckoutModal opened={opened} onClose={close} plate={results.placa} />

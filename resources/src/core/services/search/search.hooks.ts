@@ -1,10 +1,11 @@
 import { AxiosError } from 'axios';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { useSearchResults } from '@/core/providers';
 import { getErrorMessage, showError } from '@/core/utils';
 import searchService from './search.service';
+import { SearchInformation } from '.';
 
 export function useSearch() {
   const navigate = useNavigate();
@@ -20,4 +21,16 @@ export function useSearch() {
       navigate('/');
     },
   });
+}
+
+export function useSearchInfo() {
+  return useQuery<SearchInformation, AxiosError>(
+    ['search.info'],
+    () => searchService.info(),
+    {
+      onError(error) {
+        showError(getErrorMessage(error as AxiosError));
+      },
+    }
+  );
 }
