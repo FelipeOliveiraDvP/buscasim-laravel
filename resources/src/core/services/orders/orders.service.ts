@@ -1,21 +1,15 @@
 import api from '@/core/config/axios';
 import {
   Order,
-  CheckoutRequest,
-  CheckoutResponse,
   OrderListQuery,
   OrderListResponse,
-  PaymentRequest,
-  PaymentResponse,
+  ProcessPaymentRequest,
+  ProcessPaymentResponse,
 } from '.';
 
 export default {
-  async checkout(data: CheckoutRequest): Promise<CheckoutResponse> {
-    return api.post(`/api/orders/checkout`, data);
-  },
-
-  async payment(data: PaymentRequest): Promise<PaymentResponse> {
-    return api.post(`/api/orders/payment`, data);
+  async process(data: ProcessPaymentRequest): Promise<ProcessPaymentResponse> {
+    return api.post(`/api/orders/process`, data);
   },
 
   async list(params?: OrderListQuery): Promise<OrderListResponse> {

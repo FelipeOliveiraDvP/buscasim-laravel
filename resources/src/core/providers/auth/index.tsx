@@ -26,6 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function handleLogin(data: LoginResponse, callback: VoidFunction) {
     const currentUser = getDecodedUser(data.token);
 
+    console.log('AuthProvider: ', currentUser, data.token);
+
     if (currentUser !== null) {
       setAuthToken(data.token);
       setUser(currentUser);

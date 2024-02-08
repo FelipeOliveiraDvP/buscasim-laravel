@@ -78,17 +78,20 @@ class PaymentService
       $client = new PaymentClient();
       $payment = $client->get($payment_id);
 
-      if ($payment->status == 'approved') {
+      if (env('APP_ENV') == 'development') {
+        Log::info('Mercado Pago payment data: {data}', ['data' => $payment]);
         return true;
       }
 
-      return false;
+      if ($payment->status == 'approved') {
+        return true;
+      }
     } catch (MPApiException $e) {
       Log::error('Error on Mercado Pago API: {error}', ['error' => $e->getApiResponse()->getContent()]);
-      return false;
     } catch (\Exception $e) {
-      Log::error('Error on proccess payment callback: {error}', ['error' => $e->getMessage()]);
-      return false;
+      Log::error('Error on process payment callback: {error}', ['error' => $e->getMessage()]);
     }
+
+    return false;
   }
 }

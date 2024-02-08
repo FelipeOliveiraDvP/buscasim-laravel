@@ -23,7 +23,6 @@ import {
   ResultsOverview,
   ResultsPremiumInfo,
 } from '@/components/Results';
-import { CheckoutModal } from '@/components/Checkout';
 
 import { useSearchResults } from '@/core/providers';
 import { useSearchInfo } from '@/core/services/search';
@@ -32,7 +31,7 @@ import { moneyFormat } from '@/core/utils';
 import classes from './styles.module.css';
 
 export default function ResultsPage() {
-  const [opened, { open, close }] = useDisclosure(false);
+  // const [opened, { open, close }] = useDisclosure(false);
   const { results, premium } = useSearchResults();
   const { data, isLoading } = useSearchInfo();
   const navigate = useNavigate();
@@ -176,9 +175,9 @@ export default function ResultsPage() {
           </Center>
         )}
       </Stack>
-      <Portal>
+      {/* <Portal>
         <CheckoutModal opened={opened} onClose={close} plate={results.placa} />
-      </Portal>
+      </Portal> */}
     </Container>
   );
 }

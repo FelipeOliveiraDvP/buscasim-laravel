@@ -1,31 +1,37 @@
 import { UseFormReturnType } from '@mantine/form';
-import { Checkbox, Stack, Text, Title } from '@mantine/core';
+import { Checkbox, Stack, Text, TextInput, Title } from '@mantine/core';
 
 import { AnchorLink, MaskedInput } from '@/components/__commons';
-import { PaymentRequest } from '@/core/services/orders';
-import { useSearchResults } from '@/core/providers';
+import { ProcessPaymentRequest } from '@/core/services/orders';
 
 interface Props {
-  form: UseFormReturnType<PaymentRequest>;
+  form: UseFormReturnType<ProcessPaymentRequest>;
 }
 
 export function CheckoutForm({ form }: Props) {
-  const { order } = useSearchResults();
-
   return (
     <Stack>
       <Title order={3}>Suas informações</Title>
-      <Text fw="bolder">Nome</Text>
-      <Text c="dimmed">{order?.customer.name}</Text>
+      <TextInput
+        {...form.getInputProps('name')}
+        label="Seu nome"
+        placeholder="Informe seu nome completo"
+        withAsterisk
+      />
 
-      <Text fw="bolder">E-mail</Text>
-      <Text c="dimmed">{order?.customer.email}</Text>
+      <TextInput
+        {...form.getInputProps('email')}
+        label="Seu e-mail"
+        placeholder="EX: exemplo@email.com"
+        withAsterisk
+      />
 
       <MaskedInput
         {...form.getInputProps('document')}
         mask="cpf"
         label="CPF"
         placeholder="000.000.000-00"
+        withAsterisk
       />
       <Checkbox
         {...form.getInputProps('accept_terms', { type: 'checkbox' })}

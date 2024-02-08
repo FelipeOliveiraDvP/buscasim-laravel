@@ -1,11 +1,14 @@
 import { ReactNode, createContext, useContext, useReducer } from 'react';
 import { SearchResult } from '@/core/services/search';
-import { CheckoutResponse, PaymentResponse } from '@/core/services/orders';
+import {
+  PaymentConfirmed,
+  ProcessPaymentResponse,
+} from '@/core/services/orders';
 
 type SearchResultsState = {
   results: SearchResult | null;
-  order: CheckoutResponse | null;
-  payment: PaymentResponse | null;
+  order: ProcessPaymentResponse | null;
+  payment: PaymentConfirmed | null;
   premium: boolean;
 };
 

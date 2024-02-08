@@ -10,7 +10,7 @@ const masks: Record<MaksType, string> = {
   cpf: '___.___.___-__',
   cep: '________',
   phone: '(__)_____-____',
-  plate: 'AAA-0Z00',
+  plate: 'AAA-NZNN',
 };
 
 const masksErrors: Record<MaksType, string> = {
@@ -26,7 +26,6 @@ export function MaskedInput({ mask, withAsterisk, ...props }: Props) {
   const wrapperClassName =
     props.classNames && 'root' in props.classNames ? props.classNames.root : '';
 
-  console.log(wrapperClassName);
   return (
     <InputWrapper classNames={{ root: wrapperClassName }}>
       <Input.Label required={withAsterisk}>{props.label}</Input.Label>
@@ -35,7 +34,7 @@ export function MaskedInput({ mask, withAsterisk, ...props }: Props) {
         mt={mask === 'plate' ? 'calc(64px - 88.8px)' : undefined}
         component={InputMask}
         mask={masks[mask]}
-        replacement={{ _: /\d/, '0': /\d/, A: /[A-Za-z]/, Z: /[0-9A-Za-z]/ }}
+        replacement={{ _: /\d/, N: /\d/, A: /[A-Za-z]/, Z: /[0-9A-Za-z]/ }}
         onMask={(e) => setMaskDetail(e.detail)}
       />
       {maskDetail?.input && !maskDetail?.isValid && (

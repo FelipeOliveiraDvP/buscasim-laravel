@@ -11,9 +11,9 @@ import {
 import { useSearchResults } from '@/core/providers';
 
 export function CheckoutQRCode() {
-  const { payment } = useSearchResults();
+  const { order } = useSearchResults();
 
-  if (!payment) return null;
+  if (!order) return null;
 
   return (
     <Stack align="center">
@@ -23,11 +23,11 @@ export function CheckoutQRCode() {
         informações vão ser liberadas assim que o pagamento for confirmado.
       </Text>
 
-      <Image src={`data:image/jpeg;base64,${payment?.qrcode}`} maw={200} />
+      <Image src={`data:image/jpeg;base64,${order?.qrcode}`} maw={200} />
 
       <Flex w="100%">
-        <Input value={payment?.code} readOnly radius={0} flex={1} />
-        <CopyButton value={payment?.code}>
+        <Input value={order?.code} readOnly radius={0} flex={1} />
+        <CopyButton value={order?.code}>
           {({ copied, copy }) => (
             <Button color={copied ? 'teal' : 'blue'} radius={0} onClick={copy}>
               {copied ? 'Copiado' : 'Copiar'}

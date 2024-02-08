@@ -16,33 +16,24 @@ export interface Order {
   deleted_at?: string | null;
 }
 
-export interface CheckoutRequest {
+export type OrderStatusType = 'pending' | 'confirmed' | 'cancelled';
+
+export type OrderListQuery = BaseQuery & {
+  date?: Date | string | null;
+  status?: OrderStatusType | null;
+};
+
+export type OrderListResponse = PaginatedResponse<Order>;
+export interface ProcessPaymentRequest {
   name: string;
   email: string;
-  plate: string;
-}
-
-export interface CheckoutResponse {
-  customer: {
-    id: number;
-    name: string;
-    email: string;
-  };
-  order: {
-    id: number;
-    total: number;
-    plate: string;
-  };
-}
-
-export interface PaymentRequest {
-  order_id: number | null;
   document: string;
-  coupon_id: number | null;
   accept_terms: boolean;
+  plate: string;
+  coupon_id: number | null;
 }
 
-export interface PaymentResponse {
+export interface ProcessPaymentResponse {
   payment_id: number;
   customer: {
     id: number;
@@ -60,12 +51,3 @@ export interface PaymentConfirmed {
     confirmed: boolean;
   };
 }
-
-export type OrderStatusType = 'pending' | 'confirmed' | 'cancelled';
-
-export type OrderListQuery = BaseQuery & {
-  date?: Date | string | null;
-  status?: OrderStatusType | null;
-};
-
-export type OrderListResponse = PaginatedResponse<Order>;

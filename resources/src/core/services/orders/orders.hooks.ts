@@ -7,27 +7,12 @@ import { Order, OrderListQuery, OrderListResponse } from '.';
 import { useSearchResults } from '@/core/providers';
 import ordersService from './orders.service';
 
-export function useCheckout() {
-  const { setSearchResults } = useSearchResults();
-  const navigate = useNavigate();
-
-  return useMutation(ordersService.checkout, {
-    onSuccess(order) {
-      setSearchResults({ order });
-      navigate('/pagamento');
-    },
-    onError(error) {
-      showError(getErrorMessage(error as AxiosError));
-    },
-  });
-}
-
-export function usePayment() {
+export function useProcessPayment() {
   const { setSearchResults } = useSearchResults();
 
-  return useMutation(ordersService.payment, {
-    onSuccess(payment) {
-      setSearchResults({ payment });
+  return useMutation(ordersService.process, {
+    onSuccess(data) {
+      setSearchResults({ order: data });
     },
     onError(error) {
       showError(getErrorMessage(error as AxiosError));

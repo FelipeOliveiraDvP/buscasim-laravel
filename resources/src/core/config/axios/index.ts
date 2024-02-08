@@ -16,6 +16,8 @@ api.interceptors.request.use((config) => {
 
   const token = getAuthToken();
 
+  console.log('RequestInterceptor: ', token);
+
   if (token) {
     newHeaders = {
       ...newHeaders,

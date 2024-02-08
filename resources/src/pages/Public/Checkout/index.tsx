@@ -5,7 +5,6 @@ import {
   Alert,
   Button,
   Container,
-  NumberFormatter,
   Paper,
   SimpleGrid,
   Stack,
@@ -22,18 +21,24 @@ import { PageLoader } from '@/components/__commons';
 import { CheckoutForm, CheckoutQRCode } from '@/components/Checkout';
 import {
   PaymentConfirmed,
-  PaymentRequest,
-  PaymentResponse,
-  usePayment,
+  ProcessPaymentRequest,
+  ProcessPaymentResponse,
+  useProcessPayment,
 } from '@/core/services/orders';
-import { getFormErrors, showSuccess } from '@/core/utils';
+import { getFormErrors, moneyFormat, showSuccess } from '@/core/utils';
 
 import classes from './styles.module.css';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useDiscount } from '@/core/services/coupons';
-import { useSearchResults } from '@/core/providers';
+import { useAuth, useSearchResults } from '@/core/providers';
+import { useSearchInfo } from '@/core/services/search';
 
 const schema = yup.object().shape({
+  name: yup.string().required('Informe o seu nome'),
+  email: yup
+    .string()
+    .required('Informe seu e-mail')
+    .email('Informe um e-mail válido'),
   document: yup.string().required('Campo Obrigatório'),
   accept_terms: yup.boolean().oneOf([true], 'Aceite os termos para continuar'),
 });
@@ -41,36 +46,43 @@ const schema = yup.object().shape({
 export default function CheckoutPage() {
   const [coupon, setCoupon] = useState<string>();
   const [debounced] = useDebouncedValue(coupon, 250);
+  const { user } = useAuth();
   const { data: discount } = useDiscount(debounced);
-  const { order, payment, setSearchResults } = useSearchResults();
-  const mutation = usePayment();
+  const { results, order, setSearchResults } = useSearchResults();
+  const { data: info, isLoading: loadingInfo } = useSearchInfo();
+
+  const mutation = useProcessPayment();
   const navigate = useNavigate();
 
-  const form = useForm<PaymentRequest>({
+  const form = useForm<ProcessPaymentRequest>({
     initialValues: {
+      name: user ? user.name : '',
+      email: user ? user.email : '',
       document: '',
       accept_terms: false,
+      plate: '',
       coupon_id: null,
-      order_id: null,
     },
     validate: yupResolver(schema),
   });
 
-  async function handleSubmit(values: PaymentRequest) {
+  async function handleSubmit(values: ProcessPaymentRequest) {
     try {
       await mutation.mutateAsync({
         ...values,
+        plate: results?.placa || '',
         coupon_id: discount?.coupon_id || null,
-        order_id: order ? order.order.id : null,
       });
     } catch (error) {
       form.setErrors({ ...getFormErrors(error as AxiosError) });
     }
   }
 
-  function listenEvents(payment: PaymentResponse) {
-    const pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
-      cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+  function listenEvents(order: ProcessPaymentResponse) {
+    const { VITE_PUSHER_APP_KEY, VITE_PUSHER_APP_CLUSTER } = import.meta.env;
+
+    const pusher = new Pusher(VITE_PUSHER_APP_KEY, {
+      cluster: VITE_PUSHER_APP_CLUSTER,
     });
 
     const channel = pusher.subscribe('payment-confirmed');
@@ -78,7 +90,7 @@ export default function CheckoutPage() {
     channel.bind('payment-event', (data: PaymentConfirmed) => {
       const { payment_id, data: results } = data.payment;
 
-      if (payment_id === payment?.payment_id) {
+      if (payment_id === order.payment_id) {
         setSearchResults({ results, premium: true });
         showSuccess('Pagamento confirmado com sucesso!');
         navigate('/resultados');
@@ -87,23 +99,24 @@ export default function CheckoutPage() {
   }
 
   useEffect(() => {
-    if (payment) listenEvents(payment);
-  }, [payment]);
-
-  useEffect(() => {
-    if (!order) navigate('/');
+    if (order) listenEvents(order);
   }, [order]);
 
-  if (!order) return <PageLoader />;
+  useEffect(() => {
+    if (!results) navigate('/');
+  }, [results]);
+
+  if (loadingInfo) return <PageLoader />;
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Container className={classes.wrapper}>
-        <SimpleGrid w="100%" cols={{ base: 1, md: payment ? 1 : 2 }}>
+        <SimpleGrid w="100%" cols={{ base: 1, md: order ? 1 : 2 }}>
           <Paper withBorder p="md">
-            {payment ? <CheckoutQRCode /> : <CheckoutForm form={form} />}
+            {order ? <CheckoutQRCode /> : <CheckoutForm form={form} />}
           </Paper>
-          {!payment && order && (
+
+          {!order && (
             <Paper withBorder p="md">
               <Stack>
                 <Title order={3}>Pagamento</Title>
@@ -111,20 +124,11 @@ export default function CheckoutPage() {
                   <Table.Tbody>
                     <Table.Tr>
                       <Table.Td>Placa</Table.Td>
-                      <Table.Th>{order.order.plate}</Table.Th>
+                      <Table.Th>{results?.placa}</Table.Th>
                     </Table.Tr>
                     <Table.Tr>
                       <Table.Td>Subtotal</Table.Td>
-                      <Table.Th>
-                        <NumberFormatter
-                          prefix="R$ "
-                          value={order.order.total}
-                          decimalScale={2}
-                          thousandSeparator="."
-                          decimalSeparator=","
-                          fixedDecimalScale
-                        />
-                      </Table.Th>
+                      <Table.Th>{moneyFormat(info?.price || 0)}</Table.Th>
                     </Table.Tr>
                     <Table.Tr>
                       <Table.Td>
@@ -136,14 +140,7 @@ export default function CheckoutPage() {
                         />
                       </Table.Td>
                       <Table.Th>
-                        <NumberFormatter
-                          prefix="R$ -"
-                          value={discount ? discount.discount : 0}
-                          decimalScale={2}
-                          thousandSeparator="."
-                          decimalSeparator=","
-                          fixedDecimalScale
-                        />
+                        {moneyFormat(discount?.discount || 0)}
                       </Table.Th>
                     </Table.Tr>
                     <Table.Tr>
@@ -152,16 +149,9 @@ export default function CheckoutPage() {
                       </Table.Td>
                       <Table.Th>
                         <Text size="lg">
-                          <NumberFormatter
-                            prefix="R$ "
-                            value={
-                              discount ? discount.subtotal : order.order.total
-                            }
-                            decimalScale={2}
-                            thousandSeparator="."
-                            decimalSeparator=","
-                            fixedDecimalScale
-                          />
+                          {moneyFormat(
+                            discount ? discount.subtotal : info?.price || 0
+                          )}
                         </Text>
                       </Table.Th>
                     </Table.Tr>
