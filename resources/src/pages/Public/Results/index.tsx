@@ -36,11 +36,10 @@ export default function ResultsPage() {
 
   useEffect(() => {
     if (!results) navigate('/');
+    ReactGA.pageview(window.location.pathname + window.location.search);
   }, [results]);
 
   if (!results) return <PageLoader />;
-
-  ReactGA.pageview(window.location.pathname + window.location.search);
 
   return (
     <Container className={classes.container}>
