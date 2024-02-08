@@ -58,7 +58,7 @@ export default function CheckoutPage() {
     initialValues: {
       name: user ? user.name : '',
       email: user ? user.email : '',
-      document: '',
+      document: user ? (user.document as string) : '',
       accept_terms: false,
       plate: '',
       coupon_id: null,

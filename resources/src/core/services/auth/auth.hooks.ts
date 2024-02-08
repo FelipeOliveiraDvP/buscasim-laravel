@@ -6,6 +6,7 @@ import { useAuth } from '@/core/providers';
 import { LoginResponse } from '.';
 import { getErrorMessage, showError } from '@/core/utils';
 import authService from './auth.service';
+import { queryClient } from '@/core/config/react-query';
 
 export function useLogin() {
   const { onLogin } = useAuth();
@@ -97,6 +98,7 @@ export function useCustomerLogin() {
 
   return useMutation(authService.customerLogin, {
     onSuccess(data) {
+      queryClient.invalidateQueries(['orders']);
       onLogin(data, () => navigate('/minhas-consultas'));
     },
     onError(error) {
