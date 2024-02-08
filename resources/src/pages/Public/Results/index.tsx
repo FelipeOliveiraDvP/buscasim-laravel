@@ -8,14 +8,13 @@ import {
   Grid,
   Image,
   Paper,
-  Portal,
   Stack,
   Table,
   Text,
   Title,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { IconCar, IconLockOpen } from '@tabler/icons-react';
+import ReactGA from 'react-ga';
 
 import { PageLoader } from '@/components/__commons';
 import {
@@ -31,7 +30,6 @@ import { moneyFormat } from '@/core/utils';
 import classes from './styles.module.css';
 
 export default function ResultsPage() {
-  // const [opened, { open, close }] = useDisclosure(false);
   const { results, premium } = useSearchResults();
   const { data, isLoading } = useSearchInfo();
   const navigate = useNavigate();
@@ -41,6 +39,8 @@ export default function ResultsPage() {
   }, [results]);
 
   if (!results) return <PageLoader />;
+
+  ReactGA.pageview(window.location.pathname + window.location.search);
 
   return (
     <Container className={classes.container}>
