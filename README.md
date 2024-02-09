@@ -30,3 +30,19 @@ O BuscaSim é uma plataforma onde os usuários podem consultar qualquer placa, e
 
 5. No histórico, o cliente poderá visualizar as informações das consultas que foram pagas.
    5.1 As informações vão ser as mesmas do momento em que a consulta foi efetuada.
+
+# Deploy em hospedagem compartilhada
+
+As hospedagens compartilhadas, geralmente servem os arquivos a partir da pasta `public_html`. Para redirecionar as requisições do servidor para a pasta `public` do Laravel, adicione um arquivo `.htaccess` na raiz do projeto com o conteúdo abaixo:
+
+```
+# Block direct requests to the "public" subdirectory
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule ^public($|/) - [R=404]
+
+# Rewrite all requests that are not already for the "public" subdirectory
+RewriteRule !^public/ /public%{REQUEST_URI} [L]
+```
+
+> [!TIP]
+> Você pode adicionar o conteúdo desse arquivo nos secrets, e criar durante a execução da pipeline.

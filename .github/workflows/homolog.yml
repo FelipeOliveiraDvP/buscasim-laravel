@@ -68,3 +68,12 @@ jobs:
           SOURCE: '.'
           EXCLUDE: /.git/, /node_modules/
           TARGET: ${{ secrets.HOMOLOG_SSH_TARGET }}
+
+      - name: Running Laravel migrations.
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOMOLOG_SSH_HOST }}
+          username: ${{ secrets.HOMOLOG_SSH_USER }}
+          key: ${{ secrets.HOMOLOG_SSH_KEY }}
+          port: ${{ secrets.HOMOLOG_SSH_PORT }}
+          script: php artisan migrate --force
