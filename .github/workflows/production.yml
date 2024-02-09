@@ -1,0 +1,70 @@
+name: Deploy on GoDaddy
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    name: Deploy app to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: echo '${{ secrets.PROD_ENV_FILE }}' >> .env
+
+      - name: Setup PHP 8.2 and required extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      - name: Install Laravel 10.x dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-req=ext-imagick
+
+      - name: Generate Laravel secret key
+        run: php artisan key:generate
+
+      - name: Cache Rest API routes
+        run: php artisan route:cache
+
+      - name: Change Laravel cache directory permissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v3
+
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+
+      - name: Build frontend assets
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy Files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PROD_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.PROD_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.PROD_SSH_USER }}
+          REMOTE_PORT: ${{ secrets.PROD_SSH_PORT }}
+          SOURCE: '.'
+          EXCLUDE: /.git/, /node_modules/
+          TARGET: ${{ secrets.PROD_SSH_TARGET }}

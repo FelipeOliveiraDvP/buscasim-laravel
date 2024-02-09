@@ -2,18 +2,18 @@ name: Deploy on Hostgator
 on:
   push:
     branches:
-      - main
+      - homolog
 
 jobs:
   deploy:
-    name: Deploy app to Production
+    name: Deploy app to Homolog
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Create .env file
-        run: echo '${{ secrets.ENV_FILE }}' >> .env
+        run: echo '${{ secrets.HOMOLOG_ENV_FILE }}' >> .env
 
       - name: Setup PHP 8.2 and required extensions
         uses: shivammathur/setup-php@v2
@@ -61,10 +61,10 @@ jobs:
       - name: Deploy Files to server
         uses: easingthemes/ssh-deploy@main
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
-          REMOTE_PORT: ${{ secrets.SSH_PORT }}
+          SSH_PRIVATE_KEY: ${{ secrets.HOMOLOG_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.HOMOLOG_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.HOMOLOG_SSH_USER }}
+          REMOTE_PORT: ${{ secrets.HOMOLOG_SSH_PORT }}
           SOURCE: '.'
           EXCLUDE: /.git/, /node_modules/
-          TARGET: ${{ secrets.SSH_TARGET }}
+          TARGET: ${{ secrets.HOMOLOG_SSH_TARGET }}
