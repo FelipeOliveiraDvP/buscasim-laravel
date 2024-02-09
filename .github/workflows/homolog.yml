@@ -70,7 +70,7 @@ jobs:
           TARGET: ${{ secrets.HOMOLOG_SSH_TARGET }}
 
       - name: Running Laravel migrations.
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.HOMOLOG_SSH_HOST }}
           username: ${{ secrets.HOMOLOG_SSH_USER }}
