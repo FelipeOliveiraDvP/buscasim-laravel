@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Setup environment.
       - uses: actions/checkout@v3
 
       - name: Create .env file
@@ -22,7 +23,8 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           coverage: none
 
-      - name: Install Laravel 10.x dependencies
+      # Setup Laravel.
+      - name: Install Laravel dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist --ignore-platform-req=ext-imagick
 
       - name: Generate Laravel secret key
@@ -34,30 +36,32 @@ jobs:
       - name: Change Laravel cache directory permissions
         run: chmod -R 777 storage bootstrap/cache
 
-      - name: Cache node modules
-        id: cache-npm
-        uses: actions/cache@v3
+      # Build React assets.
+      # - name: Cache node modules
+      #   id: cache-npm
+      #   uses: actions/cache@v3
 
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+      #   env:
+      #     cache-name: cache-node-modules
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-build-${{ env.cache-name }}-
+      #       ${{ runner.os }}-build-
+      #       ${{ runner.os }}-
 
-      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
-        continue-on-error: true
-        run: npm list
+      # - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+      #   name: List the state of node modules
+      #   continue-on-error: true
+      #   run: npm list
 
       - name: Build frontend assets
         run: |
           npm install
           npm run build
 
+      # Publish files to server.
       - name: Deploy Files to server
         uses: easingthemes/ssh-deploy@main
         env:
