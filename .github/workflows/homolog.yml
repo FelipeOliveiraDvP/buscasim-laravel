@@ -36,27 +36,8 @@ jobs:
       - name: Change Laravel cache directory permissions
         run: chmod -R 777 storage bootstrap/cache
 
-      # Build React assets.
-      # - name: Cache node modules
-      #   id: cache-npm
-      #   uses: actions/cache@v3
-
-      #   env:
-      #     cache-name: cache-node-modules
-      #   with:
-      #     path: ~/.npm
-      #     key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-build-${{ env.cache-name }}-
-      #       ${{ runner.os }}-build-
-      #       ${{ runner.os }}-
-
-      # - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-      #   name: List the state of node modules
-      #   continue-on-error: true
-      #   run: npm list
-
-      - name: Build frontend assets
+      # Vite build react assets.
+      - name: Optimize frontend assets for production
         run: |
           npm install
           npm run build
