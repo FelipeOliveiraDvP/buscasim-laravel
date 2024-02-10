@@ -13,6 +13,7 @@ const LoginPage = lazy(() => import('@/pages/Public/Login'));
 const ForgotPage = lazy(() => import('@/pages/Public/Forgot'));
 const ResetPage = lazy(() => import('@/pages/Public/Reset'));
 const SearchesPage = lazy(() => import('@/pages/Public/Searches'));
+const ThankYouPage = lazy(() => import('@/pages/Public/ThankYou'));
 
 const OrdersPage = lazy(() => import('@/pages/Private/Orders'));
 const CouponsPage = lazy(() => import('@/pages/Private/Coupons'));
@@ -29,6 +30,7 @@ export function Router() {
           <Route index element={<HomePage />} />
           <Route path="resultados" element={<ResultsPage />} />
           <Route path="pagamento" element={<CheckoutPage />} />
+          <Route path="muito-obrigado" element={<ThankYouPage />} />
           <Route path="perguntas-frequentes" element={<FaqPage />} />
           <Route path="minhas-consultas" element={<SearchesPage />} />
           <Route path="contato" element={<ContactPage />} />

@@ -14,7 +14,7 @@ import {
   Title,
 } from '@mantine/core';
 import { IconCar, IconLockOpen } from '@tabler/icons-react';
-import ReactGA from 'react-ga';
+// import ReactGA from 'react-ga';
 
 import { PageLoader } from '@/components/__commons';
 import {
@@ -25,7 +25,7 @@ import {
 
 import { useSearchResults } from '@/core/providers';
 import { useSearchInfo } from '@/core/services/search';
-import { moneyFormat } from '@/core/utils';
+import { gaPageView, moneyFormat } from '@/core/utils';
 
 import classes from './styles.module.css';
 
@@ -36,7 +36,10 @@ export default function ResultsPage() {
 
   useEffect(() => {
     if (!results) navigate('/');
-    ReactGA.pageview(window.location.pathname + window.location.search);
+
+    if (results && !premium) {
+      gaPageView(window.location.pathname + window.location.search);
+    }
   }, [results]);
 
   if (!results) return <PageLoader />;

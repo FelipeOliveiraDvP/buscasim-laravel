@@ -10,6 +10,7 @@ interface ImportMetaEnv {
   readonly VITE_PUSHER_SCHEME: string;
   readonly VITE_PUSHER_APP_CLUSTER: string;
   readonly VITE_GOOGLE_TAG_ID: string;
+  readonly VITE_GOOGLE_ADS_ID: string;
 }
 
 interface ImportMeta {

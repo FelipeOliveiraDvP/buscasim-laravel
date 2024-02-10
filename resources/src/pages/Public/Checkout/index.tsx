@@ -14,6 +14,7 @@ import {
   Title,
 } from '@mantine/core';
 import { useForm, yupResolver } from '@mantine/form';
+import { useDebouncedValue } from '@mantine/hooks';
 import Pusher from 'pusher-js';
 import * as yup from 'yup';
 
@@ -25,13 +26,17 @@ import {
   ProcessPaymentResponse,
   useProcessPayment,
 } from '@/core/services/orders';
-import { getFormErrors, moneyFormat, showSuccess } from '@/core/utils';
-
-import classes from './styles.module.css';
-import { useDebouncedValue } from '@mantine/hooks';
+import { useSearchInfo } from '@/core/services/search';
 import { useDiscount } from '@/core/services/coupons';
 import { useAuth, useSearchResults } from '@/core/providers';
-import { useSearchInfo } from '@/core/services/search';
+import {
+  gaPageView,
+  getFormErrors,
+  moneyFormat,
+  showSuccess,
+} from '@/core/utils';
+
+import classes from './styles.module.css';
 
 const schema = yup.object().shape({
   name: yup.string().required('Informe o seu nome'),
@@ -91,7 +96,7 @@ export default function CheckoutPage() {
       const { payment_id, data: results } = data.payment;
 
       if (payment_id === order.payment_id) {
-        setSearchResults({ results, premium: true });
+        setSearchResults({ results, payment: data, premium: true });
         showSuccess('Pagamento confirmado com sucesso!');
         navigate('/resultados');
       }
@@ -103,7 +108,11 @@ export default function CheckoutPage() {
   }, [order]);
 
   useEffect(() => {
-    if (!results) navigate('/');
+    if (!results) {
+      navigate('/');
+    } else {
+      gaPageView(window.location.pathname + window.location.search);
+    }
   }, [results]);
 
   if (loadingInfo) return <PageLoader />;
