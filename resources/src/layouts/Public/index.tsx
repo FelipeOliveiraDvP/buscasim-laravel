@@ -5,6 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { PageLoader, WhatsAppButton } from '@/components/__commons';
 import { PublicHeader } from './Header';
 import { PublicFooter } from './Footer';
+import { MetaPixel } from './SEO';
 
 export function PublicLayout() {
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -22,6 +23,7 @@ export function PublicLayout() {
       </Suspense>
       <PublicFooter />
       <WhatsAppButton />
+      <MetaPixel />
     </>
   );
 }
