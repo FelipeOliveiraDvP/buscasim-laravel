@@ -32,7 +32,7 @@ export default function ThankYouPage() {
         </Text>
         <Group justify="center">
           <Button component={Link} to="/resultados" variant="primary" size="md">
-            Ir para o meu relatório
+            Ver meu relatório
           </Button>
         </Group>
       </Container>

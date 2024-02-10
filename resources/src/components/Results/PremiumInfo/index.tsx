@@ -1,16 +1,23 @@
-import { Badge, Table } from '@mantine/core';
+import { Button, Table } from '@mantine/core';
 import { IconLock } from '@tabler/icons-react';
 import { ResultInfoProps } from '..';
-import classes from './styles.module.css';
 
-export function ResultsPremiumInfo({ data, show }: ResultInfoProps) {
+interface Props extends ResultInfoProps {
+  onScroll: VoidFunction;
+}
+
+export function ResultsPremiumInfo({ data, show, onScroll }: Props) {
   function showInfo(info: string | null, show?: boolean) {
     if (show) return info;
 
     return (
-      <Badge className={classes.premium} leftSection={<IconLock size={18} />}>
+      <Button
+        size="compact-sm"
+        leftSection={<IconLock size={18} />}
+        onClick={() => onScroll()}
+      >
         Bloqueada
-      </Badge>
+      </Button>
     );
   }
 

@@ -29,12 +29,7 @@ import {
 import { useSearchInfo } from '@/core/services/search';
 import { useDiscount } from '@/core/services/coupons';
 import { useAuth, useSearchResults } from '@/core/providers';
-import {
-  gaPageView,
-  getFormErrors,
-  moneyFormat,
-  showSuccess,
-} from '@/core/utils';
+import { gaPageView, getFormErrors, moneyFormat } from '@/core/utils';
 
 import classes from './styles.module.css';
 
@@ -97,8 +92,7 @@ export default function CheckoutPage() {
 
       if (payment_id === order.payment_id) {
         setSearchResults({ results, payment: data, premium: true });
-        showSuccess('Pagamento confirmado com sucesso!');
-        navigate('/resultados');
+        navigate('/muito-obrigado');
       }
     });
   }

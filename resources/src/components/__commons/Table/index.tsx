@@ -27,10 +27,13 @@ export function Table<T>({ columns, data, pagination, loading }: Props<T>) {
 
   return (
     <Stack gap="md">
-      <MantineTable verticalSpacing="md">
-        <TableHeader table={table} />
-        <TableBody table={table} columns={columns} loading={loading} />
-      </MantineTable>
+      <MantineTable.ScrollContainer minWidth={500}>
+        <MantineTable verticalSpacing="md">
+          <TableHeader table={table} />
+          <TableBody table={table} columns={columns} loading={loading} />
+        </MantineTable>
+      </MantineTable.ScrollContainer>
+
       {pagination && (
         <Flex justify="center">
           <Pagination

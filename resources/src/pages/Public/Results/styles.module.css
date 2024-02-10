@@ -27,3 +27,8 @@
   font-weight: 700;
   color: var(--mantine-color-blue-7);
 }
+.searchPrice {
+  font-size: rem(36px);
+  font-weight: 700;
+  text-align: center;
+}

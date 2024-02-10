@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Accordion,
   Button,
-  Center,
   Container,
   Grid,
   Image,
@@ -14,7 +13,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconCar, IconLockOpen } from '@tabler/icons-react';
-// import ReactGA from 'react-ga';
 
 import { PageLoader } from '@/components/__commons';
 import {
@@ -28,10 +26,14 @@ import { useSearchInfo } from '@/core/services/search';
 import { gaPageView, moneyFormat } from '@/core/utils';
 
 import classes from './styles.module.css';
+import { useScrollIntoView } from '@mantine/hooks';
 
 export default function ResultsPage() {
   const { results, premium } = useSearchResults();
   const { data, isLoading } = useSearchInfo();
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+    offset: 60,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,21 +82,23 @@ export default function ResultsPage() {
                     <ResultsFreeInfo data={results} />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <ResultsPremiumInfo data={results} show={premium} />
+                    <ResultsPremiumInfo
+                      data={results}
+                      show={premium}
+                      onScroll={scrollIntoView}
+                    />
                   </Grid.Col>
                   {!premium && (
                     <Grid.Col>
                       <Button
-                        component={Link}
-                        to="/pagamento"
                         loading={isLoading}
                         leftSection={<IconLockOpen />}
                         variant="outline"
                         fullWidth
                         size="lg"
+                        onClick={() => scrollIntoView()}
                       >
-                        Liberar Informações por apenas{' '}
-                        {moneyFormat(data?.price || 0)}
+                        Liberar Informações
                       </Button>
                     </Grid.Col>
                   )}
@@ -151,18 +155,21 @@ export default function ResultsPage() {
             ))}
           </Accordion>
         </Paper>
+
         {!premium && (
-          <Center p="xl" bg="blue.7" c="white">
+          <Container bg="blue.7" py="lg" c="white" ref={targetRef}>
             <Stack align="center">
               <IconLockOpen size={48} />
-              <Title order={3}>
+              <Title order={3} ta="center">
                 Quer saber todas as informações que estão bloqueadas?
               </Title>
-              <Text>
+              <Text ta="center">
                 Adquira o relatório Premium e tenha acesso a essa e outras
-                informações.
+                informações por apenas
               </Text>
-              <Text size="xs">Você acessar seus relatórios quando quiser.</Text>
+              <div className={classes.searchPrice}>
+                {moneyFormat(data?.price || 0)}
+              </div>
               <Button
                 component={Link}
                 to="/pagamento"
@@ -171,15 +178,12 @@ export default function ResultsPage() {
                 color="white"
                 size="lg"
               >
-                Liberar Informações por apenas {moneyFormat(data?.price || 0)}
+                Liberar Informações
               </Button>
             </Stack>
-          </Center>
+          </Container>
         )}
       </Stack>
-      {/* <Portal>
-        <CheckoutModal opened={opened} onClose={close} plate={results.placa} />
-      </Portal> */}
     </Container>
   );
 }

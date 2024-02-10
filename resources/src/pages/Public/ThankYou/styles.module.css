@@ -12,7 +12,7 @@
   color: var(--mantine-color-blue-3);
 
   @media (max-width: $mantine-breakpoint-sm) {
-    font-size: rem(120px);
+    font-size: rem(72px);
   }
 }
 
