@@ -35,7 +35,7 @@ export function Router() {
           <Route path="minhas-consultas" element={<SearchesPage />} />
           <Route path="contato" element={<ContactPage />} />
           <Route path="politica-de-privacidade" element={<PrivacyPage />} />
-          <Route path="entrar" element={<LoginPage />} />
+          <Route path="admin" element={<LoginPage />} />
           <Route path="esqueci-minha-senha" element={<ForgotPage />} />
           <Route path="alterar-senha/:token" element={<ResetPage />} />
           <Route path="*" element={<NotFoundPage />} />
