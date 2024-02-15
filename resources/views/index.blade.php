@@ -35,7 +35,7 @@
   <meta property="og:image" content="{{ $meta['image'] }}">
 
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10878664178"></script>
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10878664178"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -45,13 +45,13 @@
     gtag('js', new Date());
 
     gtag('config', 'AW-10878664178');
-  </script>
+  </script> -->
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K8865XV" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
+  <!-- End Google Tag Manager (noscript) -->
 
   <div id="root"></div>
   @viteReactRefresh
