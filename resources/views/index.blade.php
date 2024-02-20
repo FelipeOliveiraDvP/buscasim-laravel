@@ -35,7 +35,7 @@
   <meta property="og:image" content="{{ $meta['image'] }}">
 
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10878664178"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0V00GHHT3K"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -44,7 +44,7 @@
     }
     gtag('js', new Date());
 
-    gtag('config', 'AW-10878664178');
+    gtag('config', 'G-0V00GHHT3K');
   </script>
 </head>
 
