@@ -18,7 +18,7 @@ export function GoogleAdsForm({ form }: OptionsFormProps) {
 
         <Stack>
           <TextInput
-            {...form.getInputProps('options.6.value')}
+            {...form.getInputProps('options.5.value')}
             placeholder="Adicione o ID da tag do Google Ads"
           />
         </Stack>

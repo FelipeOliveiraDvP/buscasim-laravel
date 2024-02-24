@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Option;
 use App\Traits\Helpers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\UpdateOptionsRequest;
 
 class OptionsController extends Controller
 {
@@ -34,19 +33,8 @@ class OptionsController extends Controller
   /**
    * Update the system options.
    */
-  public function update(Request $request)
+  public function update(UpdateOptionsRequest $request)
   {
-    // Validate the request.
-    $validator = Validator::make($request->all(), [
-      'options'         => 'required|array',
-      'options.*.key'   => 'required|string|exists:options,key',
-      'options.*.value' => 'required',
-    ]);
-
-    if ($validator->fails()) {
-      return response()->json($validator->errors(), 400);
-    }
-
     foreach ($request->options as $option) {
       $this->setOption($option['key'], $option['value']);
     }
