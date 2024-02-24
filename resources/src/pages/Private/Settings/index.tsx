@@ -6,6 +6,7 @@ import { useForm } from '@mantine/form';
 import { AnchorLink } from '@/components/__commons';
 import {
   APIPlacasForm,
+  GoogleAdsForm,
   MercadoPagoForm,
   PriceForm,
 } from '@/components/Settings';
@@ -56,6 +57,7 @@ export default function SettingsPage() {
               <APIPlacasForm form={form} />
               <PriceForm form={form} />
               <MercadoPagoForm form={form} />
+              <GoogleAdsForm form={form} />
             </Stack>
           </Grid.Col>
         </Grid>

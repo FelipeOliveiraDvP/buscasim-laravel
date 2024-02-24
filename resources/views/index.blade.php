@@ -17,7 +17,7 @@
       j.src =
         'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
       f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-K8865XV');
+    })(window, document, 'script', 'dataLayer', "{{ $meta['google_tag'] }}");
   </script>
   <!-- End Google Tag Manager -->
 
@@ -35,7 +35,7 @@
   <meta property="og:image" content="{{ $meta['image'] }}">
 
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0V00GHHT3K"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ $meta['google_tag'] }}"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
 
@@ -44,13 +44,13 @@
     }
     gtag('js', new Date());
 
-    gtag('config', 'G-0V00GHHT3K');
+    gtag('config', "{{ $meta['google_tag'] }}");
   </script>
 </head>
 
 <body>
   <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K8865XV" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ $meta['google_tag'] }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
   <div id="root"></div>

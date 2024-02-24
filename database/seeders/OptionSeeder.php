@@ -33,6 +33,10 @@ class OptionSeeder extends Seeder
         'key'   => 'MERCADO_PAGO_ACCESS_TOKEN',
         'value' => 'TEST-5441779568103896-012821-6ecee8c98c84fffd2bc95656acf65bc7-723430278',
       ],
+      [
+        'key'   => 'GOOGLE_TAG_ID',
+        'value' => '',
+      ],
     ]);
   }
 }

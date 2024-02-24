@@ -20,6 +20,18 @@ class OptionsController extends Controller
   }
 
   /**
+   * Get a option by key.
+   */
+  public function getOption(string $key)
+  {
+    $option = Option::where('key', '=', $key)->first();
+
+    if (!$option) return response()->json(false, 200);
+
+    return response()->json($option->value, 200);
+  }
+
+  /**
    * Update the system options.
    */
   public function update(Request $request)

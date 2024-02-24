@@ -105,7 +105,9 @@ export default function CheckoutPage() {
     if (!results) {
       navigate('/');
     } else {
-      gaPageView(window.location.pathname + window.location.search);
+      const path = window.location.pathname + window.location.search;
+
+      gaPageView('Pagamento', path);
     }
   }, [results]);
 

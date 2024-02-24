@@ -7,6 +7,10 @@ export default {
     return api.get(`/api/options`);
   },
 
+  async getOption(key?: string): Promise<any | false> {
+    return api.get(`/api/options/${key?.toUpperCase()}`);
+  },
+
   async update(data: OptionsRequest): Promise<ApiResponse> {
     return api.patch(`/api/options`, data);
   },

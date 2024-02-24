@@ -38,8 +38,6 @@ Route::prefix('coupons')->group(function () {
 
 Route::prefix('orders')->group(function () {
   Route::post('process', [OrdersController::class, 'process']);
-  // Route::post('checkout', [OrdersController::class, 'checkout']);
-  // Route::post('payment',  [OrdersController::class, 'payment']);
   Route::post('callback', [OrdersController::class, 'callback']);
 });
 
@@ -75,8 +73,9 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::prefix('options')->group(function () {
-      Route::get('/',   [OptionsController::class, 'index']);
-      Route::patch('/', [OptionsController::class, 'update']);
+      Route::get('/',       [OptionsController::class, 'index']);
+      Route::get('/{key}',  [OptionsController::class, 'getOption']);
+      Route::patch('/',     [OptionsController::class, 'update']);
     });
   });
 });

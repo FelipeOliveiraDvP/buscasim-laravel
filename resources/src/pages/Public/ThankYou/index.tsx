@@ -15,7 +15,9 @@ export default function ThankYouPage() {
     if (!payment) {
       navigate('/');
     } else {
-      gaPageView(window.location.pathname + window.location.search);
+      const path = window.location.pathname + window.location.search;
+
+      gaPageView('Muito Obrigado', path);
     }
   }, []);
 

@@ -8,3 +8,4 @@ export interface OptionsFormProps {
 export * from './APIPlacas';
 export * from './MercadoPago';
 export * from './Price';
+export * from './GoogleAds';

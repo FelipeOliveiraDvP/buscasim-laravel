@@ -17,6 +17,18 @@ export function useOptions() {
   );
 }
 
+export function useGetOption(key?: string) {
+  return useQuery<any | false, AxiosError>(
+    ['getOption', key],
+    () => optionsService.getOption(key),
+    {
+      onError(error) {
+        showError(getErrorMessage(error as AxiosError));
+      },
+    }
+  );
+}
+
 export function useUpdateOptions() {
   return useMutation(optionsService.update, {
     onSuccess(data) {
