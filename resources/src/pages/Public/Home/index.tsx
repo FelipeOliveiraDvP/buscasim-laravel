@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import { CallToAction, Features, Hero } from '@/components/Home';
-import { gaPageView } from '@/core/utils';
+import { gaConversion } from '@/core/utils';
 
 export default function HomePage() {
   useEffect(() => {
-    const path = window.location.pathname + window.location.search;
-
-    gaPageView('Home', path);
+    gaConversion('AW-10878664178/yDwrCNrUkZIZEPL7rMMo');
   }, []);
 
   return (

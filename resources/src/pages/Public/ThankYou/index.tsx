@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Title, Text, Button, Container, Group } from '@mantine/core';
 
 import { useSearchResults } from '@/core/providers';
-import { gaPageView } from '@/core/utils';
+import { gaConversion } from '@/core/utils';
 
 import classes from './styles.module.css';
 
@@ -15,9 +15,7 @@ export default function ThankYouPage() {
     if (!payment) {
       navigate('/');
     } else {
-      const path = window.location.pathname + window.location.search;
-
-      gaPageView('Muito Obrigado', path);
+      gaConversion('AW-10878664178/bqGBCI_slpIZEPL7rMMo');
     }
   }, []);
 

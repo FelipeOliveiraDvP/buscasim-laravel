@@ -29,7 +29,7 @@ import {
 import { useSearchInfo } from '@/core/services/search';
 import { useDiscount } from '@/core/services/coupons';
 import { useAuth, useSearchResults } from '@/core/providers';
-import { gaPageView, getFormErrors, moneyFormat } from '@/core/utils';
+import { gaConversion, getFormErrors, moneyFormat } from '@/core/utils';
 
 import classes from './styles.module.css';
 
@@ -105,9 +105,7 @@ export default function CheckoutPage() {
     if (!results) {
       navigate('/');
     } else {
-      const path = window.location.pathname + window.location.search;
-
-      gaPageView('Pagamento', path);
+      gaConversion('AW-10878664178/ClSCCNDZjZQZEPL7rMMo');
     }
   }, [results]);
 

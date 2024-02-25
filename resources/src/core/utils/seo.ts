@@ -1,26 +1,21 @@
-// import optionsService from '../services/options/options.service';
-
-export async function gaPageView(title: string, path: string) {
-  // const googleTag = await optionsService.getOption('GOOGLE_TAG_ID');
-
-  // if (
-  //   googleTag !== false &&
-  //   'gtag' in window &&
-  //   typeof window.gtag === 'function'
-  // ) {
-  //   window.gtag('event', 'page_view', {
-  //     page_title: title,
-  //     page_location: path,
-  //   });
-  // }
-
+export async function gaPageView(title: string) {
   if ('dataLayer' in window && Array.isArray(window.dataLayer)) {
+    const path = window.location.pathname + window.location.search;
+
     window.dataLayer?.push({
       event: 'pageview',
       page: {
         page_title: title,
         page_location: path,
       },
+    });
+  }
+}
+
+export function gaConversion(conversionId: string) {
+  if ('gtag' in window && typeof window.gtag === 'function') {
+    window.gtag('event', 'conversion', {
+      send_to: conversionId,
     });
   }
 }

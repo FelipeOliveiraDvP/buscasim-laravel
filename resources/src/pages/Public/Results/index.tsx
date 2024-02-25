@@ -40,9 +40,7 @@ export default function ResultsPage() {
     if (!results) navigate('/');
 
     if (results && !premium) {
-      const path = window.location.pathname + window.location.search;
-
-      gaPageView('Resultados Free', path);
+      gaPageView('Resultados Free');
     }
   }, [results]);
 
