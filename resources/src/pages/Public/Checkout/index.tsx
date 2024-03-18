@@ -161,7 +161,7 @@ export default function CheckoutPage() {
                   </Table.Tbody>
                 </Table>
                 <Button type="submit" loading={mutation.isLoading}>
-                  Pagar
+                  Ver todas as informações
                 </Button>
                 <Alert variant="light" color="yellow">
                   Usamos suas informações para gerar o pagamento. Seus dados
