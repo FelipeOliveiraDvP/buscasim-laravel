@@ -12,13 +12,14 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import { useScrollIntoView } from '@mantine/hooks';
 import { IconCar, IconLockOpen } from '@tabler/icons-react';
 
 import { PageLoader } from '@/components/__commons';
 import {
-  ResultsFreeInfo,
   ResultsOverview,
-  ResultsPremiumInfo,
+  ResultsLeftInfo,
+  ResultsRightInfo,
 } from '@/components/Results';
 
 import { useSearchResults } from '@/core/providers';
@@ -26,7 +27,7 @@ import { useSearchInfo } from '@/core/services/search';
 import { gaPageView, moneyFormat } from '@/core/utils';
 
 import classes from './styles.module.css';
-import { useScrollIntoView } from '@mantine/hooks';
+import placeholder from '@/assets/placeholder.png';
 
 export default function ResultsPage() {
   const { results, premium } = useSearchResults();
@@ -64,7 +65,7 @@ export default function ResultsPage() {
           <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
             <Paper withBorder p="md">
               <Stack align="center">
-                <Image src={results.logo} maw={150} />
+                <Image src={results.logo} maw={150} fallbackSrc={placeholder} />
                 {results.marcaModelo}
               </Stack>
             </Paper>
@@ -79,12 +80,16 @@ export default function ResultsPage() {
               <Stack align="center">
                 <Grid w="100%">
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <ResultsFreeInfo data={results} />
+                    <ResultsLeftInfo
+                      data={results}
+                      premium={premium}
+                      onScroll={scrollIntoView}
+                    />
                   </Grid.Col>
                   <Grid.Col span={{ base: 12, md: 6 }}>
-                    <ResultsPremiumInfo
+                    <ResultsRightInfo
                       data={results}
-                      show={premium}
+                      premium={premium}
                       onScroll={scrollIntoView}
                     />
                   </Grid.Col>
