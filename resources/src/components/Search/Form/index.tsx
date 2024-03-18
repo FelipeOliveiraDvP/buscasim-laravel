@@ -9,6 +9,7 @@ import { getFormErrors } from '@/core/utils';
 
 import classes from './styles.module.css';
 import { MaskedInput } from '@/components/__commons';
+import { SearchLoader } from '..';
 
 const schema = Yup.object().shape({
   plate: Yup.string().required('Informe uma placa para consultar'),
@@ -32,22 +33,25 @@ export function SearchForm() {
   }
 
   return (
-    <form onSubmit={form.onSubmit(handleSearch)} className={classes.controls}>
-      <MaskedInput
-        {...form.getInputProps('plate')}
-        mask="plate"
-        name="plate"
-        autoComplete="on"
-        placeholder="Ex: HUF-8282"
-        classNames={{ input: classes.input, root: classes.inputWrapper }}
-      />
-      <Button
-        type="submit"
-        className={classes.control}
-        loading={mutation.isLoading}
-      >
-        <IconSearch />
-      </Button>
-    </form>
+    <>
+      <form onSubmit={form.onSubmit(handleSearch)} className={classes.controls}>
+        <MaskedInput
+          {...form.getInputProps('plate')}
+          mask="plate"
+          name="plate"
+          autoComplete="on"
+          placeholder="Ex: HUF-8282"
+          classNames={{ input: classes.input, root: classes.inputWrapper }}
+        />
+        <Button
+          type="submit"
+          className={classes.control}
+          loading={mutation.isLoading}
+        >
+          <IconSearch />
+        </Button>
+      </form>
+      <SearchLoader loading={mutation.isLoading} />
+    </>
   );
 }
