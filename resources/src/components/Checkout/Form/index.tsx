@@ -33,7 +33,7 @@ export function CheckoutForm({ form }: Props) {
         placeholder="000.000.000-00"
         withAsterisk
       />
-      <Checkbox
+      {/* <Checkbox
         {...form.getInputProps('accept_terms', { type: 'checkbox' })}
         label={
           <Text>
@@ -43,7 +43,7 @@ export function CheckoutForm({ form }: Props) {
             </AnchorLink>
           </Text>
         }
-      />
+      /> */}
     </Stack>
   );
 }
