@@ -40,7 +40,7 @@ const schema = yup.object().shape({
     .required('Informe seu e-mail')
     .email('Informe um e-mail válido'),
   document: yup.string().required('Campo Obrigatório'),
-  accept_terms: yup.boolean().oneOf([true], 'Aceite os termos para continuar'),
+  // accept_terms: yup.boolean().oneOf([true], 'Aceite os termos para continuar'),
 });
 
 export default function CheckoutPage() {
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
       name: user ? user.name : '',
       email: user ? user.email : '',
       document: user ? (user.document as string) : '',
-      accept_terms: false,
+      accept_terms: true,
       plate: '',
       coupon_id: null,
     },
@@ -161,7 +161,7 @@ export default function CheckoutPage() {
                   </Table.Tbody>
                 </Table>
                 <Button type="submit" loading={mutation.isLoading}>
-                  Pagar
+                  Ver todas as informações
                 </Button>
                 <Alert variant="light" color="yellow">
                   Usamos suas informações para gerar o pagamento. Seus dados
