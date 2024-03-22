@@ -12,12 +12,10 @@ export function ResultsLeftInfo({ data, premium, onScroll }: ResultInfoProps) {
           <Table.Td>{data.marca}</Table.Td>
         </Table.Tr>
         <Table.Tr>
-          <Table.Th>Modelo</Table.Th>
-          <Table.Td>{data.modelo}</Table.Td>
-        </Table.Tr>
-        <Table.Tr>
-          <Table.Th>Submodelo</Table.Th>
-          <Table.Td>{data.SUBMODELO}</Table.Td>
+          <Table.Th>Estado (UF) faturado</Table.Th>
+          <Table.Td>
+            {showInfo({ info: data.extra.uf_faturado, premium, onScroll })}
+          </Table.Td>
         </Table.Tr>
         <Table.Tr>
           <Table.Th>Versão</Table.Th>
@@ -32,8 +30,8 @@ export function ResultsLeftInfo({ data, premium, onScroll }: ResultInfoProps) {
           <Table.Td>{data.extra.ano_modelo}</Table.Td>
         </Table.Tr>
         <Table.Tr>
-          <Table.Th>Ano de modelo</Table.Th>
-          <Table.Td>{data.extra.ano_modelo}</Table.Td>
+          <Table.Th>Estado (UF)</Table.Th>
+          <Table.Td>{showInfo({ info: data.uf, premium, onScroll })}</Table.Td>
         </Table.Tr>
         <Table.Tr>
           <Table.Th>Nº do chassi</Table.Th>
@@ -60,6 +58,12 @@ export function ResultsLeftInfo({ data, premium, onScroll }: ResultInfoProps) {
         <Table.Tr>
           <Table.Th>DI</Table.Th>
           <Table.Td>{data.extra.di}</Table.Td>
+        </Table.Tr>
+        <Table.Tr>
+          <Table.Th>Município</Table.Th>
+          <Table.Td>
+            {showInfo({ info: data.extra.municipio, premium, onScroll })}
+          </Table.Td>
         </Table.Tr>
         <Table.Tr>
           <Table.Th>Eixos</Table.Th>
