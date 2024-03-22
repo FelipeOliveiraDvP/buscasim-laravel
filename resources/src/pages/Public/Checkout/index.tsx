@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import {
-  Alert,
   Button,
   Container,
   Paper,
@@ -163,10 +162,10 @@ export default function CheckoutPage() {
                 <Button type="submit" loading={mutation.isLoading}>
                   Ver todas as informações
                 </Button>
-                <Alert variant="light" color="yellow">
+                {/* <Alert variant="light" color="yellow">
                   Usamos suas informações para gerar o pagamento. Seus dados
                   estão seguros e não vão ser compartilhados com terceiros.
-                </Alert>
+                </Alert> */}
               </Stack>
             </Paper>
           )}
