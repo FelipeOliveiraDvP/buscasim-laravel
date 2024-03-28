@@ -79,6 +79,10 @@ export function ResultsLeftInfo({ data, premium, onScroll }: ResultInfoProps) {
             {showInfo({ info: data.extra.motor, premium, onScroll })}
           </Table.Td>
         </Table.Tr>
+        <Table.Tr>
+          <Table.Th>Nacionalidade</Table.Th>
+          <Table.Td>{data.extra.nacionalidade}</Table.Td>
+        </Table.Tr>
       </Table.Tbody>
     </Table>
   );

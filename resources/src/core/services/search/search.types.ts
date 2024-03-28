@@ -62,6 +62,9 @@ export interface SearchResult {
     uf_faturado: string;
     uf_placa: string;
     unidade_local_srf: string;
+    nome_proprietario: string;
+    endereco_proprietario: string;
+    doc_proprietario: string;
   };
   fipe: {
     dados: Array<SearchFIPEItem>;
