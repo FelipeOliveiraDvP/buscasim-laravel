@@ -16,6 +16,24 @@ export function ResultsRightInfo({ data, premium, onScroll }: Props) {
           <Table.Td>{data.extra.quantidade_passageiro}</Table.Td>
         </Table.Tr>
         <Table.Tr>
+          <Table.Th>Ano de fabricação</Table.Th>
+          <Table.Td>{data.extra.ano_fabricacao}</Table.Td>
+        </Table.Tr>
+        <Table.Tr>
+          <Table.Th>Modelo</Table.Th>
+          <Table.Td>{data.modelo}</Table.Td>
+        </Table.Tr>
+        <Table.Tr>
+          <Table.Th>Submodelo</Table.Th>
+          <Table.Td>{data.SUBMODELO}</Table.Td>
+        </Table.Tr>
+        <Table.Tr>
+          <Table.Th>Tipo de proprietário</Table.Th>
+          <Table.Td>
+            {showInfo({ info: data.extra.tipo_doc_prop, premium, onScroll })}
+          </Table.Td>
+        </Table.Tr>
+        <Table.Tr>
           <Table.Th>Segmento</Table.Th>
           <Table.Td>{data.extra.segmento}</Table.Td>
         </Table.Tr>
@@ -35,18 +53,6 @@ export function ResultsRightInfo({ data, premium, onScroll }: Props) {
               premium,
               onScroll,
             })}
-          </Table.Td>
-        </Table.Tr>
-        <Table.Tr>
-          <Table.Th>Estado (UF) faturado</Table.Th>
-          <Table.Td>
-            {showInfo({ info: data.extra.uf_faturado, premium, onScroll })}
-          </Table.Td>
-        </Table.Tr>
-        <Table.Tr>
-          <Table.Th>Município</Table.Th>
-          <Table.Td>
-            {showInfo({ info: data.extra.municipio, premium, onScroll })}
           </Table.Td>
         </Table.Tr>
         <Table.Tr>
